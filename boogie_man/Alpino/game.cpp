@@ -8,27 +8,17 @@
 #include <string>
 Alpino::Alpino(Vec2<int> WindowSize)
 {
-
+	
 	this->WindowWidth = WindowSize.x;
 	this->WindowHeight = WindowSize.y;
 
 	LoadTexture2DfromHeader(&killua, KILLUA_FORMAT, KILLUA_HEIGHT, KILLUA_WIDTH, KILLUA_DATA, 1);
 	Alpino::LoadTexture2DfromHeader(&nebula, NEBULA_FORMAT, NEBULA_HEIGHT, NEBULA_WIDTH, NEBULA_DATA, 1);
-	std::string WorkingDir(GetWorkingDirectory());
 	
-	for (size_t i = 0; i < WorkingDir.size(); i++)
-	{
-		if (WorkingDir.at(i) == '\\') {
-			WorkingDir.at(i) = '/';
-		}
-	}
-
-	std::cout << "WORKING DIR: " << WorkingDir << std::endl;
-
-	t_foreground = LoadTexture((WorkingDir + "/textures/forest.png").c_str());
-	middle_background = LoadTexture((WorkingDir + "/textures/forestback.png").c_str());
-	far_background = LoadTexture((WorkingDir + "/textures/forestfarback.png").c_str());
-	Fronstones = LoadTexture((WorkingDir + "/textures/front_rocks.png").c_str());
+	t_foreground = LoadTexture(GetRelativeTexturePath("forest.png").c_str());
+	middle_background = LoadTexture(GetRelativeTexturePath("forestback.png").c_str());
+	far_background = LoadTexture(GetRelativeTexturePath("forestfarback.png").c_str());
+	Fronstones = LoadTexture(GetRelativeTexturePath("front_rocks.png").c_str());
 
 	for (size_t i = 0; i < 8; i++)
 	{
@@ -155,6 +145,22 @@ bool Alpino::isObjectOut(Animdata data)
 	
 	//return data.pos.x <= -((int)data.rec.width << 3);
 	return (data.pos.x <= -700);
+}
+
+std::string Alpino::GetRelativeTexturePath(std::string textureName)
+{
+	std::string WorkingDir(GetWorkingDirectory());
+
+	for (size_t i = 0; i < WorkingDir.size(); i++)
+	{
+		if (WorkingDir.at(i) == '\\') {
+			WorkingDir.at(i) = '/';
+		}
+	}
+
+	std::cout << "WORKING DIR: " << (WorkingDir + "/textures/" + textureName).c_str() << std::endl;
+
+	return (WorkingDir + "/textures/" + textureName);
 }
 
 void Alpino::rotatenebula(Animdata data, int windowwidth,int index)
