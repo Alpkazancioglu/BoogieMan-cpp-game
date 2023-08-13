@@ -1,0 +1,57 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Main_Branch_22_06.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  game.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(100,35): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(101,37): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(102,51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(104,51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(107,1): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(133,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(134,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(46,2): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(102,32): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(164,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  ECS.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\ECS.cpp(61,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\ECS.cpp(62,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\ECS.cpp(79,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\ECS.cpp(80,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  FileHandler.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\FileHandler.cpp(32,29): warning C4267: '+=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\FileHandler.cpp(53,28): warning C4267: '+=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  GameEntity.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameEntity.cpp(9,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameEntity.cpp(10,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameEntity.cpp(27,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameEntity.cpp(28,15): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  GameHandler.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(100,35): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(101,37): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(102,51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(104,51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(107,1): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(133,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(134,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameHandler.cpp(31,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameHandler.cpp(32,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameHandler.cpp(194,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameHandler.cpp(195,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameHandler.cpp(199,36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\GameHandler.cpp(200,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Maincpp.cpp
+  StopWatch.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\StopWatch.h(23,57): warning C4244: 'return': conversion from '_Rep' to 'T', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+          and
+          [
+              T=int
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\StopWatch.cpp(21,73): message : see reference to function template instantiation 'T stopwatch_t::duration_cast<int,__int64,std::nano>(const std::chrono::duration<__int64,std::nano> &)' being compiled
+          with
+          [
+              T=int
+          ]
+  Generating Code...
+  Main_Branch_22_06.vcxproj -> C:\Users\alppk\Desktop\Alp_Game\x64\Debug\boogie_man.exe

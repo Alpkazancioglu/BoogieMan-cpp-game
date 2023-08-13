@@ -1,0 +1,39 @@
+﻿  game.cpp
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(59,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(60,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,21): error C2397: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,31): error C2397: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,31): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(86,7): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(30,42): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(31,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(34,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(39,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(42,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(45,34): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(90,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(105,26): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.cpp(119,31): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+  Source.cpp
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(59,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(60,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,21): error C2397: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,31): error C2397: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,31): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(86,7): warning C4305: 'initializing': truncation from 'double' to 'float'
+  GameHandler.cpp
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(59,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(60,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,21): error C2397: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,21): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,31): error C2397: conversion from 'int' to 'float' requires a narrowing conversion
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(82,31): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\Alpino\game.h(86,7): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\GameHandler.cpp(37,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\GameHandler.cpp(38,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\GameHandler.cpp(353,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\GameHandler.cpp(354,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\GameHandler.cpp(358,36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\GameHandler.cpp(359,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
