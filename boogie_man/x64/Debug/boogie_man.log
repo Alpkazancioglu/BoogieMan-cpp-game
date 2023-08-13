@@ -1,0 +1,13 @@
+﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Main_Branch_22_06.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  game.cpp
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.h(101,35): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.h(102,37): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.h(103,51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.h(105,51): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.h(108,25): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.h(134,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.h(135,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.cpp(36,7): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.cpp(94,32): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\Alpino\game.cpp(172,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  boogie_man.vcxproj -> C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\x64\Debug\boogie_man.exe

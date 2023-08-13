@@ -4,6 +4,7 @@
 #include "../VectorMath.h"
 #include "nebula.h"
 #include <memory>
+#include <string>
 #define REAL  0
 #define DUPLICATE  1
 #define INITIALPAGE 0
@@ -158,6 +159,7 @@ public:
 	void draw(RenderTexture2D* fbo);
 	
 	bool isObjectOut(Animdata data);
+    std::string GetRelativeTexturePath(std::string textureName);
 	bool isOnGround(Animdata data, int windowHeight);
 	Animdata updateAnimdata(Animdata data, float dt, int maxframe, bool onair);
 	Vector2 uptadebackgrounds(std::vector<AnimBackground>& data, float dt, bool duplicate);
