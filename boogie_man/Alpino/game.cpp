@@ -35,10 +35,10 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		0 // speed
 	};
 
-	farbackground = initbackgrounds(far_background, 80, 4,{-700,-150},0,2, farbackground);
-	middlebackground = initbackgrounds(middle_background, 110, 4, { -700,-150 },0,2, middlebackground);
-	foreground = initbackgrounds(t_foreground, 160, 4, { -700,-150 },0,2, foreground);
-	fronstones = initbackgrounds(t_Fronstones, 300, 1, { 0,(float)(getWsize().y/2)+410}, 400, 5, fronstones);
+	farbackground = initbackgrounds(far_background, 80, 4.1,{-650,-150},0,2, farbackground);
+	middlebackground = initbackgrounds(middle_background, 110, 4.1, { -650,-150 },0,2, middlebackground);
+	foreground = initbackgrounds(t_foreground, 160, 4.1, { -650,-150 },0,2, foreground);
+	fronstones = initbackgrounds(t_Fronstones, 200, 1, { -550,(float)(getWsize().y/2)+410},0, 5, fronstones);
 	
 }
 
@@ -67,6 +67,7 @@ void Alpino::update(RenderTexture2D *fbo)
 		DrawandUptadebackgrounds(farbackground, dt);
 		DrawandUptadebackgrounds(middlebackground, dt);
 		DrawandUptadebackgrounds(foreground, dt);
+		
 		for (int i = 0; i < 5; i++)
 		{
 			fronstones[i].pos = move(fronstones, dt, 1, i);
@@ -209,9 +210,9 @@ Vector2 Alpino::uptadebackgrounds(std::vector<AnimBackground>& data, float dt, b
 	else
 	{
 		data[0].pos.x -= data[0].speed * dt;
-		if (data[0].pos.x + 700 <= - data[0].texture.width * data[0].scale)
+		if (data[0].pos.x - data[REAL].origin.x<= -data[0].texture.width * data[0].scale)
 		{
-			return { -700,-150 };
+			return data[REAL].origin;
 		}
 		else
 		{
@@ -232,6 +233,7 @@ std::vector<AnimBackground> Alpino::initbackgrounds(Texture2D texture, float spe
 		data[i].scale = scale;
 		data[i].distance = distance;
 		data[i].arraysize = arraysize;
+		data[i].origin = pos;
 		if (i == 0)
 		{
 			data[0].pos = { pos.x,pos.y };

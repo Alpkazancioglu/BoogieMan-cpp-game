@@ -43,11 +43,13 @@ struct AnimBackground
 {
 	Texture2D texture;
 	Vector2 pos;
+	Vector2 origin;
 	int arraysize;
 	float speed;
 	float scale;
 	float distance;
 	bool duplicate;
+
 
 
 };
