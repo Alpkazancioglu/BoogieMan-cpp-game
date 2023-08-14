@@ -21,6 +21,12 @@ public:
 		updatetime = updatetime_i;
 		speed = speed_i;
 	};
+	bool operator ==(Animdata& other)
+	{
+		bool result = rec.x == other.rec.x && rec.y == other.rec.y && rec.width == other.rec.width && rec.height == other.rec.height && pos.x == other.pos.x &&
+			pos.y == other.pos.y && frame == other.frame && runningtime == other.runningtime && updatetime == other.updatetime && speed == other.speed;
+		return result;
+	}
 };
 
 class CollisionBox

@@ -30,20 +30,20 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		nebulas[i] = std::make_unique<Nebula>(WindowHeight, WindowWidth , nebula);
 	}
 
-	killuaData = 
+	killuaData =
 	{
 		{0.0f,0.0f,(float)killua.width / 6,(float)killua.height}, // rectangle
-		{((float)getWsize().x / 2) - (killua.width / 12),(float)( - 200 + (t_foreground.height * 4) - (killua.height))+70} , // pos
+		{(getWsize().x / 2) - (killua.width / 12),getWsize().y - killua.height-26}, // pos
 		0, // frame
 		0, // running time
 		1.0 / 12.0, // uptade time
 		0 // speed
 	};
 	max_high = killuaData.pos.y - 100;
-	farbackground = initbackgrounds(far_background, 80, 4.1,{-650,-150},0,2, farbackground);
-	middlebackground = initbackgrounds(middle_background, 110, 4.1, { -650,-150 },0,2, middlebackground);
-	foreground = initbackgrounds(t_foreground, 160, 4.1, { -650,-150 },0,2, foreground);
-	fronstones = initbackgrounds(t_Fronstones, 200, 1, { -550,(float)(getWsize().y/2)+410},0, 5, fronstones);
+	farbackground = initbackgrounds(far_background, 80, 4.1,{-10,-80},0,2, farbackground);
+	middlebackground = initbackgrounds(middle_background, 110, 4.1, { -10,-80 },0,2, middlebackground);
+	foreground = initbackgrounds(t_foreground, 160, 4.1, { -10,-80 },0,2, foreground);
+	fronstones = initbackgrounds(t_Fronstones, 200, 1, { 0,getWsize().y - (float)t_Fronstones.height}, 0, 5, fronstones);
 	
 }
 
@@ -89,20 +89,20 @@ void Alpino::update(RenderTexture2D *fbo)
 			fronstones[i].pos = moveStones(fronstones, dt, 1, i);
 			drawStones(fronstones, 5);
 		}
-		killuaData = updateAnimdata(killuaData, dt, 5, onAir);
+		killuaData = updateAnimdata(killuaData, dt, 5);
 		
 		for (int i = 0; i < sizeofnebula; i++)
 		{
-			nebulas[i]->Data = updateAnimdata(nebulas[i]->Data, dt, sizeofnebula, false);
+			nebulas[i]->Data = updateAnimdata(nebulas[i]->Data, dt, sizeofnebula);
 			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed * dt;
 			nebulas[i]->Hitbox.Data.pos.x -= nebulas[i]->Data.speed * dt;
 			DrawTextureRec(nebula, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
-			//DrawCircleV(nebulas[i]->Hitbox.pos, nebulas[i]->Hitbox.radius, WHITE);
+			//DrawCircleV(nebulas[i]->Hitbox.Data.pos, nebulas[i]->Hitbox.radius, WHITE);
 		}
-
+		
 		for (int i = 0; i < sizeofnebula; i++)
 		{	
-			RotateNebula(nebulas[i]->Data, getWsize().x , i);		
+			RotateNebula(nebulas[i]->Data, getWsize().x , i);
 		}
 		
 		KilluaJump();
@@ -149,7 +149,7 @@ void Alpino::draw(RenderTexture2D* fbo)
 
 bool Alpino::isObjectOut(Animdata data)
 {
-	return (data.pos.x <= (-700));
+	return (data.pos.x <= -nebulas[0]->Data.rec.width);
 }
 
 std::string Alpino::GetRelativeTexturePath(std::string textureName)
@@ -172,14 +172,18 @@ void Alpino::RotateNebula(Animdata data, int windowwidth,int index)
 {
 	if (isObjectOut(data))
 	{
-		nebulas[index]->Data.pos.x = windowwidth - 200;
-		nebulas[index]->Hitbox.Data.pos.x = windowwidth - 200 + (nebulas[index]->Hitbox.radius+18);
+		int temp_i;
+		temp_i = index - 1;
+		if (temp_i == -1)
+			temp_i = sizeofnebula - 1;
+		nebulas[index]->Data.pos.x = nebulas[temp_i]->Data.pos.x+300;
+		nebulas[index]->Hitbox.Data.pos.x = nebulas[temp_i]->Hitbox.Data.pos.x + 300;
 	}
 	
 }
-Animdata Alpino::updateAnimdata(Animdata data, float dt, int maxframe, bool onair)
+Animdata Alpino::updateAnimdata(Animdata data, float dt, int maxframe)
 {
-	if (!isOnGround(killuaData, GetMonitorHeight(GetCurrentMonitor()) - killua.height + 3))
+	if (!isOnGround(killuaData, getWsize().y) && data == killuaData)
 		return data;
 	else
 	{
@@ -244,9 +248,9 @@ std::vector<AnimBackground> Alpino::initbackgrounds(Texture2D texture, float spe
 	return data;
 }
 
-bool Alpino::isOnGround(Animdata data, int windowHeight)
+bool Alpino::isOnGround(Animdata data, float windowHeight)
 {
-	return data.pos.y + data.rec.height >= windowHeight;
+	return data.pos.y + data.rec.height >= getWsize().y-26;
 }
 void Alpino::DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt, Color tint)
 {
@@ -260,7 +264,7 @@ void Alpino::DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float d
 inline Vector2 Alpino::moveStones(std::vector<AnimBackground>& data, float dt, float scale, int index)
 {
 	data[index].pos.x -= data[index].speed * dt;
-	if (data[index].pos.x <= -(610 + data[index].texture.width))
+	if (data[index].pos.x <= -data[index].texture.width)
 	{
 		int temp;
 		temp = index - 1;
@@ -285,7 +289,7 @@ inline void Alpino::KilluaJump()
 	current_high = killuaData.pos.y;
 	killuaData.pos.y += killuaData.speed * dt;
 	
-	if (isOnGround(killuaData, GetMonitorHeight(GetCurrentMonitor()) - killua.height + 3))
+	if (isOnGround(killuaData,getWsize().y))
 	{
 		killuaData.speed = 0;
 		onAir = false;

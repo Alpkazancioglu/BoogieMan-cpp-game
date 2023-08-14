@@ -39,7 +39,7 @@ public:
 		this->Texture = &Texture_i;
 
 		this->Data.Set({ 0,0 ,(float)Texture->width / 8 , (float)Texture->height / 8 },
-			           { getWsize().x + (300 * NebulaCount) - 400 ,getWsize().y - Texture->height / 8 - 100 },
+			           { getWsize().x + (300 * NebulaCount) - 400 ,getWsize().y - Texture->height / 8 - 10},
 			           0, 0, 1.0 / 12.0, 400);
 
 		Hitbox.radius = 67.0 / 2;
@@ -119,8 +119,8 @@ public:
 	
 	bool isObjectOut(Animdata data);
     std::string GetRelativeTexturePath(std::string textureName);
-	bool isOnGround(Animdata data, int windowHeight);
-	Animdata updateAnimdata(Animdata data, float dt, int maxframe, bool onair);
+	bool isOnGround(Animdata data, float windowHeight);
+	Animdata updateAnimdata(Animdata data, float dt, int maxframe);
 	Vector2 uptadebackgrounds(std::vector<AnimBackground>& data, float dt, bool duplicate);
 	void RotateNebula(Animdata data, int windowwidth,int index);
 	
