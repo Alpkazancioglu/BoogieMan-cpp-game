@@ -81,8 +81,11 @@ void game::update()
 	////          GAME_UPDATE             /////
 
 	/////            ////                /////
-
-	Update_Camera({ AlpinoGame->killuaData.pos.x  + (AlpinoGame->killuaData.rec.width/2),AlpinoGame->killuaData.pos.y });
+	
+	//Update_Camera({ AlpinoGame->killuaData.pos.x  + (AlpinoGame->killuaData.rec.width/2),AlpinoGame->killuaData.pos.y });
+    //Update_Camera({ 0,AlpinoGame->killuaData.pos.y });
+	//Update_Camera({ (float)getWsize().x / 2 ,AlpinoGame->killuaData.pos.y });
+	Update_Camera({ getWsize().x / 2 ,getWsize().y/2 - (MainCamera->zoom * 60.0f) });
 	game::fullscreen_g(900, 700);
 
 	if (IsWindowMaximized())
@@ -111,7 +114,6 @@ void game::draw()
 	ClearBackground(GRAY);
 
 	BeginMode2D(*MainCamera);
-
 
 	////          GAME_DRAW_CAMERA             /////
 	AlpinoGame->update(target);
@@ -173,8 +175,9 @@ void game::Clean(game* currentgame)
 void game::Update_Camera(Vector2 target)
 {
 	
-	MainCamera->target = { target.x,800};
-	MainCamera->offset = { (float)GetMonitorWidth(GetCurrentMonitor()) / 2 , (float)GetMonitorHeight(GetCurrentMonitor()) - AlpinoGame->killua.height - 3-(MainCamera->zoom* 60.0f)};
+	MainCamera->target = target;
+	//MainCamera->offset = { (float)getWsize().x /2 , (float)GetMonitorHeight(GetCurrentMonitor()) - AlpinoGame->killua.height - 3 - (MainCamera->zoom * 60.0f)};
+	MainCamera->offset = { (float)getWsize().x / 2 , (getWsize().y / 2) - (MainCamera->zoom * 60.0f) };
 	MainCamera->zoom += ((float)GetMouseWheelMove() * 0.05f);
 
 	if (MainCamera->zoom > 1.3f) MainCamera->zoom = 1.3f;

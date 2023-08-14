@@ -1,2 +1,0 @@
-C:\Users\kbald\Desktop\Projects\BoogieMan\BoogieMan-cpp-game\boogie_man\x64\Debug\boogie_man.vcxproj.CopyComplete
-C:\Users\alppk\Desktop\Alp_Game\boogie_man\x64\Debug\boogie_man.vcxproj.CopyComplete

@@ -145,6 +145,7 @@
     <ClCompile Include="FileHandler.cpp" />
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="GameHandler.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Maincpp.cpp" />
     <ClCompile Include="StopWatch.cpp" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameHandler.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="StopWatch.h" />
     <ClInclude Include="VectorMath.h" />
   </ItemGroup>
