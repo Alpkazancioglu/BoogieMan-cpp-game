@@ -43,37 +43,19 @@ struct AnimBackground
 {
 	Texture2D texture;
 	Vector2 pos;
+	int arraysize;
 	float speed;
 	float scale;
+	float distance;
 	bool duplicate;
 
 
 };
 class FrontStone
 {
-	Vector2 move(std::vector<AnimBackground>& data, float dt, bool duplicate, float scale)
-	{
-		if (duplicate)
-		{
-			data[1].pos.x = data[0].pos.x + data[1].texture.width * scale;
-			return data[1].pos;
-		}
-		else
-		{
-			data[0].pos.x -= data[0].speed * dt;
-			if (data[0].pos.x <= -data[0].texture.width * scale)
-			{
-				return { (float)getWsize().x / 2 ,(float)getWsize().y - data[0].texture.width };
-			}
-			else
-			{
-				return data[0].pos;
-			}
-		}
-	}
-
 	Texture2D* Texture;
-
+	
+	
 	FrontStone(Texture2D Texture_i)
 	{
 		this->Texture = &Texture_i;
@@ -144,10 +126,12 @@ public:
 	Texture2D middle_background;
 	Texture2D t_foreground;
 	Texture2D nebula;
-	Texture2D Fronstones;
+	Texture2D t_Fronstones;
 	std::vector<AnimBackground> farbackground;
 	std::vector<AnimBackground> middlebackground;
 	std::vector<AnimBackground> foreground;
+	std::vector<AnimBackground> fronstones;
+	
 	std::unique_ptr<Nebula> nebulas[8];
 
 	Animdata killuaData;
@@ -175,8 +159,35 @@ public:
 		*texture = LoadTextureFromImage(image);
 	}	
 
-	std::vector<AnimBackground> initbackgrounds(Texture2D texture, float speed,float scale, std::vector <AnimBackground>& data);
+	std::vector<AnimBackground> initbackgrounds(Texture2D texture, float speed,float scale, Vector2 pos,float distance,int arraysize, std::vector <AnimBackground>& data);
 	void DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt);
+	Vector2 move(std::vector<AnimBackground>& data, float dt, float scale, int index)
+	{
+		data[index].pos.x -= data[index].speed * dt;
+		if (data[index].pos.x <= -(610 + data[index].texture.width))
+		{
+			int temp;
+			temp = index - 1;
+			if (temp == -1)
+				temp = data[0].arraysize-1;
+			return { data[temp].pos.x + data[0].texture.width + data[0].distance,data[index].pos.y};
+		}
+		else
+		{
+			return data[index].pos;
+		}
+	}
+
+
+
+	void drawStones(std::vector <AnimBackground> data, unsigned int size)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			DrawTextureEx(data[i].texture, data[i].pos, 0, data[i].scale, WHITE);
+		}
+	}
+
 
 private:
 

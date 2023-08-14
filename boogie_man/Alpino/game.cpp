@@ -18,7 +18,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	t_foreground = LoadTexture(GetRelativeTexturePath("forest.png").c_str());
 	middle_background = LoadTexture(GetRelativeTexturePath("forestback.png").c_str());
 	far_background = LoadTexture(GetRelativeTexturePath("forestfarback.png").c_str());
-	Fronstones = LoadTexture(GetRelativeTexturePath("front_rocks.png").c_str());
+	t_Fronstones = LoadTexture(GetRelativeTexturePath("front_rocks.png").c_str());
 
 	for (size_t i = 0; i < 8; i++)
 	{
@@ -35,9 +35,11 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		0 // speed
 	};
 
-	farbackground = initbackgrounds(far_background, 80, 4, farbackground);
-	middlebackground = initbackgrounds(middle_background, 110, 4, middlebackground);
-	foreground = initbackgrounds(t_foreground, 160, 4, foreground);
+	farbackground = initbackgrounds(far_background, 80, 4,{-700,-150},0,2, farbackground);
+	middlebackground = initbackgrounds(middle_background, 110, 4, { -700,-150 },0,2, middlebackground);
+	foreground = initbackgrounds(t_foreground, 160, 4, { -700,-150 },0,2, foreground);
+	fronstones = initbackgrounds(t_Fronstones, 300, 1, { 0,(float)(getWsize().y/2)+410}, 400, 5, fronstones);
+	
 }
 
 Alpino::~Alpino()
@@ -47,7 +49,7 @@ Alpino::~Alpino()
 	UnloadTexture(far_background);
 	UnloadTexture(middle_background);
 	UnloadTexture(t_foreground);
-	UnloadTexture(Fronstones);
+	UnloadTexture(t_Fronstones);
 }
 
 void Alpino::update(RenderTexture2D *fbo)
@@ -65,6 +67,11 @@ void Alpino::update(RenderTexture2D *fbo)
 		DrawandUptadebackgrounds(farbackground, dt);
 		DrawandUptadebackgrounds(middlebackground, dt);
 		DrawandUptadebackgrounds(foreground, dt);
+		for (int i = 0; i < 5; i++)
+		{
+			fronstones[i].pos = move(fronstones, dt, 1, i);
+			drawStones(fronstones, 5);
+		}
 		killuaData = updateAnimdata(killuaData, dt, 5, onAir);
 		killuaData.pos.y += killuaData.speed * dt;
 		for (int i = 0; i < sizeofnebula; i++)
@@ -72,7 +79,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			nebulas[i]->Data = updateAnimdata(nebulas[i]->Data, dt, sizeofnebula, false);
 			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed * dt;
 			nebulas[i]->Hitbox.pos.x -= nebulas[i]->Data.speed * dt;
-			DrawTextureRec(nebula, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
+			//DrawTextureRec(nebula, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
 			//DrawCircleV(nebulas[i]->Hitbox.pos, nebulas[i]->Hitbox.radius, WHITE);
 		}
 
@@ -144,7 +151,7 @@ bool Alpino::isObjectOut(Animdata data)
 {
 	
 	//return data.pos.x <= -((int)data.rec.width << 3);
-	return (data.pos.x <= -700);
+	return (data.pos.x <= (-700));
 }
 
 std::string Alpino::GetRelativeTexturePath(std::string textureName)
@@ -215,22 +222,24 @@ Vector2 Alpino::uptadebackgrounds(std::vector<AnimBackground>& data, float dt, b
 }
 
 
-std::vector<AnimBackground> Alpino::initbackgrounds(Texture2D texture, float speed,float scale, std::vector<AnimBackground> &data)
+std::vector<AnimBackground> Alpino::initbackgrounds(Texture2D texture, float speed,float scale, Vector2 pos ,float distance,int arraysize, std::vector<AnimBackground> &data)
 {
-	data.resize(2);
+	data.resize(arraysize);
 	for (int i = 0; i < data.size(); i++)
 	{
 		data[i].texture = texture;
 		data[i].speed = speed;
 		data[i].scale = scale;
+		data[i].distance = distance;
+		data[i].arraysize = arraysize;
 		if (i == 0)
 		{
-			data[0].pos = { -700,-150 };
+			data[0].pos = { pos.x,pos.y };
 			data[0].duplicate = false;
 		}
 		else
 		{
-			data[i].pos = { data[i-1].pos.x + (texture.width *data[i].scale) ,-150};
+			data[i].pos = { data[i-1].pos.x + (texture.width *data[i].scale) + distance ,pos.y};
 			data[i].duplicate = true;
 		}
 	};
