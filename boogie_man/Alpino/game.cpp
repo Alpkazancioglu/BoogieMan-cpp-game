@@ -28,7 +28,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	killuaData = 
 	{
 		{0.0f,0.0f,(float)killua.width / 6,(float)killua.height}, // rectangle
-		{(WindowWidth / 2) - (killuaData.rec.width / 2),(float)( - 200 + (t_foreground.height * 4) - (killua.height))} , // pos
+		{(WindowWidth / 2) - (killuaData.rec.width / 2),(float)( - 200 + (t_foreground.height * 4) - (killua.height))+70} , // pos
 		0, // frame
 		0, // running time
 		1.0 / 12.0, // uptade time
@@ -50,6 +50,7 @@ Alpino::~Alpino()
 	UnloadTexture(middle_background);
 	UnloadTexture(t_foreground);
 	UnloadTexture(t_Fronstones);
+	
 }
 
 void Alpino::update(RenderTexture2D *fbo)
@@ -70,43 +71,26 @@ void Alpino::update(RenderTexture2D *fbo)
 		
 		for (int i = 0; i < 5; i++)
 		{
-			fronstones[i].pos = move(fronstones, dt, 1, i);
+			fronstones[i].pos = moveStones(fronstones, dt, 1, i);
 			drawStones(fronstones, 5);
 		}
 		killuaData = updateAnimdata(killuaData, dt, 5, onAir);
-		killuaData.pos.y += killuaData.speed * dt;
+		
 		for (int i = 0; i < sizeofnebula; i++)
 		{
 			nebulas[i]->Data = updateAnimdata(nebulas[i]->Data, dt, sizeofnebula, false);
 			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed * dt;
 			nebulas[i]->Hitbox.pos.x -= nebulas[i]->Data.speed * dt;
-			//DrawTextureRec(nebula, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
+			DrawTextureRec(nebula, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
 			//DrawCircleV(nebulas[i]->Hitbox.pos, nebulas[i]->Hitbox.radius, WHITE);
 		}
 
 		for (int i = 0; i < sizeofnebula; i++)
 		{	
-			rotatenebula(nebulas[i]->Data, getWsize().x , i);		
+			RotateNebula(nebulas[i]->Data, getWsize().x , i);		
 		}
 		
-		if (isOnGround(killuaData, GetMonitorHeight(GetCurrentMonitor())-killua.height+3))
-		{
-			killuaData.speed = 0;
-			onAir = false;
-		}
-
-		else
-		{
-			killuaData.speed += gravity * dt;
-			onAir = true;
-		}
-
-		if (IsKeyPressed(KEY_SPACE) && !onAir)
-		{
-			killuaData.speed = -600;
-		}
-		
-		//std::cout << nebulas[1]->Data.rec.width + 700 << std::endl;
+		KilluaJump();
 		DrawTextureRec(killua, killuaData.rec, killuaData.pos, WHITE);
 
 		for (int i = 0; i < sizeofnebula; i++)
@@ -150,8 +134,6 @@ void Alpino::draw(RenderTexture2D* fbo)
 
 bool Alpino::isObjectOut(Animdata data)
 {
-	
-	//return data.pos.x <= -((int)data.rec.width << 3);
 	return (data.pos.x <= (-700));
 }
 
@@ -171,7 +153,7 @@ std::string Alpino::GetRelativeTexturePath(std::string textureName)
 	return (WorkingDir + "/textures/" + textureName);
 }
 
-void Alpino::rotatenebula(Animdata data, int windowwidth,int index)
+void Alpino::RotateNebula(Animdata data, int windowwidth,int index)
 {
 	if (isObjectOut(data))
 	{
@@ -258,6 +240,49 @@ void Alpino::DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float d
 	{
 		data[i].pos = uptadebackgrounds(data, dt, data[i].duplicate);
 		DrawTextureEx(data[i].texture, data[i].pos, 0.0, data[i].scale, WHITE);
+	}
+
+}
+inline Vector2 Alpino::moveStones(std::vector<AnimBackground>& data, float dt, float scale, int index)
+{
+	data[index].pos.x -= data[index].speed * dt;
+	if (data[index].pos.x <= -(610 + data[index].texture.width))
+	{
+		int temp;
+		temp = index - 1;
+		if (temp == -1)
+			temp = data[0].arraysize - 1;
+		return { data[temp].pos.x + data[0].texture.width + data[0].distance,data[index].pos.y };
+	}
+	else
+	{
+		return data[index].pos;
+	}
+}
+inline void Alpino::drawStones(std::vector<AnimBackground> data, unsigned int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		DrawTextureEx(data[i].texture, data[i].pos, 0, data[i].scale, WHITE);
+	}
+}
+inline void Alpino::KilluaJump()
+{
+	killuaData.pos.y += killuaData.speed * dt;
+	if (isOnGround(killuaData, GetMonitorHeight(GetCurrentMonitor()) - killua.height + 3))
+	{
+		killuaData.speed = 0;
+		onAir = false;
+	}
+	else
+	{
+		killuaData.speed += gravity * dt;
+		onAir = true;
+	}
+
+	if (IsKeyPressed(KEY_SPACE) && !onAir)
+	{
+		killuaData.speed = -600;
 	}
 
 }

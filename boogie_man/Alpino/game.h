@@ -149,7 +149,7 @@ public:
 	bool isOnGround(Animdata data, int windowHeight);
 	Animdata updateAnimdata(Animdata data, float dt, int maxframe, bool onair);
 	Vector2 uptadebackgrounds(std::vector<AnimBackground>& data, float dt, bool duplicate);
-	void rotatenebula(Animdata data, int windowwidth,int index);
+	void RotateNebula(Animdata data, int windowwidth,int index);
 	void static LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
 	{
 		Image image = { 0 };
@@ -163,34 +163,9 @@ public:
 
 	std::vector<AnimBackground> initbackgrounds(Texture2D texture, float speed,float scale, Vector2 pos,float distance,int arraysize, std::vector <AnimBackground>& data);
 	void DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt);
-	Vector2 move(std::vector<AnimBackground>& data, float dt, float scale, int index)
-	{
-		data[index].pos.x -= data[index].speed * dt;
-		if (data[index].pos.x <= -(610 + data[index].texture.width))
-		{
-			int temp;
-			temp = index - 1;
-			if (temp == -1)
-				temp = data[0].arraysize-1;
-			return { data[temp].pos.x + data[0].texture.width + data[0].distance,data[index].pos.y};
-		}
-		else
-		{
-			return data[index].pos;
-		}
-	}
-
-
-
-	void drawStones(std::vector <AnimBackground> data, unsigned int size)
-	{
-		for (int i = 0; i < size; i++)
-		{
-			DrawTextureEx(data[i].texture, data[i].pos, 0, data[i].scale, WHITE);
-		}
-	}
-
-
+	void drawStones(std::vector <AnimBackground> data, unsigned int size);
+	void KilluaJump();
+	Vector2 moveStones(std::vector<AnimBackground>& data, float dt, float scale, int index);
 private:
 
 };
