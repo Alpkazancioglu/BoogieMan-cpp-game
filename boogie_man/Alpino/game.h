@@ -5,6 +5,7 @@
 #include "nebula.h"
 #include <memory>
 #include <string>
+#include "../GameObject.h"
 #define REAL  0
 #define DUPLICATE  1
 #define INITIALPAGE 0
@@ -12,47 +13,8 @@
 #define ENDPAGE 2
 
 typedef unsigned int uint;
-Vec2<int> getWsize();
-class Animdata
-{
-public:
-	Rectangle rec;
-	Vector2 pos;
-	int frame;
-	float runningtime;
-	float updatetime;
-	int speed;
+Vec2<float> getWsize();
 
-};
-
-class CollisionBox
-{
-public:
-	
-	Rectangle rec;
-	Vector2 pos;
-	int frame;
-	float runningtime;
-	float updatetime;
-	float speed;
-	float radius;
-	
-};
-
-struct AnimBackground
-{
-	Texture2D texture;
-	Vector2 pos;
-	Vector2 origin;
-	int arraysize;
-	float speed;
-	float scale;
-	float distance;
-	bool duplicate;
-
-
-
-};
 class FrontStone
 {
 	Texture2D* Texture;
@@ -66,12 +28,9 @@ class FrontStone
 };
 
 
-class Nebula
+class Nebula : public GameObject
 {
 public:
-	Texture2D *Texture;
-	Animdata Data;
-	CollisionBox Hitbox;
 	
 	Nebula(int WindowHeight , int WindowWidth , Texture2D Texture_i)
 	{
@@ -79,18 +38,14 @@ public:
 
 		this->Texture = &Texture_i;
 
+		this->Data.Set({ 0,0 ,(float)Texture->width / 8 , (float)Texture->height / 8 },
+			           { getWsize().x + (300 * NebulaCount) - 400 ,getWsize().y - Texture->height / 8 - 100 },
+			           0, 0, 1.0 / 12.0, 400);
+
 		Hitbox.radius = 67.0 / 2;
-		Data.rec.x = 0.0;
-		Data.rec.y = 0.0;
-		Data.rec.width = Texture->width / 8;
-		Data.rec.height = Texture->height / 8;
-		Data.pos.x = getWsize().x + (300 * NebulaCount) - 400;
-		Hitbox.pos.x = Data.pos.x + (Hitbox.radius + 18);
-		Data.pos.y = getWsize().y - Texture->height / 8 - 100;
-		Hitbox.pos.y = Data.pos.y + (Hitbox.radius + 18);
-		Data.runningtime = 0;
-		Data.updatetime = 1.0 / 12.0;
-		Data.speed = 400;
+		Hitbox.Data.pos.x = Data.pos.x + (Hitbox.radius + 18);
+		Hitbox.Data.pos.y = Data.pos.y + (Hitbox.radius + 18);
+
 		NebulaCount++;
 	};
 
@@ -100,6 +55,18 @@ public:
 class Character
 {
 
+
+
+};
+
+class Castle : public GameObject
+{
+public:
+
+	Castle()
+	{
+		this->SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
+	}
 
 
 };
@@ -131,6 +98,10 @@ public:
 	Texture2D t_foreground;
 	Texture2D nebula;
 	Texture2D t_Fronstones;
+	Texture2D CastleTexture;
+
+	Castle Castle_;
+
 	std::vector<AnimBackground> farbackground;
 	std::vector<AnimBackground> middlebackground;
 	std::vector<AnimBackground> foreground;
@@ -152,19 +123,10 @@ public:
 	Animdata updateAnimdata(Animdata data, float dt, int maxframe, bool onair);
 	Vector2 uptadebackgrounds(std::vector<AnimBackground>& data, float dt, bool duplicate);
 	void RotateNebula(Animdata data, int windowwidth,int index);
-	void static LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
-	{
-		Image image = { 0 };
-		image.format = format;
-		image.height = height;
-		image.width = width;
-		image.data = data;
-		image.mipmaps = mipmaps;
-		*texture = LoadTextureFromImage(image);
-	}	
+	
 
 	std::vector<AnimBackground> initbackgrounds(Texture2D texture, float speed,float scale, Vector2 pos,float distance,int arraysize, std::vector <AnimBackground>& data);
-	void DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt);
+	void DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt , Color tint);
 	void drawStones(std::vector <AnimBackground> data, unsigned int size);
 	void KilluaJump();
 	Vector2 moveStones(std::vector<AnimBackground>& data, float dt, float scale, int index);

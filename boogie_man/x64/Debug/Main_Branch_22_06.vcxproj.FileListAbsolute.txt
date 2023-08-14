@@ -1,7 +1,0 @@
-C:\Users\Isengard\Desktop\Projects\SDL2 PROJECTS\VS_sdl2_projects\Main_Branch_22_06\Main_Branch_22_06\x64\Debug\Main_Branch_22_06.vcxproj.CopyComplete
-C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\x64\Debug\Main_Branch_22_06.exe
-C:\Users\kbald\Desktop\Alp_Game\Main_Branch_22_06\x64\Debug\Main_Branch_22_06.vcxproj.CopyComplete
-C:\Users\alppk\Desktop\Yeni klasör\Alp_Game\Main_Branch_22_06\x64\Debug\Main_Branch_22_06.vcxproj.CopyComplete
-C:\Users\alppk\Desktop\Yeni klasör\Alp_Game\Main_Branch_22_06\x64\Debug\Main_Branch_22_06.exe
-C:\Users\alppk\Desktop\Alp_Game\Main_Branch_22_06\x64\Debug\Main_Branch_22_06.vcxproj.CopyComplete
-C:\Users\alppk\Desktop\Alp_Game\boogie_man\x64\Debug\Main_Branch_22_06.vcxproj.CopyComplete

@@ -6,6 +6,8 @@
 #include "middle_Background.h"
 #include "foreground.h"
 #include <string>
+
+
 Alpino::Alpino(Vec2<int> WindowSize)
 {
 	
@@ -13,12 +15,15 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	this->WindowHeight = WindowSize.y;
 
 	LoadTexture2DfromHeader(&killua, KILLUA_FORMAT, KILLUA_HEIGHT, KILLUA_WIDTH, KILLUA_DATA, 1);
-	Alpino::LoadTexture2DfromHeader(&nebula, NEBULA_FORMAT, NEBULA_HEIGHT, NEBULA_WIDTH, NEBULA_DATA, 1);
+	LoadTexture2DfromHeader(&nebula, NEBULA_FORMAT, NEBULA_HEIGHT, NEBULA_WIDTH, NEBULA_DATA, 1);
 	
 	t_foreground = LoadTexture(GetRelativeTexturePath("forest.png").c_str());
 	middle_background = LoadTexture(GetRelativeTexturePath("forestback.png").c_str());
 	far_background = LoadTexture(GetRelativeTexturePath("forestfarback.png").c_str());
 	t_Fronstones = LoadTexture(GetRelativeTexturePath("front_rocks.png").c_str());
+	CastleTexture = LoadTexture(GetRelativeTexturePath("CastleBack_small.png").c_str());
+
+	Castle_.SetTexture(CastleTexture);
 
 	for (size_t i = 0; i < 8; i++)
 	{
@@ -28,7 +33,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	killuaData = 
 	{
 		{0.0f,0.0f,(float)killua.width / 6,(float)killua.height}, // rectangle
-		{(WindowWidth / 2) - (killuaData.rec.width / 2),(float)( - 200 + (t_foreground.height * 4) - (killua.height))+70} , // pos
+		{((float)getWsize().x / 2) - (killua.width / 12),(float)( - 200 + (t_foreground.height * 4) - (killua.height))+70} , // pos
 		0, // frame
 		0, // running time
 		1.0 / 12.0, // uptade time
@@ -64,11 +69,21 @@ void Alpino::update(RenderTexture2D *fbo)
 	case INGAME:
 
 		dt = GetFrameTime();
-		
-		DrawandUptadebackgrounds(farbackground, dt);
-		DrawandUptadebackgrounds(middlebackground, dt);
-		DrawandUptadebackgrounds(foreground, dt);
-		
+
+		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 90  , 125 , 151 , 255 } , {195 , 251 , 255 , 255});
+
+		if (Castle_.Data.pos.x <= -Castle_.Texture->width * 0.7f)
+		{
+			Castle_.Move({ getWsize().x   , 100});
+		}
+
+		this->Castle_.IncrementPosition({ -(float)Castle_.Data.speed * dt , 0 });
+		DrawTextureEx(CastleTexture, Castle_.Data.pos, 0.0f, 0.7f, {200,200,200,210});
+
+		DrawandUptadebackgrounds(farbackground, dt , { 255,255,255,245 });
+		DrawandUptadebackgrounds(middlebackground, dt , WHITE);
+		DrawandUptadebackgrounds(foreground, dt , WHITE);
+	
 		for (int i = 0; i < 5; i++)
 		{
 			fronstones[i].pos = moveStones(fronstones, dt, 1, i);
@@ -80,7 +95,7 @@ void Alpino::update(RenderTexture2D *fbo)
 		{
 			nebulas[i]->Data = updateAnimdata(nebulas[i]->Data, dt, sizeofnebula, false);
 			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed * dt;
-			nebulas[i]->Hitbox.pos.x -= nebulas[i]->Data.speed * dt;
+			nebulas[i]->Hitbox.Data.pos.x -= nebulas[i]->Data.speed * dt;
 			DrawTextureRec(nebula, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
 			//DrawCircleV(nebulas[i]->Hitbox.pos, nebulas[i]->Hitbox.radius, WHITE);
 		}
@@ -95,7 +110,7 @@ void Alpino::update(RenderTexture2D *fbo)
 		
 		for (int i = 0; i < sizeofnebula; i++)
 		{
-			if (CheckCollisionCircleRec(nebulas[i]->Hitbox.pos, nebulas[i]->Hitbox.radius, Rectangle{ killuaData.pos.x + 38,killuaData.pos.y,(float)(killua.width / 6) - 38,(float)killua.height - 20 }))
+			if (CheckCollisionCircleRec(nebulas[i]->Hitbox.Data.pos, nebulas[i]->Hitbox.radius, Rectangle{ killuaData.pos.x + 38,killuaData.pos.y,(float)(killua.width / 6) - 38,(float)killua.height - 20 }))
 			{
 				//std::cout << "game is over" << std::endl;
 				//GAMESTAGE = ENDPAGE;
@@ -158,7 +173,7 @@ void Alpino::RotateNebula(Animdata data, int windowwidth,int index)
 	if (isObjectOut(data))
 	{
 		nebulas[index]->Data.pos.x = windowwidth - 200;
-		nebulas[index]->Hitbox.pos.x = windowwidth - 200 + (nebulas[index]->Hitbox.radius+18);
+		nebulas[index]->Hitbox.Data.pos.x = windowwidth - 200 + (nebulas[index]->Hitbox.radius+18);
 	}
 	
 }
@@ -233,12 +248,12 @@ bool Alpino::isOnGround(Animdata data, int windowHeight)
 {
 	return data.pos.y + data.rec.height >= windowHeight;
 }
-void Alpino::DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt)
+void Alpino::DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt, Color tint)
 {
 	for (int i = 0; i < data.size(); i++)
 	{
 		data[i].pos = uptadebackgrounds(data, dt, data[i].duplicate);
-		DrawTextureEx(data[i].texture, data[i].pos, 0.0, data[i].scale, WHITE);
+		DrawTextureEx(data[i].texture, data[i].pos, 0.0, data[i].scale, tint);
 	}
 
 }
@@ -290,9 +305,9 @@ inline void Alpino::KilluaJump()
 			isplayerjumped = true;
 
 }
-Vec2<int> getWsize()
+Vec2<float> getWsize()
 {
-	Vec2<int> temp(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
+	Vec2<float> temp(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
 	return temp;
 }
 
