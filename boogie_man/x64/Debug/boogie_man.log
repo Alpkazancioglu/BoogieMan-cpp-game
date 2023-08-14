@@ -13,7 +13,7 @@ C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(39,101): warning C430
 C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(40,84): warning C4305: 'argument': truncation from 'double' to 'float'
 C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(160,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(264,20): warning C4018: '<': signed/unsigned mismatch
-C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(279,31): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.cpp(282,31): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
   GameHandler.cpp
 C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(85,35): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 C:\Users\alppk\Desktop\Alp_Game\boogie_man\Alpino\game.h(86,37): warning C4244: '=': conversion from 'int' to 'float', possible loss of data

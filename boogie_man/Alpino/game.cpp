@@ -34,7 +34,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		1.0 / 12.0, // uptade time
 		0 // speed
 	};
-
+	max_high = killuaData.pos.y - 100;
 	farbackground = initbackgrounds(far_background, 80, 4.1,{-650,-150},0,2, farbackground);
 	middlebackground = initbackgrounds(middle_background, 110, 4.1, { -650,-150 },0,2, middlebackground);
 	foreground = initbackgrounds(t_foreground, 160, 4.1, { -650,-150 },0,2, foreground);
@@ -92,7 +92,7 @@ void Alpino::update(RenderTexture2D *fbo)
 		
 		KilluaJump();
 		DrawTextureRec(killua, killuaData.rec, killuaData.pos, WHITE);
-
+		
 		for (int i = 0; i < sizeofnebula; i++)
 		{
 			if (CheckCollisionCircleRec(nebulas[i]->Hitbox.pos, nebulas[i]->Hitbox.radius, Rectangle{ killuaData.pos.x + 38,killuaData.pos.y,(float)(killua.width / 6) - 38,(float)killua.height - 20 }))
@@ -164,7 +164,7 @@ void Alpino::RotateNebula(Animdata data, int windowwidth,int index)
 }
 Animdata Alpino::updateAnimdata(Animdata data, float dt, int maxframe, bool onair)
 {
-	if (onair)
+	if (!isOnGround(killuaData, GetMonitorHeight(GetCurrentMonitor()) - killua.height + 3))
 		return data;
 	else
 	{
@@ -182,8 +182,7 @@ Animdata Alpino::updateAnimdata(Animdata data, float dt, int maxframe, bool onai
 }
 Vector2 Alpino::uptadebackgrounds(std::vector<AnimBackground>& data, float dt, bool duplicate)
 {
-	
-	
+
 	if (duplicate)
 	{
 		data[1].pos.x = data[0].pos.x + data[1].texture.width * data[1].scale;
@@ -268,22 +267,27 @@ inline void Alpino::drawStones(std::vector<AnimBackground> data, unsigned int si
 }
 inline void Alpino::KilluaJump()
 {
+	current_high = killuaData.pos.y;
 	killuaData.pos.y += killuaData.speed * dt;
+	
 	if (isOnGround(killuaData, GetMonitorHeight(GetCurrentMonitor()) - killua.height + 3))
 	{
 		killuaData.speed = 0;
 		onAir = false;
+		isplayerjumped = false;
 	}
 	else
 	{
 		killuaData.speed += gravity * dt;
+	}		
+	if (max_high >= current_high)
 		onAir = true;
+	if (IsKeyDown(KEY_SPACE) && !onAir && !isplayerjumped)
+	{	
+			killuaData.speed = -300;
 	}
-
-	if (IsKeyPressed(KEY_SPACE) && !onAir)
-	{
-		killuaData.speed = -600;
-	}
+	else if (IsKeyReleased(KEY_SPACE))
+			isplayerjumped = true;
 
 }
 Vec2<int> getWsize()

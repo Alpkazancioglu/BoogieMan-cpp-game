@@ -122,7 +122,9 @@ public:
 	bool allow = true;
 	bool onAir = false;
 	bool collusion = false;
-
+	float max_high;
+	float current_high;
+	bool isplayerjumped;
 	Texture2D killua;
 	Texture2D far_background;
 	Texture2D middle_background;
