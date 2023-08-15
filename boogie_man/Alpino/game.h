@@ -39,8 +39,8 @@ public:
 		this->Texture = &Texture_i;
 
 		this->Data.Set({ 0,0 ,(float)Texture->width / 8 , (float)Texture->height / 8 },
-			           { getWsize().x + (300 * NebulaCount) - 400 ,getWsize().y - Texture->height / 8 - 10},
-			           0, 0, 1.0 / 12.0, 400);
+			           { getWsize().x + (300 * NebulaCount) - 400 ,getWsize().y - Texture->height / 8 },
+			           0, 0, 1.0 / 12.0, 180);
 
 		Hitbox.radius = 67.0 / 2;
 		Hitbox.Data.pos.x = Data.pos.x + (Hitbox.radius + 18);
@@ -99,7 +99,8 @@ public:
 	Texture2D nebula;
 	Texture2D t_Fronstones;
 	Texture2D CastleTexture;
-
+	Texture2D t_woodenlog;
+	GameObject wooden_log;
 	Castle Castle_;
 
 	std::vector<AnimBackground> farbackground;

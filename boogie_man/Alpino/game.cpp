@@ -22,9 +22,11 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	far_background = LoadTexture(GetRelativeTexturePath("forestfarback.png").c_str());
 	t_Fronstones = LoadTexture(GetRelativeTexturePath("front_rocks.png").c_str());
 	CastleTexture = LoadTexture(GetRelativeTexturePath("CastleBack_small.png").c_str());
-
+	t_woodenlog = LoadTexture(GetRelativeTexturePath("wooden_log.png").c_str());
 	Castle_.SetTexture(CastleTexture);
+	wooden_log.SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
 
+	
 	for (size_t i = 0; i < 8; i++)
 	{
 		nebulas[i] = std::make_unique<Nebula>(WindowHeight, WindowWidth , nebula);
@@ -55,6 +57,7 @@ Alpino::~Alpino()
 	UnloadTexture(middle_background);
 	UnloadTexture(t_foreground);
 	UnloadTexture(t_Fronstones);
+	UnloadTexture(t_woodenlog);
 	
 }
 
@@ -93,10 +96,12 @@ void Alpino::update(RenderTexture2D *fbo)
 		
 		for (int i = 0; i < sizeofnebula; i++)
 		{
-			nebulas[i]->Data = updateAnimdata(nebulas[i]->Data, dt, sizeofnebula);
+			//nebulas[i]->Data = updateAnimdata(nebulas[i]->Data, dt, sizeofnebula);
+			nebulas[i]->Data.rec.width = t_woodenlog.width;
+			nebulas[i]->Data.rec.height = t_woodenlog.height;
 			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed * dt;
 			nebulas[i]->Hitbox.Data.pos.x -= nebulas[i]->Data.speed * dt;
-			DrawTextureRec(nebula, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
+			DrawTextureRec(t_woodenlog, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
 			//DrawCircleV(nebulas[i]->Hitbox.Data.pos, nebulas[i]->Hitbox.radius, WHITE);
 		}
 		
