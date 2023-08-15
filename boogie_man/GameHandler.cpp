@@ -1,33 +1,18 @@
 #include "GameHandler.h"
-#include "ECS.h"
-#include "FileHandler.h"
 #include <algorithm>
-#include <vector>
 #include <unordered_map>
-#include "Alpino/far_background.h"
-#include "Alpino/killua.h"
-#include "Alpino/nebula.h"
-#include "Alpino/game.h"
-#include "Alpino/middle_Background.h"
-#include "Alpino/foreground.h"
-#include "StopWatch.h"
-#include <vector>
-#include <memory>
-
-
-ecs *newecs;
-std::unique_ptr<Alpino> AlpinoGame;
-RenderTexture2D* target;
-float scale;
-stopwatch_t newwatch;
-static int newrandomnum = 0;
+#include "core/far_background.h"
+#include "core/killua.h"
+#include "core/nebula.h"
+#include "core/middle_Background.h"
+#include "core/foreground.h"
 
 game::game(int screenw_a, int screenh_a)
 {
 	 screenw = screenw_a;
 	 screenh = screenh_a;
-	 MainCamera = new Camera2D;
 	 newecs = new ecs;
+	 MainCamera = std::make_unique<Camera2D>();
 	 screenrec.width =  screenw;
 	 screenrec.height =  screenh;
 	 screenrec.x = 0;
@@ -57,9 +42,10 @@ void game::initialize(const char* windowname , int fps)
 
 
 
-	target = new RenderTexture;
+	target = std::make_shared<RenderTexture>();
 	*target = LoadRenderTexture(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
 	SetTextureFilter(target->texture,TEXTURE_FILTER_BILINEAR);
+
 
 	MainCamera->target = { 0,0 };
 	MainCamera->offset = { (float)GetMonitorWidth(GetCurrentMonitor()) / 2, (float)GetMonitorHeight(GetCurrentMonitor()) };
@@ -116,15 +102,10 @@ void game::draw()
 	BeginMode2D(*MainCamera);
 
 	////          GAME_DRAW_CAMERA             /////
-	AlpinoGame->update(target);
-	AlpinoGame->draw(target);
+	AlpinoGame->update(target.get());
+	AlpinoGame->draw(target.get());
 	/////            ////                     /////
 
-
-
-	
-
-	
 
 	EndMode2D();
 
@@ -164,9 +145,7 @@ void game::draw()
 
 void game::Clean(game* currentgame)
 {
-	delete MainCamera;
 	UnloadRenderTexture(*target);
-	delete target;
 	delete newecs;
 	delete currentgame;
 
@@ -323,50 +302,6 @@ void game::fullscreen_g(int screenw_a, int screenh_a)
 	
 }
 
-int GiveRandomNumf(int min, int max, int sizeofarray, bool exclude_on_off, int numtoexclude) {
 
-	static int timesthisfunctioncalled = 0;
-	int* randarray = new int[sizeofarray];
-	*randarray = NULL;
-	int finalresult;
-
-	srand((unsigned)time(NULL));
-	if (min < max)
-	{
-		for (size_t i = 0; i < sizeofarray; i++)
-		{
-			randarray[i] = rand() % max;
-
-			if (randarray[i] < min)
-			{
-				i--;
-			}
-			if (exclude_on_off == true)
-			{
-				if (randarray[i] == numtoexclude)
-				{
-
-					i--;
-
-				}
-
-			}
-
-		}
-	}
-
-	timesthisfunctioncalled++;
-
-	if (timesthisfunctioncalled > sizeofarray - 1)
-	{
-		timesthisfunctioncalled = (timesthisfunctioncalled % (sizeofarray - 1));
-	}
-
-	finalresult = randarray[timesthisfunctioncalled];
-	delete[] randarray;
-	return finalresult;
-
-
-}
 
 

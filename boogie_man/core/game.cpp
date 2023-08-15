@@ -7,7 +7,6 @@
 #include "foreground.h"
 #include <string>
 
-
 Alpino::Alpino(Vec2<int> WindowSize)
 {
 	
@@ -27,6 +26,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	wooden_log.SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
 
 	
+
 	for (size_t i = 0; i < 8; i++)
 	{
 		nebulas[i] = std::make_unique<Nebula>(WindowHeight, WindowWidth , nebula);
@@ -80,7 +80,12 @@ void Alpino::update(RenderTexture2D *fbo)
 			Castle_.Move({ getWsize().x   , 100});
 		}
 
+		//Castle_.RenderDuplicateEx(5, 20, WHITE);
+		//Castle_.RenderDuplicateRandomDisEx(5, 0, 300, 100, WHITE);
+
+
 		this->Castle_.IncrementPosition({ -(float)Castle_.Data.speed * dt , 0 });
+		//this->Castle_.RenderDuplicateExLoop(1, 20, WHITE, -Castle_.Texture->width * 0.7f, { getWsize().x   , 100 }, dt);
 		DrawTextureEx(CastleTexture, Castle_.Data.pos, 0.0f, 0.7f, {200,200,200,210});
 
 		DrawandUptadebackgrounds(farbackground, dt , { 255,255,255,245 });

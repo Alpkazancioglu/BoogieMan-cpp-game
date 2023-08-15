@@ -30,13 +30,16 @@
     <ClCompile Include="ECS.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Alpino\game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="StopWatch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,24 +56,6 @@
     <ClInclude Include="ECS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Alpino\far_background.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Alpino\foreground.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Alpino\game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Alpino\killua.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Alpino\middle_Background.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Alpino\nebula.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="VectorMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -78,6 +63,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\far_background.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\foreground.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\killua.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\middle_Background.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\nebula.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

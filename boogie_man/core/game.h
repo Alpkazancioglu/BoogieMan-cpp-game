@@ -1,8 +1,8 @@
 #pragma once
 #include "raylib.h"
 #include <vector>
-#include "../VectorMath.h"
 #include "nebula.h"
+#include "../VectorMath.h"
 #include <memory>
 #include <string>
 #include "../GameObject.h"
@@ -12,7 +12,6 @@
 #define INGAME 1
 #define ENDPAGE 2
 
-typedef unsigned int uint;
 Vec2<float> getWsize();
 
 class FrontStone
@@ -66,6 +65,8 @@ public:
 	Castle()
 	{
 		this->SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
+		this->rotation = 0.0f;
+		this->scale = 0.7f;
 	}
 
 
