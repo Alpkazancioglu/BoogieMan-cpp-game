@@ -25,7 +25,22 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	Castle_.SetTexture(CastleTexture);
 	wooden_log.SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
 
-	
+
+	foreground_o.SetTexture(t_foreground);
+	foreground_o.scale = 4.0f;
+	foreground_o.SetAnimData({}, { 0, -80}, 0, 0, 0, 160);
+	foreground_o.rotation = 0.0f;
+
+	middlebackground_o.SetTexture(middle_background);
+	middlebackground_o.scale = 4.0f;
+	middlebackground_o.SetAnimData({}, { 0, -80 }, 0, 0, 0, 110);
+	middlebackground_o.rotation = 0.0f;
+
+	farbackground_o.SetTexture(far_background);
+	farbackground_o.scale = 4.0f;
+	farbackground_o.SetAnimData({}, { 0, -80 }, 0, 0, 0, 80);
+	farbackground_o.rotation = 0.0f;
+
 
 	for (size_t i = 0; i < 8; i++)
 	{
@@ -42,9 +57,11 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		0 // speed
 	};
 	max_high = killuaData.pos.y - 100;
-	farbackground = initbackgrounds(far_background, 80, 4.1,{-10,-80},0,2, farbackground);
+
+	/*farbackground = initbackgrounds(far_background, 80, 4.1,{-10,-80},0,2, farbackground);
 	middlebackground = initbackgrounds(middle_background, 110, 4.1, { -10,-80 },0,2, middlebackground);
 	foreground = initbackgrounds(t_foreground, 160, 4.1, { -10,-80 },0,2, foreground);
+	*/
 	fronstones = initbackgrounds(t_Fronstones, 200, 1, { 0,getWsize().y - (float)t_Fronstones.height}, 0, 5, fronstones);
 	
 }
@@ -77,23 +94,39 @@ void Alpino::update(RenderTexture2D *fbo)
 		std::cout << MoveEverything << std::endl;
 		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 90  , 125 , 151 , 255 } , {195 , 251 , 255 , 255});
 
+
 		if (Castle_.Data.pos.x <= -Castle_.Texture->width * 0.7f)
 		{
 			Castle_.Move({ getWsize().x   , 100});
 		}
-
-		//Castle_.RenderDuplicateEx(5, 20, WHITE);
-		//Castle_.RenderDuplicateRandomDisEx(5, 0, 300, 100, WHITE);
-
-
 		this->Castle_.IncrementPosition({ -(float)Castle_.Data.speed * dt , 0 });
-		//this->Castle_.RenderDuplicateExLoop(1, 20, WHITE, -Castle_.Texture->width * 0.7f, { getWsize().x   , 100 }, dt);
 		DrawTextureEx(CastleTexture, Castle_.Data.pos, 0.0f, 0.7f, {200,200,200,210});
 
-		//DrawandUptadebackgrounds(farbackground, dt , { 255,255,255,245 });
-		//DrawandUptadebackgrounds(middlebackground, dt , WHITE);
-		DrawandUptadebackgrounds(foreground, dt , WHITE);
-	
+		
+
+
+		if (MoveEverything == MOVING_FRONT)
+		{
+			farbackground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
+			middlebackground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
+			foreground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
+		}
+		else if (MoveEverything == IDLE)
+		{
+			farbackground_o.RenderDuplicateEx(2, 0, WHITE);
+			middlebackground_o.RenderDuplicateEx(2, 0, WHITE);
+			foreground_o.RenderDuplicateEx(2, 0, WHITE);
+		}
+		else if (MoveEverything == MOVING_BACK)
+		{
+			farbackground_o.RenderDuplicateExLoop(2, 0, WHITE,  0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80}, dt, true);
+			middlebackground_o.RenderDuplicateExLoop(2, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80 }, dt, true);
+			foreground_o.RenderDuplicateExLoop(2, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80 }, dt, true);
+		}
+
+		
+
+
 		for (int i = 0; i < 5; i++)
 		{
 			fronstones[i].pos = moveStones(fronstones, dt, 1, i);

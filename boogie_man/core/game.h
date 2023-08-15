@@ -8,9 +8,14 @@
 #include "../GameObject.h"
 #define REAL  0
 #define DUPLICATE  1
+
 #define INITIALPAGE 0
 #define INGAME 1
 #define ENDPAGE 2
+
+#define IDLE 0
+#define MOVING_FRONT 1
+#define MOVING_BACK -1
 
 Vec2<float> getWsize();
 
@@ -110,6 +115,11 @@ public:
 	std::vector<AnimBackground> middlebackground;
 	std::vector<AnimBackground> foreground;
 	std::vector<AnimBackground> fronstones;
+
+	GameObject farbackground_o;
+	GameObject middlebackground_o;
+	GameObject foreground_o;
+
 	std::unique_ptr<Nebula> nebulas[8];
 
 	Animdata killuaData;
@@ -135,13 +145,13 @@ public:
 	void movecharacter()
 	{
 		if (IsKeyDown(KEY_D))
-			MoveEverything = 1;
+			MoveEverything = MOVING_FRONT;
 
 		else if (IsKeyDown(KEY_A))
-			MoveEverything = -1;
+			MoveEverything = MOVING_BACK;
 		
 		else if (IsKeyUp(KEY_A) && IsKeyUp(KEY_D))
-			MoveEverything = 0;
+			MoveEverything = IDLE;
 	
 	}
 	

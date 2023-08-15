@@ -32,7 +32,7 @@ void GameObject::RenderDuplicateEx(int16 duplicateCount, float distance , Color 
 	{
 		for (size_t i = 0; i < duplicateCount; i++)
 		{
-			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width) + distance , this->Data.pos.y }, this->rotation, this->scale, tint);
+			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + distance , this->Data.pos.y }, this->rotation, this->scale, tint);
 		}
 	}
 	else
@@ -42,21 +42,30 @@ void GameObject::RenderDuplicateEx(int16 duplicateCount, float distance , Color 
 }
 
 //Draw the object with duplicates and also update the position as a loop
-void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint , float EndDes , Vector2 StartDes , float dt)
+void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint , float EndDes , Vector2 StartDes , float dt, bool ReverseSpeed)
 {
-
-	if (this->Data.pos.x <= EndDes)
+	if (ReverseSpeed)
 	{
-		this->Move(StartDes);
+		if (this->Data.pos.x >= EndDes)
+		{
+			this->Move(StartDes);
+		}
+		this->IncrementPosition({ (float)this->Data.speed * dt , 0 });
 	}
-
-	this->IncrementPosition({ -(float)this->Data.speed * 8 * dt , 0 });
+	else
+	{
+		if (this->Data.pos.x <= EndDes)
+		{
+			this->Move(StartDes);
+		}
+		this->IncrementPosition({ -(float)this->Data.speed * dt , 0 });
+	}
 
 	if (this->Texture != nullptr)
 	{
 		for (size_t i = 0; i < duplicateCount; i++)
 		{
-			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width) + distance , this->Data.pos.y }, this->rotation, this->scale, tint);
+			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + distance , this->Data.pos.y }, this->rotation, this->scale, tint);
 		}
 	}
 	else
@@ -82,7 +91,7 @@ void GameObject::RenderDuplicateRandomDisEx(unsigned int duplicateCount , int Di
 	{
 		for (size_t i = DistanceArrayoffset; i < duplicateCount; i++)
 		{
-			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width) + RandomDistances.at(i) , this->Data.pos.y}, this->rotation, this->scale, tint);
+			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + RandomDistances.at(i) , this->Data.pos.y}, this->rotation, this->scale, tint);
 		}
 	}
 	else
@@ -98,7 +107,7 @@ void GameObject::RenderDuplicateRec(int16 duplicateCount, float distance, Color 
 	{
 		for (size_t i = 0; i < duplicateCount; i++)
 		{
-			DrawTextureRec(*this->Texture,this->Data.rec,{ this->Data.pos.x + (i * this->Texture->width) + distance , this->Data.pos.y }, tint);
+			DrawTextureRec(*this->Texture,this->Data.rec,{ this->Data.pos.x + (i * this->Texture->width * scale) + distance , this->Data.pos.y }, tint);
 		
 		}
 	}

@@ -67,7 +67,7 @@ public:
 	void InitializeTextureFromHeader(unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 	void InitializeTextureFromFile(const char* FilePath);
 	void RenderDuplicateEx(int16 duplicateCount, float distance, Color tint);
-	void RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes , float dt);
+	void RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes , float dt , bool ReverseSpeed);
 	void AllocateRandomDistance(unsigned int duplicateCount, int min, int max, int RandomArrayCount);
 	void RenderDuplicateRandomDisEx(unsigned int duplicateCount, int DistanceArrayoffset, Color tint);
 	void RenderDuplicateRec(int16 duplicateCount, float distance, Color tint);
