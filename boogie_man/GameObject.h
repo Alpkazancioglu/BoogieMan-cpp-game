@@ -80,8 +80,6 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
-	
-
 	Texture2D *Texture = nullptr;
 	Animdata Data;
 	CollisionBox Hitbox;

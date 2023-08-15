@@ -44,6 +44,7 @@ void GameObject::RenderDuplicateEx(int16 duplicateCount, float distance , Color 
 //Draw the object with duplicates and also update the position as a loop
 void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint , float EndDes , Vector2 StartDes , float dt, bool ReverseSpeed)
 {
+	
 	if (ReverseSpeed)
 	{
 		if (this->Data.pos.x >= EndDes)

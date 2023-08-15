@@ -22,10 +22,27 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	t_Fronstones = LoadTexture(GetRelativeTexturePath("front_rocks.png").c_str());
 	CastleTexture = LoadTexture(GetRelativeTexturePath("CastleBack_small.png").c_str());
 	t_woodenlog = LoadTexture(GetRelativeTexturePath("wooden_log.png").c_str());
+	t_fog_cloud = LoadTexture(GetRelativeTexturePath("mist_atlas.png").c_str());
+	
+	
 	Castle_.SetTexture(CastleTexture);
 	wooden_log.SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
+	
+	fog_cloud.SetTexture(t_fog_cloud);
+	fog_cloud.scale = 1.0f;
+	fog_cloud.SetAnimData(
+		{0,0,(float)t_fog_cloud.width/4 ,(float)t_fog_cloud.height},
+		{0,450},
+		0,
+		0,
+		1.0 / 12.0,
+		135
+	);
+	fog_cloud.rotation = 0.0f;
 
-
+	
+	
+	
 	foreground_o.SetTexture(t_foreground);
 	foreground_o.scale = 4.0f;
 	foreground_o.SetAnimData({}, { 0, -80}, 0, 0, 0, 160);
@@ -40,8 +57,8 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	farbackground_o.scale = 4.0f;
 	farbackground_o.SetAnimData({}, { 0, -80 }, 0, 0, 0, 80);
 	farbackground_o.rotation = 0.0f;
-
-
+	
+	
 	for (size_t i = 0; i < 8; i++)
 	{
 		nebulas[i] = std::make_unique<Nebula>(WindowHeight, WindowWidth , nebula);
@@ -49,7 +66,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 
 	killuaData =
 	{
-		{0.0f,0.0f,(float)killua.width / 6,(float)killua.height}, // rectangle
+		{0.0f,0.0f,(float)(killua.width / 6),(float)killua.height}, // rectangle
 		{(getWsize().x / 2) - (killua.width / 12),getWsize().y - killua.height-26}, // pos
 		0, // frame
 		0, // running time
@@ -57,11 +74,6 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		0 // speed
 	};
 	max_high = killuaData.pos.y - 100;
-
-	/*farbackground = initbackgrounds(far_background, 80, 4.1,{-10,-80},0,2, farbackground);
-	middlebackground = initbackgrounds(middle_background, 110, 4.1, { -10,-80 },0,2, middlebackground);
-	foreground = initbackgrounds(t_foreground, 160, 4.1, { -10,-80 },0,2, foreground);
-	*/
 	fronstones = initbackgrounds(t_Fronstones, 200, 1, { 0,getWsize().y - (float)t_Fronstones.height}, 0, 5, fronstones);
 	
 }
@@ -93,37 +105,42 @@ void Alpino::update(RenderTexture2D *fbo)
 		movecharacter();
 		std::cout << MoveEverything << std::endl;
 		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 90  , 125 , 151 , 255 } , {195 , 251 , 255 , 255});
-
+		
 
 		if (Castle_.Data.pos.x <= -Castle_.Texture->width * 0.7f)
 		{
 			Castle_.Move({ getWsize().x   , 100});
 		}
-		this->Castle_.IncrementPosition({ -(float)Castle_.Data.speed * dt , 0 });
+		this->Castle_.IncrementPosition({ -(float)Castle_.Data.speed* MoveEverything * dt , 0 });
 		DrawTextureEx(CastleTexture, Castle_.Data.pos, 0.0f, 0.7f, {200,200,200,210});
-
+		fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
 		
-
-
+		fog_cloud.IncrementPosition({ -(float)fog_cloud.Data.speed / 200 ,0});
+		
 		if (MoveEverything == MOVING_FRONT)
 		{
-			farbackground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
-			middlebackground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
-			foreground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
+			//farbackground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
+			//middlebackground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
+			fog_cloud.RenderDuplicateExLoop(2, 0, BLACK, -(float)(fog_cloud.Data.rec.width * fog_cloud.scale), {0 , 450}, dt, false);
+			//foreground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
+			
 		}
 		else if (MoveEverything == IDLE)
 		{
-			farbackground_o.RenderDuplicateEx(2, 0, WHITE);
-			middlebackground_o.RenderDuplicateEx(2, 0, WHITE);
-			foreground_o.RenderDuplicateEx(2, 0, WHITE);
+			//farbackground_o.RenderDuplicateEx(2, 0, WHITE);
+			//middlebackground_o.RenderDuplicateEx(2, 0, WHITE);
+			fog_cloud.RenderDuplicateEx(2,0, BLACK);
+			//foreground_o.RenderDuplicateEx(2, 0, WHITE);
 		}
+		
 		else if (MoveEverything == MOVING_BACK)
 		{
-			farbackground_o.RenderDuplicateExLoop(2, 0, WHITE,  0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80}, dt, true);
-			middlebackground_o.RenderDuplicateExLoop(2, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80 }, dt, true);
-			foreground_o.RenderDuplicateExLoop(2, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80 }, dt, true);
+			//farbackground_o.RenderDuplicateExLoop(2, 0, WHITE,  0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80}, dt, true);
+			//middlebackground_o.RenderDuplicateExLoop(2, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80 }, dt, true);
+			fog_cloud.RenderDuplicateExLoop(2, 0, BLACK,0 ,{- (float)(fog_cloud.Data.rec.width * fog_cloud.scale) , 450 }, dt, true);
+			//foreground_o.RenderDuplicateExLoop(2, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80 }, dt, true);
 		}
-
+		
 		
 
 
@@ -132,7 +149,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			fronstones[i].pos = moveStones(fronstones, dt, 1, i);
 			drawStones(fronstones, 5);
 		}
-		killuaData = updateAnimdata(killuaData, dt, 5);
+		
 		
 		for (int i = 0; i < sizeofnebula; i++)
 		{
@@ -150,7 +167,10 @@ void Alpino::update(RenderTexture2D *fbo)
 			RotateNebula(nebulas[i]->Data, getWsize().x , i);
 		}
 		
+		
+		
 		KilluaJump();
+		killuaData = updateAnimdata(killuaData, dt, 5);
 		DrawTextureRec(killua, killuaData.rec, killuaData.pos, WHITE);
 		
 		for (int i = 0; i < sizeofnebula; i++)
@@ -225,7 +245,7 @@ void Alpino::RotateNebula(Animdata data, int windowwidth,int index)
 }
 Animdata Alpino::updateAnimdata(Animdata data, float dt, int maxframe)
 {
-	if (!isOnGround(killuaData, getWsize().y) && data == killuaData || MoveEverything == 0)
+	if (!isOnGround(killuaData, getWsize().y) && data == killuaData)
 		return data;	
 	else
 	{
