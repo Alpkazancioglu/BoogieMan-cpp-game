@@ -15,7 +15,7 @@ public:
 	float runningtime;
 	float updatetime;
 	int speed;
-
+	
 	void Set(Rectangle rec_i, Vector2 pos_i, int frame_i, float runningtime_i, float updatetime_i, int speed_i) {
 		rec = rec_i;
 		pos = pos_i;
@@ -24,6 +24,7 @@ public:
 		updatetime = updatetime_i;
 		speed = speed_i;
 	};
+	
 	bool operator ==(Animdata& other)
 	{
 		bool result = rec.x == other.rec.x && rec.y == other.rec.y && rec.width == other.rec.width && rec.height == other.rec.height && pos.x == other.pos.x &&
@@ -56,9 +57,7 @@ struct AnimBackground
 	float scale;
 	float distance;
 	bool duplicate;
-
 };
-
 
 class GameObject
 {
@@ -81,11 +80,13 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
+	
 
 	Texture2D *Texture = nullptr;
 	Animdata Data;
 	CollisionBox Hitbox;
 	float scale;
 	float rotation;
+	
 	std::vector<int> RandomDistances;
 };

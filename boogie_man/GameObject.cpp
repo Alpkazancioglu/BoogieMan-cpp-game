@@ -164,6 +164,8 @@ void GameObject::SetTexture(Texture2D &texture)
 	this->Texture = &texture;
 }
 
+
+
 //Load a texture from a header file consists of an image byte array
 void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
 {

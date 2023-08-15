@@ -73,6 +73,8 @@ void Alpino::update(RenderTexture2D *fbo)
 
 		dt = GetFrameTime();
 
+		movecharacter();
+		std::cout << MoveEverything << std::endl;
 		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 90  , 125 , 151 , 255 } , {195 , 251 , 255 , 255});
 
 		if (Castle_.Data.pos.x <= -Castle_.Texture->width * 0.7f)
@@ -88,8 +90,8 @@ void Alpino::update(RenderTexture2D *fbo)
 		//this->Castle_.RenderDuplicateExLoop(1, 20, WHITE, -Castle_.Texture->width * 0.7f, { getWsize().x   , 100 }, dt);
 		DrawTextureEx(CastleTexture, Castle_.Data.pos, 0.0f, 0.7f, {200,200,200,210});
 
-		DrawandUptadebackgrounds(farbackground, dt , { 255,255,255,245 });
-		DrawandUptadebackgrounds(middlebackground, dt , WHITE);
+		//DrawandUptadebackgrounds(farbackground, dt , { 255,255,255,245 });
+		//DrawandUptadebackgrounds(middlebackground, dt , WHITE);
 		DrawandUptadebackgrounds(foreground, dt , WHITE);
 	
 		for (int i = 0; i < 5; i++)
@@ -104,7 +106,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			//nebulas[i]->Data = updateAnimdata(nebulas[i]->Data, dt, sizeofnebula);
 			nebulas[i]->Data.rec.width = t_woodenlog.width;
 			nebulas[i]->Data.rec.height = t_woodenlog.height;
-			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed * dt;
+			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed *MoveEverything* dt;
 			nebulas[i]->Hitbox.Data.pos.x -= nebulas[i]->Data.speed * dt;
 			DrawTextureRec(t_woodenlog, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
 			//DrawCircleV(nebulas[i]->Hitbox.Data.pos, nebulas[i]->Hitbox.radius, WHITE);
@@ -154,9 +156,6 @@ void Alpino::draw(RenderTexture2D* fbo)
 	}
 }
 
-
-
-
 bool Alpino::isObjectOut(Animdata data)
 {
 	return (data.pos.x <= -nebulas[0]->Data.rec.width);
@@ -193,8 +192,8 @@ void Alpino::RotateNebula(Animdata data, int windowwidth,int index)
 }
 Animdata Alpino::updateAnimdata(Animdata data, float dt, int maxframe)
 {
-	if (!isOnGround(killuaData, getWsize().y) && data == killuaData)
-		return data;
+	if (!isOnGround(killuaData, getWsize().y) && data == killuaData || MoveEverything == 0)
+		return data;	
 	else
 	{
 		data.runningtime += dt;
@@ -210,26 +209,27 @@ Animdata Alpino::updateAnimdata(Animdata data, float dt, int maxframe)
 	}
 }
 Vector2 Alpino::uptadebackgrounds(std::vector<AnimBackground>& data, float dt, bool duplicate)
-{
-
-	if (duplicate)
-	{
-		data[1].pos.x = data[0].pos.x + data[1].texture.width * data[1].scale;
-		return data[1].pos;
-	}
-	else
-	{
-		data[0].pos.x -= data[0].speed * dt;
-		if (data[0].pos.x - data[REAL].origin.x<= -data[0].texture.width * data[0].scale)
+{	
+		
+		if (duplicate)
 		{
-			return data[REAL].origin;
+			data[1].pos.x = data[0].pos.x + data[1].texture.width * data[1].scale;
+			return data[1].pos;
 		}
+
 		else
 		{
-			return data[0].pos;
+			data[0].pos.x -= data[0].speed * MoveEverything * dt;
+			if (data[0].pos.x - data[REAL].origin.x <= -data[0].texture.width * data[0].scale)
+			{
+				return data[REAL].origin;
+			}
+			else
+			{
+				return data[0].pos;
+			}
 		}
-	}
-
+		
 }
 
 
@@ -273,7 +273,7 @@ void Alpino::DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float d
 }
 inline Vector2 Alpino::moveStones(std::vector<AnimBackground>& data, float dt, float scale, int index)
 {
-	data[index].pos.x -= data[index].speed * dt;
+	data[index].pos.x -= data[index].speed *MoveEverything* dt;
 	if (data[index].pos.x <= -data[index].texture.width)
 	{
 		int temp;

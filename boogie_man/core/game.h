@@ -83,6 +83,7 @@ public:
 	int WindowHeight;
 	const int sizeofnebula = 8;
 	int gravity = 1000;
+	int MoveEverything = 1;
 	float posy = WindowHeight - 40;
 	float posx = WindowWidth / 2;
 	float far_bgx = 0;
@@ -93,6 +94,7 @@ public:
 	float max_high;
 	float current_high;
 	bool isplayerjumped;
+	
 	Texture2D killua;
 	Texture2D far_background;
 	Texture2D middle_background;
@@ -108,7 +110,6 @@ public:
 	std::vector<AnimBackground> middlebackground;
 	std::vector<AnimBackground> foreground;
 	std::vector<AnimBackground> fronstones;
-	
 	std::unique_ptr<Nebula> nebulas[8];
 
 	Animdata killuaData;
@@ -131,6 +132,19 @@ public:
 	void DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt , Color tint);
 	void drawStones(std::vector <AnimBackground> data, unsigned int size);
 	void KilluaJump();
+	void movecharacter()
+	{
+		if (IsKeyDown(KEY_D))
+			MoveEverything = 1;
+
+		else if (IsKeyDown(KEY_A))
+			MoveEverything = -1;
+		
+		else if (IsKeyUp(KEY_A) && IsKeyUp(KEY_D))
+			MoveEverything = 0;
+	
+	}
+	
 	Vector2 moveStones(std::vector<AnimBackground>& data, float dt, float scale, int index);
 private:
 
