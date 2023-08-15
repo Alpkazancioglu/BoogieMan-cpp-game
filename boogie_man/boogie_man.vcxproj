@@ -140,7 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Alpino\game.cpp" />
+    <ClCompile Include="core\game.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="FileHandler.cpp" />
     <ClCompile Include="GameEntity.cpp" />
@@ -148,14 +148,15 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Maincpp.cpp" />
     <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="VectorMath.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Alpino\far_background.h" />
-    <ClInclude Include="Alpino\foreground.h" />
-    <ClInclude Include="Alpino\game.h" />
-    <ClInclude Include="Alpino\killua.h" />
-    <ClInclude Include="Alpino\middle_Background.h" />
-    <ClInclude Include="Alpino\nebula.h" />
+    <ClInclude Include="core\far_background.h" />
+    <ClInclude Include="core\foreground.h" />
+    <ClInclude Include="core\game.h" />
+    <ClInclude Include="core\killua.h" />
+    <ClInclude Include="core\middle_Background.h" />
+    <ClInclude Include="core\nebula.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="FileHandler.h" />
     <ClInclude Include="GameEntity.h" />

@@ -1,5 +1,8 @@
 #pragma once
 #include <raylib.h>
+#include <vector>
+
+typedef short int int16;
 
 void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 
@@ -61,19 +64,28 @@ class GameObject
 {
 public:
 	GameObject();
+	~GameObject();
 	void InitializeTextureFromHeader(unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 	void InitializeTextureFromFile(const char* FilePath);
+	void RenderDuplicateEx(int16 duplicateCount, float distance, Color tint);
+	void RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes , float dt);
+	void AllocateRandomDistance(unsigned int duplicateCount, int min, int max, int RandomArrayCount);
+	void RenderDuplicateRandomDisEx(unsigned int duplicateCount, int DistanceArrayoffset, Color tint);
+	void RenderDuplicateRec(int16 duplicateCount, float distance, Color tint);
 	void Move(Vector2 pos);
 	void IncrementPosition(Vector2 IncrAmount);
 	void Scale(float scale);
 	void Rotate(float degree);
 	void SetAnimData(Rectangle rec,Vector2 pos,int frame,float runningtime,float updatetime,int speed);
-	void MoveVerticaly();
+	Texture2D* GetTexture();
+	void ReferenceCopyTexture(GameObject& Object2CopyTo);
+	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
 
-	Texture2D *Texture;
+	Texture2D *Texture = nullptr;
 	Animdata Data;
 	CollisionBox Hitbox;
 	float scale;
 	float rotation;
+	std::vector<int> RandomDistances;
 };

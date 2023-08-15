@@ -1,10 +1,13 @@
-#ifndef VECTORMATH
-#define VECTORMATH 1
-
-#if VECTORMATH
+#pragma once
+#include <random>
+#include <time.h>
 
 #define MAX(a, b) ((a)>(b)? (a) : (b))
 #define MIN(a, b) ((a)<(b)? (a) : (b))
+
+typedef unsigned int uint;
+typedef short int int16;
+typedef long long int int64;
 
 template<typename T>
 struct Vec2
@@ -45,6 +48,7 @@ struct Vec2
 	{
 		return false;
 	}
+
 };
 
 template<typename T>
@@ -157,7 +161,7 @@ struct Vec_n
 	}
 };
 
+int GiveRandomNumf(int min, int max, int sizeofarray, bool exclude_on_off, int numtoexclude);
 
-#endif // INITIALIZE
 
-#endif 
+

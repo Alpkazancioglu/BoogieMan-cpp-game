@@ -4,6 +4,11 @@
 #include <raylib.h>
 #include <vector>
 #include <bitset>
+#include <memory>
+#include "core/game.h"
+#include "ECS.h"
+#include "FileHandler.h"
+#include "StopWatch.h"
 
 class somestaticclass
 {
@@ -35,11 +40,17 @@ private:
 
 	int screenw;
 	int screenh;
-	Camera2D* MainCamera;
+	std::unique_ptr<Camera2D> MainCamera;
 	Rectangle screenrec;
+
+	ecs* newecs;
+	std::unique_ptr<Alpino> AlpinoGame;
+	std::shared_ptr<RenderTexture2D> target;
+	float scale;
+	stopwatch_t newwatch;
 };
 
-int GiveRandomNumf(int min, int max, int sizeofarray, bool exclude_on_off, int numtoexclude);
+
 
 
 
