@@ -32,41 +32,27 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	Castle_.Init();
 	wooden_log.SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
 	
-	fog_cloud.SetTexture(t_fog_cloud);
-	fog_cloud.scale = 1.0f;
-	fog_cloud.SetAnimData(
-		{0,0,(float)t_fog_cloud.width/4 ,(float)t_fog_cloud.height},
+	fog_cloud.SetBaseAttributes(t_fog_cloud, 1.0f,
+		{ {0,0,(float)t_fog_cloud.width / 4 ,(float)t_fog_cloud.height},
 		{0,450},
 		0,
 		0,
 		0.5f,
 		135
-	);
-	fog_cloud.rotation = 0.0f;
+		},
+		0.0f);
 
 	
 	float ForestScale = 3.8f;
 	
-	foreground_o.SetTexture(t_foreground);
-	foreground_o.scale = ForestScale;
-	foreground_o.SetAnimData({}, { 0, FORESTPOSY }, 0, 0, 0, 160);
-	foreground_o.rotation = 0.0f;
+	foreground_o.SetBaseAttributes(t_foreground, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 160 }, 0.0f);
+	middlebackground_o.SetBaseAttributes(middle_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 110 }, 0.0f);
+	farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
+	Clouds.SetBaseAttributes(Clouds_t, 1.0f, ObjectData({}, { 0, -20 }, 0, 0, 0, 80), 0.0f);
+	farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
 
-	middlebackground_o.SetTexture(middle_background);
-	middlebackground_o.scale = ForestScale;
-	middlebackground_o.SetAnimData({}, { 0, FORESTPOSY }, 0, 0, 0, 110);
-	middlebackground_o.rotation = 0.0f;
 
-	farbackground_o.SetTexture(far_background);
-	farbackground_o.scale = ForestScale;
-	farbackground_o.SetAnimData({}, { 0, FORESTPOSY }, 0, 0, 0, 80);
-	farbackground_o.rotation = 0.0f;
 
-	Clouds.SetTexture(Clouds_t);
-	Clouds.scale = 1.0f;
-	Clouds.SetAnimData({}, { 0, -20 }, 0, 0, 0, 80);
-	Clouds.rotation = 0.0f;
-	
 	for (size_t i = 0; i < 8; i++)
 	{
 		nebulas[i] = std::make_unique<Nebula>(WindowHeight, WindowWidth , nebula);
@@ -112,10 +98,10 @@ void Alpino::update(RenderTexture2D *fbo)
 
 		movecharacter();
 		std::cout << MoveEverything << std::endl;
-		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 45  , 84 , 133 , 255 } , {195 , 251 , 255 , 255});
+		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 80  , 121 , 170 , 255 } , {179 , 181 , 199 , 255});
 		
 
-		Clouds.RenderDuplicateEx(1, 0, { 255,255,255,220 });
+		Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 
 		if (Castle_.Data.pos.x <= -Castle_.Texture->width * 0.7f)
 		{
@@ -227,7 +213,7 @@ void Alpino::draw(RenderTexture2D* fbo)
 	}
 }
 
-bool Alpino::isObjectOut(Animdata data)
+bool Alpino::isObjectOut(ObjectData data)
 {
 	return (data.pos.x <= -nebulas[0]->Data.rec.width);
 }
@@ -248,7 +234,7 @@ std::string Alpino::GetRelativeTexturePath(std::string textureName)
 	return (WorkingDir + "/textures/" + textureName);
 }
 
-void Alpino::RotateNebula(Animdata data, int windowwidth,int index)
+void Alpino::RotateNebula(ObjectData data, int windowwidth,int index)
 {
 	if (isObjectOut(data))
 	{
@@ -261,7 +247,7 @@ void Alpino::RotateNebula(Animdata data, int windowwidth,int index)
 	}
 	
 }
-Animdata Alpino::updateAnimdata(Animdata data, float dt, int maxframe)
+ObjectData Alpino::updateAnimdata(ObjectData data, float dt, int maxframe)
 {
 	if (!isOnGround(killuaData, getWsize().y) && data == killuaData)
 		return data;	
@@ -329,7 +315,7 @@ std::vector<AnimBackground> Alpino::initbackgrounds(Texture2D texture, float spe
 	return data;
 }
 
-bool Alpino::isOnGround(Animdata data, float windowHeight)
+bool Alpino::isOnGround(ObjectData data, float windowHeight)
 {
 	return data.pos.y + data.rec.height >= getWsize().y-26;
 }

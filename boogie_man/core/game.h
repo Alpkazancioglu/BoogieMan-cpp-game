@@ -125,10 +125,11 @@ public:
 	GameObject fog_cloud;
 	GameObject wooden_log;
 	GameObject Clouds;
+	GameObject FrontVegetation;
 
 	std::unique_ptr<Nebula> nebulas[8];
 
-	Animdata killuaData;
+	ObjectData killuaData;
 
 	Alpino(Vec2<int> WindowSize);
 	~Alpino();
@@ -136,12 +137,12 @@ public:
 	void update(RenderTexture2D* fbo);
 	void draw(RenderTexture2D* fbo);
 	
-	bool isObjectOut(Animdata data);
+	bool isObjectOut(ObjectData data);
     std::string GetRelativeTexturePath(std::string textureName);
-	bool isOnGround(Animdata data, float windowHeight);
-	Animdata updateAnimdata(Animdata data, float dt, int maxframe);
+	bool isOnGround(ObjectData data, float windowHeight);
+	ObjectData updateAnimdata(ObjectData data, float dt, int maxframe);
 	Vector2 uptadebackgrounds(std::vector<AnimBackground>& data, float dt, bool duplicate);
-	void RotateNebula(Animdata data, int windowwidth,int index);
+	void RotateNebula(ObjectData data, int windowwidth,int index);
 	
 
 	std::vector<AnimBackground> initbackgrounds(Texture2D texture, float speed,float scale, Vector2 pos,float distance,int arraysize, std::vector <AnimBackground>& data);
