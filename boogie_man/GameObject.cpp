@@ -7,12 +7,14 @@
 
 GameObject::GameObject()
 {
+
 }
 
 GameObject::~GameObject()
 {
 	
 }
+
 
 //Initialize the texture from a header file consists of a byte array
 void GameObject::InitializeTextureFromHeader(unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
@@ -208,6 +210,14 @@ void GameObject::IncrementPosition(Vector2 IncrAmount)
 void GameObject::Scale(float scale)
 {
 	this->scale = scale;
+}
+
+void GameObject::SetBaseAttributes(Texture2D& Texture, float scale, ObjectData data, float rotation)
+{
+	this->SetTexture(Texture);
+	this->scale = scale;
+	this->Data(data);
+	this->rotation = rotation;
 }
 
 //Set the rotation in degrees

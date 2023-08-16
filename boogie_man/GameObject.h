@@ -6,7 +6,7 @@ typedef short int int16;
 
 void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 
-class Animdata
+class ObjectData
 {
 public:
 	Rectangle rec;
@@ -15,7 +15,22 @@ public:
 	float runningtime;
 	float updatetime;
 	int speed;
-	
+
+	ObjectData()
+	{
+
+	}
+
+	ObjectData(Rectangle rec_i, Vector2 pos_i, int frame_i, float runningtime_i, float updatetime_i, int speed_i)
+	{
+		rec = rec_i;
+		pos = pos_i;
+		frame = frame_i;
+		runningtime = runningtime_i;
+		updatetime = updatetime_i;
+		speed = speed_i;
+	}
+
 	void Set(Rectangle rec_i, Vector2 pos_i, int frame_i, float runningtime_i, float updatetime_i, int speed_i) {
 		rec = rec_i;
 		pos = pos_i;
@@ -25,19 +40,32 @@ public:
 		speed = speed_i;
 	};
 	
-	bool operator ==(Animdata& other)
+	bool operator ==(ObjectData& other)
 	{
 		bool result = rec.x == other.rec.x && rec.y == other.rec.y && rec.width == other.rec.width && rec.height == other.rec.height && pos.x == other.pos.x &&
 			pos.y == other.pos.y && frame == other.frame && runningtime == other.runningtime && updatetime == other.updatetime && speed == other.speed;
 		return result;
 	}
+
+	void operator ()(ObjectData& other)
+	{
+		rec = other.rec;
+		pos = other.pos;
+		frame = other.frame;
+		runningtime = other.runningtime;
+		updatetime = other.updatetime;
+		speed = other.speed;
+	}
+
+	
+
 };
 
 class CollisionBox
 {
 public:
 
-	Animdata Data;
+	ObjectData Data;
 	float radius;
 
 	void Set(const Rectangle rec_i, const Vector2 pos_i, int frame_i, float runningtime_i, float updatetime_i, float speed_i, float radius_i)
@@ -75,14 +103,16 @@ public:
 	void Move(Vector2 pos);
 	void IncrementPosition(Vector2 IncrAmount);
 	void Scale(float scale);
+	void SetBaseAttributes(Texture2D& Texture, float scale, ObjectData data, float rotation);
 	void Rotate(float degree);
 	void SetAnimData(Rectangle rec,Vector2 pos,int frame,float runningtime,float updatetime,int speed);
 	Texture2D* GetTexture();
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
+
 	Texture2D *Texture = nullptr;
-	Animdata Data;
+	ObjectData Data;
 	CollisionBox Hitbox;
 	float scale;
 	float rotation;
