@@ -19,18 +19,6 @@
 
 Vec2<float> getWsize();
 
-class FrontStone
-{
-	Texture2D* Texture;
-	
-	
-	FrontStone(Texture2D Texture_i)
-	{
-		this->Texture = &Texture_i;
-	}
-
-};
-
 
 class Nebula : public GameObject
 {
@@ -63,22 +51,6 @@ class Character
 
 };
 
-class Castle : public GameObject
-{
-public:
-
-	
-	void Init()
-	{
-		//this->SetAnimData({ 0,0,(float)this->Texture->width , (float)this->Texture->height }, { getWsize().x / 2 , 0 }, 0, 0, 0, 10);
-		this->SetAnimData({ 0,0,(float)this->Texture->width , (float)this->Texture->height }, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
-		this->rotation = 0.0f;
-		this->scale = 0.7f;
-	}
-
-
-};
-
 
 class Alpino
 {
@@ -102,22 +74,16 @@ public:
 	float current_high;
 	bool isplayerjumped;
 	
-	Texture2D killua;
+	Texture2D killua_t;
 	Texture2D far_background;
 	Texture2D middle_background;
 	Texture2D t_foreground;
 	Texture2D nebula;
-	Texture2D t_Fronstones;
+	Texture2D FrontVegetation_t;
 	Texture2D CastleTexture;
 	Texture2D t_woodenlog;
 	Texture2D t_fog_cloud;
 	Texture2D Clouds_t;
-	Castle Castle_;
-
-	std::vector<AnimBackground> farbackground;
-	std::vector<AnimBackground> middlebackground;
-	std::vector<AnimBackground> foreground;
-	std::vector<AnimBackground> fronstones;
 
 	GameObject farbackground_o;
 	GameObject middlebackground_o;
@@ -126,10 +92,12 @@ public:
 	GameObject wooden_log;
 	GameObject Clouds;
 	GameObject FrontVegetation;
-
+	GameObject castle;
+	
+		
 	std::unique_ptr<Nebula> nebulas[8];
 
-	ObjectData killuaData;
+	GameObject killua;
 
 	Alpino(Vec2<int> WindowSize);
 	~Alpino();
@@ -141,28 +109,9 @@ public:
     std::string GetRelativeTexturePath(std::string textureName);
 	bool isOnGround(ObjectData data, float windowHeight);
 	ObjectData updateAnimdata(ObjectData data, float dt, int maxframe);
-	Vector2 uptadebackgrounds(std::vector<AnimBackground>& data, float dt, bool duplicate);
-	void RotateNebula(ObjectData data, int windowwidth,int index);
-	
-
-	std::vector<AnimBackground> initbackgrounds(Texture2D texture, float speed,float scale, Vector2 pos,float distance,int arraysize, std::vector <AnimBackground>& data);
-	void DrawandUptadebackgrounds(std::vector<AnimBackground>& data, float dt , Color tint);
-	void drawStones(std::vector <AnimBackground> data, unsigned int size);
-	void KilluaJump();
-	void movecharacter()
-	{
-		if (IsKeyDown(KEY_D))
-			MoveEverything = MOVING_FRONT;
-
-		else if (IsKeyDown(KEY_A))
-			MoveEverything = MOVING_BACK;
-		
-		else if (IsKeyUp(KEY_A) && IsKeyUp(KEY_D))
-			MoveEverything = IDLE;
-	
-	}
-	
-	Vector2 moveStones(std::vector<AnimBackground>& data, float dt, float scale, int index);
+	void RotateNebula(ObjectData data, int windowwidth,int index);	
+	void CharacterMovement();
+	void movecharacter();
 private:
 
 };
