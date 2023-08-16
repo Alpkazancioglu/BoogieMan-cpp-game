@@ -111,6 +111,7 @@ public:
 	Texture2D CastleTexture;
 	Texture2D t_woodenlog;
 	Texture2D t_fog_cloud;
+	Texture2D Clouds_t;
 	Castle Castle_;
 
 	std::vector<AnimBackground> farbackground;
@@ -123,6 +124,7 @@ public:
 	GameObject foreground_o;
 	GameObject fog_cloud;
 	GameObject wooden_log;
+	GameObject Clouds;
 
 	std::unique_ptr<Nebula> nebulas[8];
 

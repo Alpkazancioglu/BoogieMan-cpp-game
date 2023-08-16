@@ -10,7 +10,7 @@ game* currentgame;
 int main()
 {
 	currentgame = new game(512, 380);
-	currentgame->initialize("Alpino", 60);
+	currentgame->initialize("BoogieMan", 60);
 
 	while (!WindowShouldClose())
 	{

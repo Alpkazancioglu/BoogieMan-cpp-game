@@ -25,6 +25,8 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	CastleTexture = LoadTexture(GetRelativeTexturePath("CastleBack_small.png").c_str());
 	t_woodenlog = LoadTexture(GetRelativeTexturePath("wooden_log.png").c_str());
 	t_fog_cloud = LoadTexture(GetRelativeTexturePath("mist_atlas.png").c_str());
+	Clouds_t = LoadTexture(GetRelativeTexturePath("Clouds.png").c_str());
+
 	
 	Castle_.SetTexture(CastleTexture);
 	Castle_.Init();
@@ -59,7 +61,11 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	farbackground_o.scale = ForestScale;
 	farbackground_o.SetAnimData({}, { 0, FORESTPOSY }, 0, 0, 0, 80);
 	farbackground_o.rotation = 0.0f;
-	
+
+	Clouds.SetTexture(Clouds_t);
+	Clouds.scale = 1.0f;
+	Clouds.SetAnimData({}, { 0, -20 }, 0, 0, 0, 80);
+	Clouds.rotation = 0.0f;
 	
 	for (size_t i = 0; i < 8; i++)
 	{
@@ -106,8 +112,10 @@ void Alpino::update(RenderTexture2D *fbo)
 
 		movecharacter();
 		std::cout << MoveEverything << std::endl;
-		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 90  , 125 , 151 , 255 } , {195 , 251 , 255 , 255});
+		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 45  , 84 , 133 , 255 } , {195 , 251 , 255 , 255});
 		
+
+		Clouds.RenderDuplicateEx(1, 0, { 255,255,255,220 });
 
 		if (Castle_.Data.pos.x <= -Castle_.Texture->width * 0.7f)
 		{
@@ -123,6 +131,8 @@ void Alpino::update(RenderTexture2D *fbo)
 		{
 			fog_cloud.Move({ 0 , 450 });
 		}
+
+		//Clouds.RenderDuplicateExLoop(2)
 
 		if (MoveEverything == MOVING_FRONT)
 		{
