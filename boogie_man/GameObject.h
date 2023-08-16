@@ -68,9 +68,10 @@ public:
 	void InitializeTextureFromFile(const char* FilePath);
 	void RenderDuplicateEx(int16 duplicateCount, float distance, Color tint);
 	void RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes , float dt , bool ReverseSpeed);
+	void RenderDuplicateRecLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes, float dt, bool ReverseSpeed, int atlas_cut_x = 1, int atlas_cut_y = 1);
 	void AllocateRandomDistance(unsigned int duplicateCount, int min, int max, int RandomArrayCount);
 	void RenderDuplicateRandomDisEx(unsigned int duplicateCount, int DistanceArrayoffset, Color tint);
-	void RenderDuplicateRec(int16 duplicateCount, float distance, Color tint);
+	void RenderDuplicateRec(int16 duplicateCount, float distance, Color tint, int atlas_cut_x = 1, int atlas_cut_y = 1);
 	void Move(Vector2 pos);
 	void IncrementPosition(Vector2 IncrAmount);
 	void Scale(float scale);

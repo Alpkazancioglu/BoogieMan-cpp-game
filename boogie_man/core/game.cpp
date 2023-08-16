@@ -7,6 +7,8 @@
 #include "foreground.h"
 #include <string>
 
+#define FORESTPOSY 0
+
 Alpino::Alpino(Vec2<int> WindowSize)
 {
 	
@@ -24,8 +26,8 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	t_woodenlog = LoadTexture(GetRelativeTexturePath("wooden_log.png").c_str());
 	t_fog_cloud = LoadTexture(GetRelativeTexturePath("mist_atlas.png").c_str());
 	
-	
 	Castle_.SetTexture(CastleTexture);
+	Castle_.Init();
 	wooden_log.SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
 	
 	fog_cloud.SetTexture(t_fog_cloud);
@@ -35,27 +37,27 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		{0,450},
 		0,
 		0,
-		1.0 / 12.0,
+		0.5f,
 		135
 	);
 	fog_cloud.rotation = 0.0f;
 
 	
-	
+	float ForestScale = 3.8f;
 	
 	foreground_o.SetTexture(t_foreground);
-	foreground_o.scale = 4.0f;
-	foreground_o.SetAnimData({}, { 0, -80}, 0, 0, 0, 160);
+	foreground_o.scale = ForestScale;
+	foreground_o.SetAnimData({}, { 0, FORESTPOSY }, 0, 0, 0, 160);
 	foreground_o.rotation = 0.0f;
 
 	middlebackground_o.SetTexture(middle_background);
-	middlebackground_o.scale = 4.0f;
-	middlebackground_o.SetAnimData({}, { 0, -80 }, 0, 0, 0, 110);
+	middlebackground_o.scale = ForestScale;
+	middlebackground_o.SetAnimData({}, { 0, FORESTPOSY }, 0, 0, 0, 110);
 	middlebackground_o.rotation = 0.0f;
 
 	farbackground_o.SetTexture(far_background);
-	farbackground_o.scale = 4.0f;
-	farbackground_o.SetAnimData({}, { 0, -80 }, 0, 0, 0, 80);
+	farbackground_o.scale = ForestScale;
+	farbackground_o.SetAnimData({}, { 0, FORESTPOSY }, 0, 0, 0, 80);
 	farbackground_o.rotation = 0.0f;
 	
 	
@@ -112,37 +114,43 @@ void Alpino::update(RenderTexture2D *fbo)
 			Castle_.Move({ getWsize().x   , 100});
 		}
 		this->Castle_.IncrementPosition({ -(float)Castle_.Data.speed* MoveEverything * dt , 0 });
-		DrawTextureEx(CastleTexture, Castle_.Data.pos, 0.0f, 0.7f, {200,200,200,210});
+		this->Castle_.RenderDuplicateEx(1, 0, { 200,200,200,210 });
+
 		fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
-		
-		fog_cloud.IncrementPosition({ -(float)fog_cloud.Data.speed / 200 ,0});
-		
+
+		fog_cloud.IncrementPosition({ -(float)fog_cloud.Data.speed / 600 ,0});
+		if (fog_cloud.Data.pos.x <= -(float)(fog_cloud.Data.rec.width * fog_cloud.scale))
+		{
+			fog_cloud.Move({ 0 , 450 });
+		}
+
 		if (MoveEverything == MOVING_FRONT)
 		{
-			//farbackground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
-			//middlebackground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
-			fog_cloud.RenderDuplicateExLoop(2, 0, BLACK, -(float)(fog_cloud.Data.rec.width * fog_cloud.scale), {0 , 450}, dt, false);
-			//foreground_o.RenderDuplicateExLoop(2, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , -80 }, dt, false);
+
+			farbackground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
+			middlebackground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
+			fog_cloud.RenderDuplicateRecLoop(3, 0, { 255,255,255,220 }, -(float)(fog_cloud.Data.rec.width * fog_cloud.scale), { 0 , 450 }, dt, false , 4);
+			foreground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
 			
 		}
 		else if (MoveEverything == IDLE)
 		{
-			//farbackground_o.RenderDuplicateEx(2, 0, WHITE);
-			//middlebackground_o.RenderDuplicateEx(2, 0, WHITE);
-			fog_cloud.RenderDuplicateEx(2,0, BLACK);
-			//foreground_o.RenderDuplicateEx(2, 0, WHITE);
+			farbackground_o.RenderDuplicateEx(3, 0, WHITE);
+			middlebackground_o.RenderDuplicateEx(3, 0, WHITE);
+			fog_cloud.RenderDuplicateRec(3, 0, {255,255,255,220}, 4, 1);
+			foreground_o.RenderDuplicateEx(3, 0, WHITE);
 		}
 		
 		else if (MoveEverything == MOVING_BACK)
 		{
-			//farbackground_o.RenderDuplicateExLoop(2, 0, WHITE,  0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80}, dt, true);
-			//middlebackground_o.RenderDuplicateExLoop(2, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80 }, dt, true);
-			fog_cloud.RenderDuplicateExLoop(2, 0, BLACK,0 ,{- (float)(fog_cloud.Data.rec.width * fog_cloud.scale) , 450 }, dt, true);
-			//foreground_o.RenderDuplicateExLoop(2, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , -80 }, dt, true);
+
+			farbackground_o.RenderDuplicateExLoop(3, 0, WHITE,  0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , FORESTPOSY }, dt, true);
+			middlebackground_o.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , FORESTPOSY }, dt, true);
+			fog_cloud.RenderDuplicateRecLoop(3, 0, { 255,255,255,220 }, 0, { -(float)(fog_cloud.Data.rec.width * fog_cloud.scale) , 450 }, dt, true , 4);
+			foreground_o.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , FORESTPOSY }, dt, true);
 		}
 		
 		
-
 
 		for (int i = 0; i < 5; i++)
 		{

@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include <raymath.h>
 #include <iostream>
 #include "VectorMath.h"
 
@@ -32,7 +33,14 @@ void GameObject::RenderDuplicateEx(int16 duplicateCount, float distance , Color 
 	{
 		for (size_t i = 0; i < duplicateCount; i++)
 		{
-			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + distance , this->Data.pos.y }, this->rotation, this->scale, tint);
+			float internalDistance = distance;
+
+			if (i == 0)
+			{
+				internalDistance = 0;
+			}
+
+			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + internalDistance , this->Data.pos.y }, this->rotation, this->scale, tint);
 		}
 	}
 	else
@@ -66,7 +74,14 @@ void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Col
 	{
 		for (size_t i = 0; i < duplicateCount; i++)
 		{
-			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + distance , this->Data.pos.y }, this->rotation, this->scale, tint);
+			float internalDistance = distance;
+
+			if (i == 0)
+			{
+				internalDistance = 0;
+			}
+
+			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + internalDistance , this->Data.pos.y }, this->rotation, this->scale, tint);
 		}
 	}
 	else
@@ -74,6 +89,48 @@ void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Col
 		std::cerr << "Cannot Render " << typeid(this).name() << " :: Texture was nullptr" << std::endl;
 	}
 
+}
+
+void GameObject::RenderDuplicateRecLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes, float dt, bool ReverseSpeed , int atlas_cut_x, int atlas_cut_y)
+{
+	if (ReverseSpeed)
+	{
+		if (this->Data.pos.x >= EndDes)
+		{
+			this->Move(StartDes);
+		}
+		this->IncrementPosition({ (float)this->Data.speed * dt , 0 });
+	}
+	else
+	{
+		if (this->Data.pos.x <= EndDes)
+		{
+			this->Move(StartDes);
+		}
+		this->IncrementPosition({ -(float)this->Data.speed * dt , 0 });
+	}
+
+	if (this->Texture != nullptr)
+	{
+		for (size_t i = 0; i < duplicateCount; i++)
+		{
+			float internalDistance = distance;
+
+			if (i == 0)
+			{
+				internalDistance = 0;
+			}
+
+			Rectangle destRec = { this->Data.pos.x + ((i * (this->Texture->width / atlas_cut_x) * scale)) + internalDistance ,this->Data.pos.y , ((float)this->Texture->width / atlas_cut_x) * scale , ((float)this->Texture->height / atlas_cut_y) * scale };
+			Vector2 CenterPoint = { 0 , 0 };
+
+			DrawTexturePro(*this->Texture, this->Data.rec, destRec, CenterPoint, rotation, tint);
+		}
+	}
+	else
+	{
+		std::cerr << "Cannot Render " << typeid(this).name() << " :: Texture was nullptr" << std::endl;
+	}
 }
 
 //Fill the random distance vector with random integers
@@ -86,13 +143,21 @@ void GameObject::AllocateRandomDistance(unsigned int DistanceCount, int min, int
 }
 
 //Draw the object with its duplicates with random distances between them (Required to use AllocateRandomDistance() in init faze)
-void GameObject::RenderDuplicateRandomDisEx(unsigned int duplicateCount , int DistanceArrayoffset, Color tint)
+void GameObject::RenderDuplicateRandomDisEx(unsigned int duplicateCount , int DistanceArrayoffset, Color tint )
 {
 	if (this->Texture != nullptr)
 	{
+
 		for (size_t i = DistanceArrayoffset; i < duplicateCount; i++)
 		{
-			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + RandomDistances.at(i) , this->Data.pos.y}, this->rotation, this->scale, tint);
+			float internalDistance = RandomDistances.at(i);
+
+			if (i == 0)
+			{
+				internalDistance = 0;
+			}
+
+			DrawTextureEx(*this->Texture, { this->Data.pos.x + (i * this->Texture->width * scale) + internalDistance , this->Data.pos.y}, this->rotation, this->scale, tint);
 		}
 	}
 	else
@@ -102,14 +167,23 @@ void GameObject::RenderDuplicateRandomDisEx(unsigned int duplicateCount , int Di
 }
 
 //Draw the object with duplicates
-void GameObject::RenderDuplicateRec(int16 duplicateCount, float distance, Color tint)
+void GameObject::RenderDuplicateRec(int16 duplicateCount, float distance, Color tint, int atlas_cut_x  , int atlas_cut_y )
 {
 	if (this->Texture != nullptr)
 	{
 		for (size_t i = 0; i < duplicateCount; i++)
 		{
-			DrawTextureRec(*this->Texture,this->Data.rec,{ this->Data.pos.x + (i * this->Texture->width * scale) + distance , this->Data.pos.y }, tint);
-		
+			float internalDistance = distance;
+
+			if (i == 0)
+			{
+				internalDistance = 0;
+			}
+
+			Rectangle destRec = { this->Data.pos.x + ((i * (this->Texture->width / atlas_cut_x) * scale)) + internalDistance ,this->Data.pos.y , ((float)this->Texture->width / atlas_cut_x) * scale , ((float)this->Texture->height / atlas_cut_y) * scale };
+			Vector2 CenterPoint = { 0 , 0 };
+
+			DrawTexturePro(*this->Texture,  this->Data.rec  ,destRec,CenterPoint,rotation, tint);
 		}
 	}
 	else

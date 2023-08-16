@@ -67,9 +67,11 @@ class Castle : public GameObject
 {
 public:
 
-	Castle()
+	
+	void Init()
 	{
-		this->SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
+		//this->SetAnimData({ 0,0,(float)this->Texture->width , (float)this->Texture->height }, { getWsize().x / 2 , 0 }, 0, 0, 0, 10);
+		this->SetAnimData({ 0,0,(float)this->Texture->width , (float)this->Texture->height }, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
 		this->rotation = 0.0f;
 		this->scale = 0.7f;
 	}
