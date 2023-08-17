@@ -15,7 +15,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	this->WindowWidth = WindowSize.x;
 	this->WindowHeight = WindowSize.y;
 
-	LoadTexture2DfromHeader(&killua_t, KILLUA_FORMAT, KILLUA_HEIGHT, KILLUA_WIDTH, KILLUA_DATA, 1);
+	//LoadTexture2DfromHeader(&killua_t, KILLUA_FORMAT, KILLUA_HEIGHT, KILLUA_WIDTH, KILLUA_DATA, 1);
 	LoadTexture2DfromHeader(&nebula, NEBULA_FORMAT, NEBULA_HEIGHT, NEBULA_WIDTH, NEBULA_DATA, 1);
 	
 	t_foreground = LoadTexture(GetRelativeTexturePath("forest.png").c_str());
@@ -26,6 +26,8 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	t_woodenlog = LoadTexture(GetRelativeTexturePath("wooden_log.png").c_str());
 	t_fog_cloud = LoadTexture(GetRelativeTexturePath("mist_atlas.png").c_str());
 	Clouds_t = LoadTexture(GetRelativeTexturePath("Clouds.png").c_str());
+	killua_t = LoadTexture(GetRelativeTexturePath("scarfy.png").c_str());
+
 
 	wooden_log.SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
 	float ForestScale = 3.8f;
@@ -71,9 +73,9 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	killua.SetTexture(killua_t);
 	killua.SetAnimData(
 		
-			{0.0f,0.0f,(float)(killua_t.width / 6),(float)killua_t.height}, // rectangle
+			{0.0f,0.0f,(float)(killua_t.width / 12),(float)killua_t.height}, // rectangle
 			{(getWsize().x / 2) - (killua_t.width / 12),getWsize().y - killua_t.height - 26}, // pos
-			0, // frame
+			5, // frame number
 			0, // running time
 			1.0 / 12.0, // uptade time
 			0 // speed
@@ -106,7 +108,8 @@ void Alpino::update(RenderTexture2D *fbo)
 		dt = GetFrameTime();
 
 		
-		std::cout << MoveEverything << std::endl;
+		std::cout << killua.Data.frame << std::endl;
+		
 		DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 80  , 121 , 170 , 255 } , {179 , 181 , 199 , 255});
 		
 		//animation uptade for textures
@@ -165,7 +168,7 @@ void Alpino::update(RenderTexture2D *fbo)
 		}
 		
 		CharacterMovement();
-		killua.Data = updateAnimdata(killua.Data, dt, 5);
+		killua.uptadeCharacterTexture(dt, 5);
 		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos, WHITE);
 		
 		for (int i = 0; i < sizeofnebula; i++)
@@ -238,11 +241,13 @@ void Alpino::RotateNebula(ObjectData data, int windowwidth,int index)
 	}
 	
 }
-ObjectData Alpino::updateAnimdata(ObjectData data, float dt, int maxframe)
+ObjectData  Alpino::updateAnimdata(ObjectData data, float dt, int maxframe)
 {
-	if (!isOnGround(killua.Data, getWsize().y) && data == killua.Data || data==killua.Data && MoveEverything == IDLE)
+
+	if (!isOnGround(killua.Data) && data == killua.Data || data == killua.Data && MoveEverything == IDLE)
+	{
 		return data;
-	
+	}
 	else
 	{
 		data.runningtime += dt;
@@ -253,12 +258,15 @@ ObjectData Alpino::updateAnimdata(ObjectData data, float dt, int maxframe)
 			data.frame++;
 			if (data.frame > maxframe)
 				data.frame = 0;
+			return data;
+
 		}
-		return data;
 	}
 }
 
-bool Alpino::isOnGround(ObjectData data, float windowHeight)
+
+
+bool Alpino::isOnGround(ObjectData data)
 {
 	return data.pos.y + data.rec.height >= getWsize().y-26;
 }
@@ -267,10 +275,10 @@ bool Alpino::isOnGround(ObjectData data, float windowHeight)
 inline void Alpino::CharacterMovement()
 {
 	movecharacter();
+	killua.moveKillua();
 	current_high = killua.Data.pos.y;
 	killua.Data.pos.y += killua.Data.speed * dt;
-	
-	if (isOnGround(killua.Data,getWsize().y))
+	if (isOnGround(killua.Data))
 	{
 		killua.Data.speed = 0;
 		onAir = false;
@@ -293,15 +301,16 @@ inline void Alpino::CharacterMovement()
 inline void Alpino::movecharacter()
 {
 	if (IsKeyDown(KEY_D))
-		MoveEverything = MOVING_FRONT;
+		MoveEverything = 1;
 
 	else if (IsKeyDown(KEY_A))
-		MoveEverything = MOVING_BACK;
+		MoveEverything = -1;
 
 	else if (IsKeyUp(KEY_A) && IsKeyUp(KEY_D))
-		MoveEverything = IDLE;
+		MoveEverything = 0;
 
 }
+
 Vec2<float> getWsize()
 {
 	Vec2<float> temp(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));

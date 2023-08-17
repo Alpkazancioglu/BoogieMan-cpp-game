@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <vector>
 
+
 typedef short int int16;
 
 void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
@@ -15,7 +16,7 @@ public:
 	float runningtime;
 	float updatetime;
 	int speed;
-
+	
 	ObjectData()
 	{
 
@@ -90,8 +91,10 @@ struct AnimBackground
 class GameObject
 {
 public:
+	
 	GameObject();
 	~GameObject();
+	int MoveEverything = 1;
 	void InitializeTextureFromHeader(unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 	void InitializeTextureFromFile(const char* FilePath);
 	void RenderDuplicateEx(int16 duplicateCount, float distance, Color tint);
@@ -110,10 +113,14 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
-
+	void uptadeCharacterTexture(float dt,int maxframe);
+	void moveKillua();
+	bool ischaracterGround();
+	
 	Texture2D *Texture = nullptr;
 	ObjectData Data;
 	CollisionBox Hitbox;
+	
 	float scale;
 	float rotation;
 	

@@ -62,7 +62,6 @@ public:
 	int WindowHeight;
 	const int sizeofnebula = 8;
 	int gravity = 1000;
-	int MoveEverything = 1;
 	float posy = WindowHeight - 40;
 	float posx = WindowWidth / 2;
 	float far_bgx = 0;
@@ -73,6 +72,7 @@ public:
 	float max_high;
 	float current_high;
 	bool isplayerjumped;
+	int MoveEverything = 1;
 	
 	Texture2D killua_t;
 	Texture2D far_background;
@@ -93,22 +93,23 @@ public:
 	GameObject Clouds;
 	GameObject FrontVegetation;
 	GameObject castle;
-	
+	GameObject killua;
 		
+	
 	std::unique_ptr<Nebula> nebulas[8];
 
-	GameObject killua;
+	
 
 	Alpino(Vec2<int> WindowSize);
 	~Alpino();
+	
 
 	void update(RenderTexture2D* fbo);
 	void draw(RenderTexture2D* fbo);
-	
-	bool isObjectOut(ObjectData data);
     std::string GetRelativeTexturePath(std::string textureName);
-	bool isOnGround(ObjectData data, float windowHeight);
 	ObjectData updateAnimdata(ObjectData data, float dt, int maxframe);
+	bool isOnGround(ObjectData data);
+	bool isObjectOut(ObjectData data);
 	void RotateNebula(ObjectData data, int windowwidth,int index);	
 	void CharacterMovement();
 	void movecharacter();

@@ -258,6 +258,85 @@ void GameObject::SetTexture(Texture2D &texture)
 	this->Texture = &texture;
 }
 
+void GameObject::uptadeCharacterTexture(float dt, int maxframe)
+{
+	
+		if (!ischaracterGround())
+		{	
+			
+			if (MoveEverything == 1)
+			{
+				this->Data.frame = 0;
+				this->Data.rec.x = Data.frame * Data.rec.width;
+			
+			}
+			else if (MoveEverything == -1)
+			{
+				this->Data.frame = 11;
+				this->Data.rec.x = Data.frame * Data.rec.width;
+			}	
+		}
+		
+		
+		else if (MoveEverything == 1)
+		{
+			this->Data.runningtime += dt;
+			
+			if (Data.frame > maxframe)
+			{
+				this->Data.frame = 0;
+				this->Data.rec.x = Data.frame * Data.rec.width;
+			}
+			
+			if (Data.updatetime - Data.runningtime <= 0)
+			{
+				this->Data.runningtime = 0.0;
+				this->Data.rec.x = Data.frame * Data.rec.width;
+				this->Data.frame++;
+				if (Data.frame > maxframe)
+					this->Data.frame = 0;
+				
+			}
+		}
+		else if (MoveEverything == -1)
+		{
+
+			this->Data.runningtime += dt;
+			if (Data.frame <= maxframe)
+			{
+				this->Data.frame = maxframe + 1;
+				this->Data.rec.x = Data.frame * Data.rec.width;
+			}
+			if (Data.updatetime - Data.runningtime <= 0)
+			{
+				this->Data.runningtime = 0.0;
+				this->Data.rec.x = Data.frame * Data.rec.width;
+				this->Data.frame++;
+				if (Data.frame > (maxframe * 2) + 1)
+					this->Data.frame = maxframe + 1;
+			}
+		}
+
+}
+	
+
+
+bool GameObject::ischaracterGround()
+{
+		return Data.pos.y + Data.rec.height >= GetMonitorHeight(GetCurrentMonitor()) - 26;
+}
+
+void GameObject::moveKillua()
+{
+	if (IsKeyDown(KEY_D))
+		MoveEverything = 1;
+
+	else if (IsKeyDown(KEY_A))
+		MoveEverything = -1;
+
+	else if (IsKeyUp(KEY_A) && IsKeyUp(KEY_D))
+		MoveEverything = 0;
+}
 
 
 //Load a texture from a header file consists of an image byte array
