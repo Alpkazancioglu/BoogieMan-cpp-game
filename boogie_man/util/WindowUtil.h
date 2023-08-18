@@ -28,6 +28,7 @@ public:
 	Camera camera = { 0 };
 	Model skybox;
 	Shader CubeMapShader;
+    float CameraRotationSpeed = 0.0001f;
 
 	cubemap(const char* fileName)
 	{
@@ -39,13 +40,11 @@ public:
         camera.fovy = 45.0f;                                
         camera.projection = CAMERA_PERSPECTIVE;             
 
-        // Load skybox model
         Mesh cube = GenMeshCube(1.0f, 1.0f, 1.0f);
         skybox = LoadModelFromMesh(cube);
 
         bool useHDR = false;
 
-       
         skybox.materials[0].shader = LoadShader(TextFormat(GetRelativeTexturePath("skybox.vs").c_str(), GLSL_VERSION),
             TextFormat(GetRelativeTexturePath("skybox.fs").c_str(), GLSL_VERSION));
 
@@ -53,11 +52,9 @@ public:
 
         MaterialMapIndex cubeMapIndex = MATERIAL_MAP_CUBEMAP;
 
-
         SetShaderValue(skybox.materials[0].shader, GetShaderLocation(skybox.materials[0].shader, "environmentMap"), &cubeMapIndex, SHADER_UNIFORM_INT);
         SetShaderValue(skybox.materials[0].shader, GetShaderLocation(skybox.materials[0].shader, "doGamma"), &UseHDRuniform, SHADER_UNIFORM_INT);
         SetShaderValue(skybox.materials[0].shader, GetShaderLocation(skybox.materials[0].shader, "doGamma"), &UseHDRuniform, SHADER_UNIFORM_INT);
-
        
         CubeMapShader = LoadShader(TextFormat(GetRelativeTexturePath("cubemap.vs").c_str(), GLSL_VERSION),
             TextFormat(GetRelativeTexturePath("cubemap.fs").c_str(), GLSL_VERSION));
@@ -70,54 +67,30 @@ public:
 
         Texture2D panorama;
 
-        
-         Image img = LoadImage(GetRelativeTexturePath("StandardCubeMap.png").c_str());
-         skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = LoadTextureCubemap(img, CUBEMAP_LAYOUT_AUTO_DETECT);    // CUBEMAP_LAYOUT_PANORAMA
-         UnloadImage(img);
-        
-         SetCameraMode(camera, CAMERA_ORBITAL);
-            
+        Image img = LoadImage(GetRelativeTexturePath("StandardCubeMap.png").c_str());
+        skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = LoadTextureCubemap(img, CUBEMAP_LAYOUT_AUTO_DETECT);    // CUBEMAP_LAYOUT_PANORAMA
+        UnloadImage(img);
              
 	}
 
-    float angle = 0;
 
-    Vector3 rotationAxis = { 0.0f, 1.0f, 0.0f };
-    float rotationSpeed = 0.1f;
 
 	void Draw()
 	{
-        //camera.target.x = ();
 		UpdateCamera(&this->camera);
         
-        angle += 0.0001;
-
-        std::cout << "angle: " << angle << std::endl;
-      
-       
-
 		BeginMode3D(this->camera);
 
 
 		ClearBackground(WHITE);
 		rlDisableBackfaceCulling();
 		rlDisableDepthMask();
-
-        
-        
-            // Rotation axis
-        Vector3 forward = Vector3Normalize(Vector3Subtract(camera.target, camera.position));
-
-            // Rotate up direction around forward axis
-        camera.up = Vector3RotateByAxisAngle(camera.up, forward, angle);
-        
-
+        camera.target = Vector3RotateByAxisAngle(camera.target, {0.0f,1.0f,0.f}, CameraRotationSpeed * (PI * 180) * GetFrameTime());
         DrawModel(skybox, { 0,0,0 },1.0f, WHITE);
 		rlEnableBackfaceCulling();
 		rlEnableDepthMask();
 
 		EndMode3D();
-
 
 	}
 
