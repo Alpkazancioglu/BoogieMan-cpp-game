@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include <vector>
 
+class Alpino;
 
 typedef short int int16;
 
@@ -94,7 +95,6 @@ public:
 	
 	GameObject();
 	~GameObject();
-	int MoveEverything = 1;
 	void InitializeTextureFromHeader(unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 	void InitializeTextureFromFile(const char* FilePath);
 	void RenderDuplicateEx(int16 duplicateCount, float distance, Color tint);
@@ -113,16 +113,27 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
-	void uptadeCharacterTexture(float dt,int maxframe);
-	void moveKillua();
-	bool ischaracterGround();
 	
 	Texture2D *Texture = nullptr;
 	ObjectData Data;
 	CollisionBox Hitbox;
-	
 	float scale;
 	float rotation;
 	
 	std::vector<int> RandomDistances;
 };
+
+
+
+class Character : public GameObject
+{
+public:
+
+	void updateCharacterTexture(float dt, int maxframe);
+	void updateMovingState();
+	bool isCharacterGround();
+
+	int MoveEverything = 1;
+
+};
+

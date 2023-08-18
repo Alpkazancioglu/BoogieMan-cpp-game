@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include <raymath.h>
 #include <iostream>
-#include "VectorMath.h"
+#include "util/WindowUtil.h"
 
 
 
@@ -258,10 +258,13 @@ void GameObject::SetTexture(Texture2D &texture)
 	this->Texture = &texture;
 }
 
-void GameObject::uptadeCharacterTexture(float dt, int maxframe)
+
+
+
+void Character::updateCharacterTexture(float dt, int maxframe)
 {
 	
-		if (!ischaracterGround())
+		if (!isCharacterGround())
 		{	
 			
 			if (MoveEverything == 1)
@@ -321,12 +324,12 @@ void GameObject::uptadeCharacterTexture(float dt, int maxframe)
 	
 
 
-bool GameObject::ischaracterGround()
+bool Character::isCharacterGround()
 {
 		return Data.pos.y + Data.rec.height >= GetMonitorHeight(GetCurrentMonitor()) - 26;
 }
 
-void GameObject::moveKillua()
+void Character::updateMovingState()
 {
 	if (IsKeyDown(KEY_D))
 		MoveEverything = 1;
