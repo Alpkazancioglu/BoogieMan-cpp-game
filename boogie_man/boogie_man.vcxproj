@@ -148,7 +148,8 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Maincpp.cpp" />
     <ClCompile Include="StopWatch.cpp" />
-    <ClCompile Include="VectorMath.cpp" />
+    <ClCompile Include="util\VectorMath.cpp" />
+    <ClCompile Include="util\WindowUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\far_background.h" />
@@ -162,8 +163,10 @@
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="GameHandler.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="rcamera.h" />
     <ClInclude Include="StopWatch.h" />
-    <ClInclude Include="VectorMath.h" />
+    <ClInclude Include="util\VectorMath.h" />
+    <ClInclude Include="util\WindowUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\..\amongus.png" />

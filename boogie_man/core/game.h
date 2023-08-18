@@ -2,7 +2,7 @@
 #include "raylib.h"
 #include <vector>
 #include "nebula.h"
-#include "../VectorMath.h"
+#include "../util/WindowUtil.h"
 #include <memory>
 #include <string>
 #include "../GameObject.h"
@@ -17,7 +17,6 @@
 #define MOVING_FRONT 1
 #define MOVING_BACK -1
 
-Vec2<float> getWsize();
 
 
 class Nebula : public GameObject
@@ -44,12 +43,7 @@ public:
 };
 
 
-class Character
-{
 
-
-
-};
 
 
 class Alpino
@@ -93,7 +87,10 @@ public:
 	GameObject Clouds;
 	GameObject FrontVegetation;
 	GameObject castle;
-	GameObject killua;
+
+	Character killua;
+
+	std::unique_ptr<cubemap> Sky;
 		
 	
 	std::unique_ptr<Nebula> nebulas[8];
@@ -106,7 +103,6 @@ public:
 
 	void update(RenderTexture2D* fbo);
 	void draw(RenderTexture2D* fbo);
-    std::string GetRelativeTexturePath(std::string textureName);
 	ObjectData updateAnimdata(ObjectData data, float dt, int maxframe);
 	bool isOnGround(ObjectData data);
 	bool isObjectOut(ObjectData data);
