@@ -103,7 +103,7 @@ void game::draw()
 
 	////          GAME_DRAW_CAMERA             /////
 	AlpinoGame->update(target.get());
-	AlpinoGame->draw(target.get());
+	//AlpinoGame->draw(target.get());
 	/////            ////                     /////
 
 

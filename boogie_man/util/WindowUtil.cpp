@@ -59,8 +59,8 @@ TextureCubemap cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, int siz
     Matrix fboViews[6] = {
           MatrixLookAt({ 0.0f, 0.0f, 0.0f }, { -1.0f,  0.0f,  0.0f },  { 0.0f, 1.0f,  0.0f }),
           MatrixLookAt({ 0.0f, 0.0f, 0.0f }, { 1.0f,  0.0f,  0.0f },  { 0.0f, 1.0f,  0.0f }),
-          MatrixLookAt({ 0.0f, 0.0f, 0.0f },  { 0.0f,  1.0f,  0.0f },  { 0.0f,  0.0f,  -1.0f }),
           MatrixLookAt({ 0.0f, 0.0f, 0.0f }, { 0.0f, -1.0f,  0.0f },  { 0.0f,  0.0f, 1.0f }),
+          MatrixLookAt({ 0.0f, 0.0f, 0.0f },  { 0.0f,  1.0f,  0.0f },  { 0.0f,  0.0f,  -1.0f }),
           MatrixLookAt({ 0.0f, 0.0f, 0.0f },  { 0.0f,  0.0f,  1.0f },  { 0.0f, 1.0f,  0.0f }),
           MatrixLookAt({ 0.0f, 0.0f, 0.0f }, { 0.0f,  0.0f, -1.0f },  { 0.0f, 1.0f,  0.0f })
     };

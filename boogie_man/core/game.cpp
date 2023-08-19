@@ -82,7 +82,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	max_high = killua.Data.pos.y - 100;
 
 	//Sky = std::make_unique<cubemap>(GetRelativeTexturePath("StandardCubeMap.png").c_str());
-	Sky = std::make_unique<cubemap>(GetRelativeTexturePath("sky/dresden_square_2k.hdr").c_str() , true , 0.0001f);
+	Sky = std::make_unique<cubemap>(GetRelativeTexturePath("sky/rural_asphalt_road_2k.hdr").c_str() , true , 0.00001f , 512);
 
 }
 
@@ -202,7 +202,7 @@ void Alpino::draw(RenderTexture2D* fbo)
 	case INITIALPAGE:
 
 	case INGAME:
-		//Sky->Draw();
+	    Sky->Draw();
 
 		
 	case ENDPAGE:
