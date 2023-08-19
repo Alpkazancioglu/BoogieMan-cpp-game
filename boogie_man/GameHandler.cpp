@@ -102,7 +102,7 @@ void game::draw()
 	BeginMode2D(*MainCamera);
 
 	////          GAME_DRAW_CAMERA             /////
-	//AlpinoGame->update(target.get());
+	AlpinoGame->update(target.get());
 	AlpinoGame->draw(target.get());
 	/////            ////                     /////
 
