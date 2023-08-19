@@ -261,7 +261,7 @@ void GameObject::SetTexture(Texture2D &texture)
 
 
 
-void Character::updateCharacterTexture(float dt, int maxframe)
+void Character::updateCharacterTexture(float dt, int maxframe,int &MoveEverything)
 {
 	
 		if (!isCharacterGround())
@@ -329,7 +329,7 @@ bool Character::isCharacterGround()
 		return Data.pos.y + Data.rec.height >= GetMonitorHeight(GetCurrentMonitor()) - 26;
 }
 
-void Character::updateMovingState()
+void Character::updateMovingState(int& MoveEverything)
 {
 	if (IsKeyDown(KEY_D))
 		MoveEverything = 1;

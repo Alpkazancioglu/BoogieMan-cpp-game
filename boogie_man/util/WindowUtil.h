@@ -4,7 +4,7 @@
 #include <rlgl.h>
 #include "VectorMath.h"
 #include <iostream>
-//#define  RCAMERA_IMPLEMENTATION
+
 //#include "../rcamera.h"
 
 #include <raymath.h>
@@ -71,17 +71,15 @@ public:
         skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture = LoadTextureCubemap(img, CUBEMAP_LAYOUT_AUTO_DETECT);    // CUBEMAP_LAYOUT_PANORAMA
         UnloadImage(img);
              
-	}
+        DisableCursor();
+    }
 
-
+    
 
 	void Draw()
 	{
-		UpdateCamera(&this->camera);
-        
+		UpdateCameraPro(&this->camera,{0,0,0},{0,0,0},0);
 		BeginMode3D(this->camera);
-
-
 		ClearBackground(WHITE);
 		rlDisableBackfaceCulling();
 		rlDisableDepthMask();
@@ -89,7 +87,7 @@ public:
         DrawModel(skybox, { 0,0,0 },1.0f, WHITE);
 		rlEnableBackfaceCulling();
 		rlEnableDepthMask();
-
+        
 		EndMode3D();
 
 	}

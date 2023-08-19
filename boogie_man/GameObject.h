@@ -129,11 +129,10 @@ class Character : public GameObject
 {
 public:
 
-	void updateCharacterTexture(float dt, int maxframe);
-	void updateMovingState();
+	void updateCharacterTexture(float dt, int maxframe,int &MoveEverything);
+	void updateMovingState(int &MoveEverything);
 	bool isCharacterGround();
 
-	int MoveEverything = 1;
 
 };
 

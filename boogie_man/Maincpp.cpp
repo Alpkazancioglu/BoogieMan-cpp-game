@@ -1,7 +1,5 @@
-#define RCAMERA_IMPLEMENTATION
 #include <iostream>
 #include <raylib.h>
-#include "rcamera.h"
 #include <vector>
 #include <chrono>
 #include "GameHandler.h"

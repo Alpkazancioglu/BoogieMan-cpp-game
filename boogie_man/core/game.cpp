@@ -120,11 +120,12 @@ void Alpino::update(RenderTexture2D *fbo)
 		//animation uptade for textures
 		{
 			fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
+			killua.updateCharacterTexture(dt, 5, MoveEverything);
 		}
 		
 		
 
-		if (killua.MoveEverything == MOVING_FRONT)
+		if (MoveEverything == MOVING_FRONT)
 		{
 			Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 			castle.RenderDuplicateExLoop(1, 0, { 200,200,200,210 }, -(float)(castle.Texture->width * castle.scale), { getWsize().x,0 }, dt, false);
@@ -134,7 +135,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			foreground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
 			FrontVegetation.RenderDuplicateExLoop(5, 0, { WHITE }, -(float)(FrontVegetation_t.width * FrontVegetation.scale), { 0,FrontVegetation.Data.pos.y }, dt, false);
 		}
-		else if (killua.MoveEverything == IDLE)
+		else if (MoveEverything == IDLE)
 		{
 			Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 			castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
@@ -145,7 +146,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			FrontVegetation.RenderDuplicateEx(5, 0, WHITE);
 		}
 		
-		else if (killua.MoveEverything == MOVING_BACK)
+		else if (MoveEverything == MOVING_BACK)
 		{
 			Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 			castle.RenderDuplicateExLoop(1, 0, { 200,200,200,210 }, getWsize().x, { -(float)(CastleTexture.width * castle.scale), 0 }, dt, true);
@@ -162,7 +163,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			
 			nebulas[i]->Data.rec.width = t_woodenlog.width;
 			nebulas[i]->Data.rec.height = t_woodenlog.height;
-			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed * killua.MoveEverything * dt;
+			nebulas[i]->Data.pos.x -= nebulas[i]->Data.speed * MoveEverything * dt;
 			nebulas[i]->Hitbox.Data.pos.x -= nebulas[i]->Data.speed * dt;
 			DrawTextureRec(t_woodenlog, nebulas[i]->Data.rec, nebulas[i]->Data.pos, WHITE);
 		}
@@ -173,7 +174,6 @@ void Alpino::update(RenderTexture2D *fbo)
 		}
 		
 		CharacterMovement();
-		killua.updateCharacterTexture(dt, 5);
 		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos, WHITE);
 		
 		for (int i = 0; i < sizeofnebula; i++)
@@ -234,7 +234,7 @@ void Alpino::RotateNebula(ObjectData data, int windowwidth,int index)
 ObjectData  Alpino::updateAnimdata(ObjectData data, float dt, int maxframe)
 {
 
-	if (!isOnGround(killua.Data) && data == killua.Data || data == killua.Data && killua.MoveEverything == IDLE)
+	if (!isOnGround(killua.Data) && data == killua.Data || data == killua.Data && MoveEverything == IDLE)
 	{
 		return data;
 	}
@@ -261,46 +261,40 @@ bool Alpino::isOnGround(ObjectData data)
 
 inline void Alpino::CharacterMovement()
 {
-	//movecharacter();
-	killua.updateMovingState();
+
+	killua.updateMovingState(MoveEverything);
 	current_high = killua.Data.pos.y;
 	killua.Data.pos.y += killua.Data.speed * dt;
-	if (isOnGround(killua.Data))
-	{
+	
+	
+	if (isOnGround(killua.Data) && IsKeyDown(KEY_SPACE))
+	{	
+		if (!isOnGround(killua.Data))
+			isPlayerJumped = true;
 		killua.Data.speed = 0;
-		onAir = false;
-		isplayerjumped = false;
+	}
+	else if (isOnGround(killua.Data))
+	{
+		isMaxHeightReached = false;
+		killua.Data.speed = 0;
+		isPlayerJumped = false;
 	}
 	else
 	{
 		killua.Data.speed += gravity * dt;
-	}		
+	}
 	if (max_high >= current_high)
-		onAir = true;
-	if (IsKeyDown(KEY_SPACE) && !onAir && !isplayerjumped)
-	{	
-			killua.Data.speed = -300;
+		isMaxHeightReached = true;
+	if (IsKeyDown(KEY_SPACE) && !isMaxHeightReached && !isPlayerJumped)
+	{
+		killua.Data.speed = -300;
 	}
 	else if (IsKeyReleased(KEY_SPACE))
-			isplayerjumped = true;
-
+	{
+		isMaxHeightReached = true;
+	}
 }
 
-/*
-inline void Alpino::movecharacter()
-{
-	if (IsKeyDown(KEY_D))
-		//MoveEverything = 1;
-		this->killua.MoveEverything = 1;
-
-	else if (IsKeyDown(KEY_A))
-		MoveEverything = -1;
-
-	else if (IsKeyUp(KEY_A) && IsKeyUp(KEY_D))
-		MoveEverything = 0;
-
-}
-*/
 
 
 

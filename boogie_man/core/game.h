@@ -61,11 +61,11 @@ public:
 	float far_bgx = 0;
 	float dt = 0;
 	bool allow = true;
-	bool onAir = false;
+	bool isMaxHeightReached = false;
 	bool collusion = false;
 	float max_high;
 	float current_high;
-	bool isplayerjumped;
+	bool isPlayerJumped;
 	int MoveEverything = 1;
 	
 	Texture2D killua_t;
@@ -108,7 +108,6 @@ public:
 	bool isObjectOut(ObjectData data);
 	void RotateNebula(ObjectData data, int windowwidth,int index);	
 	void CharacterMovement();
-	void movecharacter();
 private:
 
 };
