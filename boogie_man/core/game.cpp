@@ -6,6 +6,7 @@
 #include "middle_Background.h"
 #include "foreground.h"
 #include <string>
+#include "../LevelHandler.h"
 
 #define FORESTPOSY 0
 
@@ -27,13 +28,13 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	t_fog_cloud = LoadTexture(GetRelativeTexturePath("mist_atlas.png").c_str());
 	Clouds_t = LoadTexture(GetRelativeTexturePath("Clouds.png").c_str());
 	killua_t = LoadTexture(GetRelativeTexturePath("scarfy.png").c_str());
-
+	Road_t = LoadTexture(GetRelativeTexturePath("Road.png").c_str());
 
 	wooden_log.SetAnimData({}, { getWsize().x / 2 , 100 }, 0, 0, 0, 10);
 	float ForestScale = 3.8f;
 	
 	FrontVegetation.SetBaseAttributes(FrontVegetation_t, 1.0f, { {0,0,(float)FrontVegetation_t.width,(float)FrontVegetation_t.height},
-	{0,getWsize().y - FrontVegetation_t.height-10},0,0,0,200}, 0.0f);
+	{0,getWsize().y * 0.965f},0,0,0,200}, 0.0f);
 	
 	
 	castle.SetBaseAttributes(CastleTexture, 0.7f, { { 0,0,(float)CastleTexture.width , (float)CastleTexture.height },
@@ -61,9 +62,8 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
 	Clouds.SetBaseAttributes(Clouds_t, 1.0f, ObjectData({}, { 0, -20 }, 0, 0, 0, 80), 0.0f);
 	farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
+	Road.SetBaseAttributes(Road_t, 0.8f, { {}, { 0, getWsize().y * 0.91f}, 0, 0, 0, 180}, 0.0f);
 
-
-	
 	for (size_t i = 0; i < 8; i++)
 	{
 		nebulas[i] = std::make_unique<Nebula>(WindowHeight, WindowWidth , nebula);
@@ -81,8 +81,10 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		);
 	max_high = killua.Data.pos.y - 100;
 
-	//Sky = std::make_unique<cubemap>(GetRelativeTexturePath("StandardCubeMap.png").c_str());
 	Sky = std::make_unique<cubemap>(GetRelativeTexturePath("sky/rural_asphalt_road_2k.hdr").c_str() , true , 0.00001f , 512);
+
+	//GameLevel::WriteLevel();
+	GameLevel::ReadLevel();
 
 }
 
@@ -96,6 +98,7 @@ Alpino::~Alpino()
 	UnloadTexture(t_woodenlog);
 	UnloadTexture(Clouds_t);
 	UnloadTexture(FrontVegetation_t);
+	UnloadTexture(Road_t);
 
 	Sky->clear();
 }
@@ -123,9 +126,6 @@ void Alpino::update(RenderTexture2D *fbo)
 		   fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
 		   killua.updateCharacterTexture(dt, 5, MoveEverything);
 		}
-		
-		
-
 		if (MoveEverything == MOVING_FRONT)
 		{
 			Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
@@ -134,6 +134,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			middlebackground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
 			fog_cloud.RenderDuplicateRecLoop(3, 0, { 255,255,255,220 }, -(float)(fog_cloud.Data.rec.width * fog_cloud.scale), { 0 , 450 }, dt, false , 4);
 			foreground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
+			Road.RenderDuplicateExLoop(3, 0, { 231, 255, 207 , 255}, -(float)(Road.Texture->width * Road.scale), {0 , Road.Data.pos.y}, dt, false);
 			FrontVegetation.RenderDuplicateExLoop(5, 0, { WHITE }, -(float)(FrontVegetation_t.width * FrontVegetation.scale), { 0,FrontVegetation.Data.pos.y }, dt, false);
 		}
 		else if (MoveEverything == IDLE)
@@ -144,6 +145,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			middlebackground_o.RenderDuplicateEx(3, 0, WHITE);
 			fog_cloud.RenderDuplicateRec(3, 0, {255,255,255,220}, 4, 1);
 			foreground_o.RenderDuplicateEx(3, 0, WHITE);
+			Road.RenderDuplicateEx(3, 0, { 231, 255, 207 , 255 });
 			FrontVegetation.RenderDuplicateEx(5, 0, WHITE);
 		}
 		
@@ -155,6 +157,7 @@ void Alpino::update(RenderTexture2D *fbo)
 			middlebackground_o.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , FORESTPOSY }, dt, true);
 			fog_cloud.RenderDuplicateRecLoop(3, 0, { 255,255,255,220 }, 0, { -(float)(fog_cloud.Data.rec.width * fog_cloud.scale) , 450 }, dt, true , 4);
 			foreground_o.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , FORESTPOSY }, dt, true);
+			Road.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(Road.Texture->width * Road.scale) , Road.Data.pos.y }, dt, true);
 			FrontVegetation.RenderDuplicateExLoop(5, 0, WHITE, 0, { -(float)(FrontVegetation_t.width * FrontVegetation.scale),FrontVegetation.Data.pos.y }, dt, true);
 		}
 		

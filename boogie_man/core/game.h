@@ -78,6 +78,8 @@ public:
 	Texture2D t_woodenlog;
 	Texture2D t_fog_cloud;
 	Texture2D Clouds_t;
+	Texture2D Road_t;
+
 
 	GameObject farbackground_o;
 	GameObject middlebackground_o;
@@ -87,6 +89,8 @@ public:
 	GameObject Clouds;
 	GameObject FrontVegetation;
 	GameObject castle;
+	GameObject Road;
+
 
 	Character killua;
 
