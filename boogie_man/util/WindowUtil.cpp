@@ -24,6 +24,11 @@ std::string GetRelativeTexturePath(std::string textureName)
 	return (WorkingDir + "/textures/" + textureName);
 }
 
+float Pixel2Percent(int Pixel)
+{
+    return (getWsize().y * Pixel) / 1080;
+}
+
 TextureCubemap cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, int size, int format)
 {
     TextureCubemap cubemap = { 0 };
