@@ -18,6 +18,8 @@
 
 #endif
 
+
+
 Vec2<float> getWsize();
 std::string GetRelativeTexturePath(std::string textureName);
 float Pixel2Percent(int Pixel);

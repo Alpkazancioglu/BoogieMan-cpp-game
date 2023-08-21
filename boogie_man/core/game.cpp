@@ -69,6 +69,8 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		nebulas[i] = std::make_unique<Nebula>(WindowHeight, WindowWidth , nebula);
 	}
 
+	GameLevel::Level newLevel("level.json");
+
 	killua.SetTexture(killua_t);
 	killua.SetAnimData(
 		
@@ -84,12 +86,13 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	Sky = std::make_unique<cubemap>(GetRelativeTexturePath("sky/rural_asphalt_road_2k.hdr").c_str() , true , 0.00001f , 512);
 
 	//GameLevel::WriteLevel();
-	GameLevel::ReadLevel();
+	//GameLevel::ReadLevel();
 
 }
 
 Alpino::~Alpino()
 {
+
 	UnloadTexture(killua_t);
 	UnloadTexture(nebula);
 	UnloadTexture(far_background);
@@ -99,6 +102,7 @@ Alpino::~Alpino()
 	UnloadTexture(Clouds_t);
 	UnloadTexture(FrontVegetation_t);
 	UnloadTexture(Road_t);
+
 
 	Sky->clear();
 }
@@ -110,7 +114,7 @@ void Alpino::update(RenderTexture2D *fbo)
 	{
 	case INITIALPAGE:
 
-
+		break;
 	case INGAME:
 
 		dt = GetFrameTime();
@@ -189,8 +193,12 @@ void Alpino::update(RenderTexture2D *fbo)
 			}
 		}
 
+		break;
+
 	case ENDPAGE:
 		
+
+		break;
 	default:
 		break;
 	}
@@ -204,13 +212,14 @@ void Alpino::draw(RenderTexture2D* fbo)
 	{
 	case INITIALPAGE:
 
+		break;
 	case INGAME:
 	    Sky->Draw();
 
-		
+		break;
 	case ENDPAGE:
 
-
+		break;
 	default:
 		break;
 	}
