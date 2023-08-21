@@ -1,1 +1,101 @@
-{"age":16,"name":"Alp"}
+{
+  "GameMetaData": {
+
+  },
+  "GameObjects": {
+    "Object1": {
+      "type": "obstacle",
+      "texture": "Wooden_log.png",
+      "data": {
+        "rec": {
+          "x": 2,
+          "y": 3,
+          "width": 4,
+          "height": 24
+        },
+        "pos": {
+          "x": 3,
+          "y": 3
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0,
+        "speed": 80
+      },
+      "scale": 2.0,
+      "rotation": 0.0,
+      "duplicateCount": 3,
+      "renderDepthIndex": 1,
+      "tint": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 255
+      },
+      "renderMethod": ""
+    },
+
+    "Object2": {
+      "type": "obstacle",
+      "texture": "forest.png",
+      "data": {
+        "rec": {
+          "x": 2,
+          "y": 3,
+          "width": 4,
+          "height": 23
+        },
+        "pos": {
+          "x": 3,
+          "y": 3
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0,
+        "speed": 80
+      },
+      "scale": 1.0,
+      "rotation": 0.0,
+      "duplicateCount": 3,
+      "renderDepthIndex": 2,
+      "tint": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 255
+      },
+      "renderMethod": ""
+    },
+    "Object3": {
+      "type": "obstacle",
+      "texture": "Wooden_log.png",
+      "data": {
+        "rec": {
+          "x": 2,
+          "y": 3,
+          "width": 4,
+          "height": 23
+        },
+        "pos": {
+          "x": 3,
+          "y": 3
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0,
+        "speed": 80
+      },
+      "scale": 1.0,
+      "rotation": 0.0,
+      "duplicateCount": 3,
+      "renderDepthIndex": 3,
+      "tint": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 255
+      },
+      "renderMethod": ""
+    }
+  }
+}

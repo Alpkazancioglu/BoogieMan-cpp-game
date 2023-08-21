@@ -1,11 +1,11 @@
 #pragma once
 #include <raylib.h>
 #include <vector>
+#include "util/VectorMath.h"
 
 
 class Alpino;
 
-typedef short int int16;
 
 void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 
@@ -114,12 +114,21 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
+
+	inline bool operator< (GameObject& other)
+	{
+		return this->RenderDepthIndex < other.RenderDepthIndex;
+	}
 	
 	Texture2D *Texture = nullptr;
 	ObjectData Data;
 	CollisionBox Hitbox;
 	float scale;
 	float rotation;
+	Color tint;
+	uint RenderDepthIndex;
+	std::string RenderMethod;
+	uint DuplicateCount;
 	
 	std::vector<int> RandomDistances;
 };
