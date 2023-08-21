@@ -129,6 +129,9 @@ public:
 	uint RenderDepthIndex;
 	std::string RenderMethod;
 	uint DuplicateCount;
+	float duplicateDistance;
+	Vector2 atlasCut;
+	bool reverseSpeed;
 	
 	std::vector<int> RandomDistances;
 };

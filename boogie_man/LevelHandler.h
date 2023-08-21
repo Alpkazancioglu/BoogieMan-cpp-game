@@ -30,8 +30,6 @@ namespace GameLevel
 
     };
 
-    
-
     void ReadLevel();
     void WriteLevel(GameObject& Object);
 

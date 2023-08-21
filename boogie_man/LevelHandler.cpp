@@ -66,6 +66,9 @@ GameLevel::Level::Level(const char* filePath)
             obstacle.DuplicateCount = attributes["duplicateCount"];
             obstacle.RenderDepthIndex = attributes["renderDepthIndex"];
             obstacle.RenderMethod = attributes["renderMethod"];
+            obstacle.duplicateDistance = attributes["duplicateDistance"];
+            obstacle.atlasCut = { attributes["atlasCut"]["x"] ,attributes["atlasCut"]["y"] };
+            obstacle.reverseSpeed = attributes["reverseSpeed"];
 
             for (auto& texture : Textures)
             {
@@ -106,6 +109,7 @@ GameLevel::Level::Level(const char* filePath)
             SceneObject.DuplicateCount = attributes["duplicateCount"];
             SceneObject.RenderDepthIndex = attributes["renderDepthIndex"];
             SceneObject.RenderMethod = attributes["renderMethod"];
+            SceneObject.duplicateDistance = attributes["duplicateDistance"];
 
             for (auto& texture : Textures)
             {
@@ -147,15 +151,19 @@ void GameLevel::Level::RenderScene()
     {
         if (object.RenderMethod == "DuplicateEx")
         {
-
+            object.RenderDuplicateEx(object.DuplicateCount, object.duplicateDistance, object.tint);
         }
-        else if (object.RenderMethod == )
+        else if (object.RenderMethod == "DuplicateExLoop")
         {
-
+            object.RenderDuplicateExLoop(object.DuplicateCount,object.duplicateDistance,object.tint)
         }
-        else if (object.RenderMethod == )
+        else if (object.RenderMethod == "DuplicateRec")
         {
-
+            object.RenderDuplicateRec(object.DuplicateCount, object.duplicateDistance, object.tint);
+        }
+        else if (object.RenderMethod == "DuplicateRec")
+        {
+            object.RenderDuplicateRecLoop()
         }
     }
 }

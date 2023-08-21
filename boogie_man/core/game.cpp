@@ -103,7 +103,6 @@ Alpino::~Alpino()
 	UnloadTexture(FrontVegetation_t);
 	UnloadTexture(Road_t);
 
-	leve
 
 	Sky->clear();
 }

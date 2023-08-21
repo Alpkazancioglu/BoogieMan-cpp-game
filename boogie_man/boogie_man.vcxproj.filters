@@ -103,11 +103,8 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="shipimage3_scaled.png">
+    <None Include="level.json">
       <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="..\..\..\..\..\amongus.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    </None>
   </ItemGroup>
 </Project>

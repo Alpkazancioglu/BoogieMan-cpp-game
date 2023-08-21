@@ -25,6 +25,7 @@
       "scale": 2.0,
       "rotation": 0.0,
       "duplicateCount": 3,
+      "duplicateDistance": 0,
       "renderDepthIndex": 1,
       "tint": {
         "r": 255,
@@ -32,18 +33,23 @@
         "b": 255,
         "a": 255
       },
-      "renderMethod": ""
+      "renderMethod": "DuplicateEx",
+      "atlasCut": {
+        "x": 1,
+        "y": 1
+      },
+      "reverseSpeed": false
     },
 
     "Object2": {
       "type": "obstacle",
-      "texture": "forest.png",
+      "texture": "Wooden_log.png",
       "data": {
         "rec": {
           "x": 2,
           "y": 3,
           "width": 4,
-          "height": 23
+          "height": 24
         },
         "pos": {
           "x": 3,
@@ -54,17 +60,23 @@
         "updateTime": 0,
         "speed": 80
       },
-      "scale": 1.0,
+      "scale": 2.0,
       "rotation": 0.0,
       "duplicateCount": 3,
-      "renderDepthIndex": 2,
+      "duplicateDistance": 0,
+      "renderDepthIndex": 1,
       "tint": {
         "r": 255,
         "g": 255,
         "b": 255,
         "a": 255
       },
-      "renderMethod": ""
+      "renderMethod": "DuplicateEx",
+      "atlasCut": {
+        "x": 1,
+        "y": 1
+      },
+      "reverseSpeed": false
     },
     "Object3": {
       "type": "obstacle",
@@ -74,7 +86,7 @@
           "x": 2,
           "y": 3,
           "width": 4,
-          "height": 23
+          "height": 24
         },
         "pos": {
           "x": 3,
@@ -85,17 +97,23 @@
         "updateTime": 0,
         "speed": 80
       },
-      "scale": 1.0,
+      "scale": 2.0,
       "rotation": 0.0,
       "duplicateCount": 3,
-      "renderDepthIndex": 3,
+      "duplicateDistance": 0,
+      "renderDepthIndex": 1,
       "tint": {
         "r": 255,
         "g": 255,
         "b": 255,
         "a": 255
       },
-      "renderMethod": ""
+      "renderMethod": "DuplicateEx",
+      "atlasCut": {
+        "x": 1,
+        "y": 1
+      },
+      "reverseSpeed": false
     }
   }
 }
