@@ -13,9 +13,7 @@
 #define INGAME 1
 #define ENDPAGE 2
 
-#define IDLE 0
-#define MOVING_FRONT 1
-#define MOVING_BACK -1
+
 
 
 

@@ -42,27 +42,212 @@
     },
 
     "Object2": {
-      "type": "obstacle",
-      "texture": "Wooden_log.png",
+      "type": "SceneObject",
+      "texture": "forestfarback.png",
       "data": {
         "rec": {
-          "x": 2,
-          "y": 3,
-          "width": 4,
-          "height": 24
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
         },
         "pos": {
-          "x": 3,
-          "y": 3
+          "x": 0,
+          "y": 0
         },
         "frame": 0,
         "runningTime": 0,
         "updateTime": 0,
         "speed": 80
       },
-      "scale": 2.0,
+      "scale": 3.8,
       "rotation": 0.0,
       "duplicateCount": 3,
+      "duplicateDistance": 0,
+      "renderDepthIndex": 6,
+      "tint": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 255
+      },
+      "renderMethod": "DuplicateEx",
+      "atlasCut": {
+        "x": 1,
+        "y": 1
+      },
+      "reverseSpeed": false
+    },
+    "Middle_Background": {
+      "type": "SceneObject",
+      "texture": "forestback.png",
+      "data": {
+        "rec": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "pos": {
+          "x": 0,
+          "y": 0
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0,
+        "speed": 110
+      },
+      "scale": 3.8,
+      "rotation": 0.0,
+      "duplicateCount": 3,
+      "duplicateDistance": 0,
+      "renderDepthIndex": 5,
+      "tint": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 255
+      },
+      "renderMethod": "DuplicateEx",
+      "atlasCut": {
+        "x": 1,
+        "y": 1
+      },
+      "reverseSpeed": false
+    },
+    "Foreground": {
+      "type": "SceneObject",
+      "texture": "forest.png",
+      "data": {
+        "rec": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "pos": {
+          "x": 0,
+          "y": 0
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0,
+        "speed": 80
+      },
+      "scale": 3.8,
+      "rotation": 0.0,
+      "duplicateCount": 3,
+      "duplicateDistance": 0,
+      "renderDepthIndex": 3,
+      "tint": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 255
+      },
+      "renderMethod": "DuplicateEx",
+      "atlasCut": {
+        "x": 1,
+        "y": 1
+      },
+      "reverseSpeed": false
+    },
+    "fogCloud": {
+      "type": "SceneObject",
+      "texture": "mist_atlas.png",
+      "data": {
+        "rec": {
+          "x": 0,
+          "y": 0,
+          "width": 960,
+          "height": 540
+        },
+        "pos": {
+          "x": 0,
+          "y": 450
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0.5,
+        "speed": 135
+      },
+      "scale": 1.0,
+      "rotation": 0.0,
+      "duplicateCount": 3,
+      "duplicateDistance": 0,
+      "renderDepthIndex": 5,
+      "tint": {
+        "r": 255,
+        "g": 255,
+        "b": 255,
+        "a": 220
+      },
+      "renderMethod": "DuplicateRec",
+      "atlasCut": {
+        "x": 4,
+        "y": 1
+      },
+      "reverseSpeed": false
+    },
+    "Object6": {
+      "type": "SceneObject",
+      "texture": "Road.png",
+      "data": {
+        "rec": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "pos": {
+          "x": 0,
+          "y": 960
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0,
+        "speed": 180
+      },
+      "scale": 0.8,
+      "rotation": 0.0,
+      "duplicateCount": 3,
+      "duplicateDistance": 0,
+      "renderDepthIndex": 2,
+      "tint": {
+        "r": 231,
+        "g": 255,
+        "b": 207,
+        "a": 255
+      },
+      "renderMethod": "DuplicateEx",
+      "atlasCut": {
+        "x": 1,
+        "y": 1
+      },
+      "reverseSpeed": false
+    },
+    "front_rocks": {
+      "type": "SceneObject",
+      "texture": "front_rocks.png",
+      "data": {
+        "rec": {
+          "x": 0,
+          "y": 0,
+          "width": 480,
+          "height": 40
+        },
+        "pos": {
+          "x": 0,
+          "y": 1042.2
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0,
+        "speed": 200
+      },
+      "scale": 1.0,
+      "rotation": 0.0,
+      "duplicateCount": 5,
       "duplicateDistance": 0,
       "renderDepthIndex": 1,
       "tint": {
@@ -78,35 +263,72 @@
       },
       "reverseSpeed": false
     },
-    "Object3": {
-      "type": "obstacle",
-      "texture": "Wooden_log.png",
+    "Clouds": {
+      "type": "SceneObject",
+      "texture": "Clouds.png",
       "data": {
         "rec": {
-          "x": 2,
-          "y": 3,
-          "width": 4,
-          "height": 24
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
         },
         "pos": {
-          "x": 3,
-          "y": 3
+          "x": 0,
+          "y": -20
         },
         "frame": 0,
         "runningTime": 0,
         "updateTime": 0,
         "speed": 80
       },
-      "scale": 2.0,
+      "scale": 1,
       "rotation": 0.0,
-      "duplicateCount": 3,
+      "duplicateCount": 1,
       "duplicateDistance": 0,
-      "renderDepthIndex": 1,
+      "renderDepthIndex": 8,
       "tint": {
-        "r": 255,
-        "g": 255,
-        "b": 255,
-        "a": 255
+        "r": 200,
+        "g": 200,
+        "b": 200,
+        "a": 220
+      },
+      "renderMethod": "DuplicateEx",
+      "atlasCut": {
+        "x": 1,
+        "y": 1
+      },
+      "reverseSpeed": false
+    },
+    "castle": {
+      "type": "SceneObject",
+      "texture": "CastleBack_small.png",
+      "data": {
+        "rec": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "pos": {
+          "x": 960,
+          "y": 0
+        },
+        "frame": 0,
+        "runningTime": 0,
+        "updateTime": 0,
+        "speed": 10
+      },
+      "scale": 0.7,
+      "rotation": 0.0,
+      "duplicateCount": 1,
+      "duplicateDistance": 0,
+      "renderDepthIndex": 8,
+      "tint": {
+        "r": 200,
+        "g": 200,
+        "b": 200,
+        "a": 210
       },
       "renderMethod": "DuplicateEx",
       "atlasCut": {

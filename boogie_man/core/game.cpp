@@ -34,7 +34,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 	float ForestScale = 3.8f;
 	
 	FrontVegetation.SetBaseAttributes(FrontVegetation_t, 1.0f, { {0,0,(float)FrontVegetation_t.width,(float)FrontVegetation_t.height},
-	{0,getWsize().y * 0.965f},0,0,0,200}, 0.0f);
+	{0,getWsize().y * 0.965f},0,0,0,200 * MoveEverything }, 0.0f);
 	
 	
 	castle.SetBaseAttributes(CastleTexture, 0.7f, { { 0,0,(float)CastleTexture.width , (float)CastleTexture.height },
@@ -42,7 +42,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		0,
 		0,
 		0,
-		10 }, 
+		10 * MoveEverything },
 		0.0f);
 	
 	fog_cloud.SetBaseAttributes(t_fog_cloud, 1.0f,
@@ -51,18 +51,19 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		0,
 		0,
 		0.5f,
-		135
+		135 * MoveEverything
 		},
 		0.0f);
 
 
 
-	foreground_o.SetBaseAttributes(t_foreground, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 160 }, 0.0f);
-	middlebackground_o.SetBaseAttributes(middle_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 110 }, 0.0f);
-	farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
-	Clouds.SetBaseAttributes(Clouds_t, 1.0f, ObjectData({}, { 0, -20 }, 0, 0, 0, 80), 0.0f);
-	farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
-	Road.SetBaseAttributes(Road_t, 0.8f, { {}, { 0, getWsize().y * 0.91f}, 0, 0, 0, 180}, 0.0f);
+	foreground_o.SetBaseAttributes(t_foreground, ForestScale, { {}, { Pixel2Percent(0), FORESTPOSY}, 0, 0, 0, 160*MoveEverything }, 0.0f);
+	middlebackground_o.SetBaseAttributes(middle_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 110 * MoveEverything }, 0.0f);
+	farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 * MoveEverything }, 0.0f);
+	Clouds.SetBaseAttributes(Clouds_t, 1.0f, ObjectData({}, { 0, -20 }, 0, 0, 0, 80 * MoveEverything), 0.0f);
+	//farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
+	Road.SetBaseAttributes(Road_t, 0.8f, { {}, { 0,getWsize().y - 120}, 0, 0, 0, 180 * MoveEverything }, 0.0f);
+	std::cout<< "size" << getWsize().x / 2 << std::endl;
 
 	for (size_t i = 0; i < 8; i++)
 	{
@@ -120,11 +121,10 @@ void Alpino::update(RenderTexture2D *fbo)
 		dt = GetFrameTime();
 
 		
-		std::cout << killua.Data.frame << std::endl;
+		std::cout << MoveEverything << std::endl;
 		//DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 43, 82, 122 , 255 } , {179 , 181 , 199 , 255});
 		Sky->Draw();
-
-		
+		 
 		////animation update for textures
 		{
 		   fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
@@ -132,6 +132,7 @@ void Alpino::update(RenderTexture2D *fbo)
 		}
 		if (MoveEverything == MOVING_FRONT)
 		{
+			
 			Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 			castle.RenderDuplicateExLoop(1, 0, { 200,200,200,210 }, -(float)(castle.Texture->width * castle.scale), { getWsize().x,0 }, dt, false);
 			farbackground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);

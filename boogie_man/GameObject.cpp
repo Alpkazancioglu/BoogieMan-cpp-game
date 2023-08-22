@@ -332,10 +332,10 @@ bool Character::isCharacterGround()
 void Character::updateMovingState(int& MoveEverything)
 {
 	if (IsKeyDown(KEY_D))
-		MoveEverything = 1;
+		MoveEverything = MOVING_FRONT;
 
 	else if (IsKeyDown(KEY_A))
-		MoveEverything = -1;
+		MoveEverything = MOVING_BACK;
 
 	else if (IsKeyUp(KEY_A) && IsKeyUp(KEY_D))
 		MoveEverything = 0;

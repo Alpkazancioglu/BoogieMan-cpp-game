@@ -16,7 +16,7 @@ GameLevel::Level::Level(const char* filePath)
     for (auto object = GameObjects.begin(); object != GameObjects.end(); object++)
     {
         const json& attributes = object.value();
-
+        
         const std::string& objectType = attributes["type"];
 
 
@@ -97,7 +97,7 @@ GameLevel::Level::Level(const char* filePath)
                            attributes["data"]["runningTime"],
                            attributes["data"]["updateTime"],
                            attributes["data"]["speed"] });
-
+            
             SceneObject.Data(temp);
             SceneObject.scale = attributes["scale"];
             SceneObject.rotation = attributes["rotation"];
@@ -155,15 +155,15 @@ void GameLevel::Level::RenderScene()
         }
         else if (object.RenderMethod == "DuplicateExLoop")
         {
-            object.RenderDuplicateExLoop(object.DuplicateCount,object.duplicateDistance,object.tint)
+            //object.RenderDuplicateExLoop(object.DuplicateCount,object.duplicateDistance,object.tint)
         }
         else if (object.RenderMethod == "DuplicateRec")
         {
             object.RenderDuplicateRec(object.DuplicateCount, object.duplicateDistance, object.tint);
         }
-        else if (object.RenderMethod == "DuplicateRec")
+        else if (object.RenderMethod == "DuplicateRecLoop")
         {
-            object.RenderDuplicateRecLoop()
+            //object.RenderDuplicateRecLoop(object.DuplicateCount,object.duplicateDistance,object.tint,object)
         }
     }
 }
