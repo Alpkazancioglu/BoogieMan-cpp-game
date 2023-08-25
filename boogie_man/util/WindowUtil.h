@@ -92,7 +92,7 @@ public:
 
 	void Draw()
 	{
-        
+        //UpdateCamera(&camera, CAMERA_FIRST_PERSON);
 		UpdateCameraPro(&this->camera,{0,0,0},{0,0,0},0);
 		BeginMode3D(this->camera);
 		//ClearBackground(WHITE);

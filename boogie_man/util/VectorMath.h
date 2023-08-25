@@ -1,7 +1,10 @@
 #pragma once
 #include <random>
 #include <time.h>
+#include <iostream>
+#include <string>
 
+//Utility functions and definitions//>
 #define MAX(a, b) ((a)>(b)? (a) : (b))
 #define MIN(a, b) ((a)<(b)? (a) : (b))
 
@@ -9,6 +12,13 @@ typedef unsigned int uint;
 typedef short int int16;
 typedef long long int int64;
 
+float Q_rsqrt(float number);
+int GiveRandomNumf(int min, int max, int sizeofarray, bool exclude_on_off, int numtoexclude);
+// // // // // // // // // // // // //<
+
+/// <summary>
+/// Math class that describes a 2D vector with complete set of parameters and functions
+/// </summary>
 template<typename T>
 struct Vec2
 {
@@ -20,12 +30,10 @@ struct Vec2
 		x = NULL;
 		y = NULL;
 	}
-	Vec2(T x_i, T y_i)
+	Vec2(const T& x, const T& y)
+		: x(x), y(y)
 	{
-		x = x_i;
-		y = y_i;
 	}
-
 	Vec2(Vec2& Input)
 	{
 		x = Input.x;
@@ -44,13 +52,74 @@ struct Vec2
 		y = Input.y;
 	}
 
+	void InverseSQroot()
+	{
+		x = Q_rsqrt(x);
+		y = Q_rsqrt(y);
+	}
+
 	bool operator==(const Vec2& other) const
 	{
-		return false;
+		return this->x == other.x && this->y == other.y;
+	}
+
+	Vec2 operator+(const Vec2& other) const
+	{
+		return { x + other.x , y + other.y };
+	}
+
+	Vec2 operator+(const T& scalar) const
+	{
+		return { x + scalar, y + scalar };
+	}
+
+	Vec2 operator-(const Vec2& other) const
+	{
+		return { x - other.x , y - other.y };
+	}
+
+	Vec2 operator-(const T& scalar) const
+	{
+		return { x - scalar, y - scalar };
+	}
+
+	Vec2 operator*(const T& scalar) const
+	{
+		return { x * scalar, y * scalar };
+	}
+
+	Vec2 operator/(const T& scalar) const
+	{
+		return { x / scalar, y / scalar };
+	}
+
+	Vec2 operator/(const Vec2& other) const
+	{
+		return { x / other.x, y / other.y };
+	}
+
+	Vec2 operator*(const Vec2& other) const
+	{
+		return { x * other.x, y * other.y };
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Vec2& vec)
+	{
+		os << "(" << vec.x << ", " << vec.y << ")";
+		return os;
+	}
+
+	void operator()(const Vec2& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
 	}
 
 };
 
+/// <summary>
+/// Math class that describes a 3D vector with complete set of parameters and functions
+/// </summary>
 template<typename T>
 struct Vec3
 {
@@ -64,11 +133,9 @@ struct Vec3
 		y = NULL;
 		z = NULL;
 	}
-	Vec3(T x_i, T y_i , T z_i)
+	Vec3(const T& x, const T& y, const T& z)
+		: x(x), y(y), z(z)
 	{
-		x = x_i;
-		y = y_i;
-		z = z_i;
 	}
 	Vec3(Vec3& Input)
 	{
@@ -91,13 +158,77 @@ struct Vec3
 		this.z = Input.z;
 	}
 
+	void InverseSQroot()
+	{
+		x = Q_rsqrt(x);
+		y = Q_rsqrt(y);
+		z = Q_rsqrt(z);
+	}
+
 	bool operator==(const Vec3& other) const
 	{
-		return false;
+		return this->x == other.x && this->y == other.y && this->z == other.z;
 	}
+
+	Vec3 operator+(const Vec3& other) const
+	{
+		return { x + other.x , y + other.y , z + other.z};
+	}
+
+	Vec3 operator+(const T& scalar) const
+	{
+		return { x + scalar, y + scalar, z + scalar };
+	}
+
+	Vec3 operator-(const Vec3& other) const
+	{
+		return { x - other.x , y - other.y , z - other.z };
+	}
+
+	Vec3 operator-(const T& scalar) const
+	{
+		return { x - scalar, y - scalar, z - scalar };
+	}
+
+	Vec3 operator*(const T& scalar) const
+	{
+		return { x * scalar, y * scalar, z * scalar };
+	}
+
+	Vec3 operator/(const T& scalar) const
+	{
+		return { x / scalar, y / scalar, z / scalar };
+	}
+
+	Vec3 operator*(const Vec3& other) const
+	{
+		return { x * other.x, y * other.y, z * other.z };
+	}
+
+	Vec3 operator/(const Vec3& other) const
+	{
+		return { x / other.x, y / other.y, z / other.z };
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Vec3& vec)
+	{
+		os << "(" << vec.x << ", " << vec.y << ", "<< vec.z << ")";
+		return os;
+	}
+
+	void operator()(const Vec3& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = other.z;
+	}
+	
 };
 
 
+/// <summary>
+/// Math class that describes a 4D vector with complete set of parameters and functions
+/// </summary>
 template<typename T>
 struct Vec4
 {
@@ -113,12 +244,10 @@ struct Vec4
 		z = NULL;
 		w = NULL;
 	}
-	Vec4(T x_i, T y_i, T z_i , T w_i)
+
+	Vec4(const T& x, const T& y, const T& z, const T& w)
+		: x(x), y(y), z(z), w(w)
 	{
-		x = x_i;
-		y = y_i;
-		z = z_i;
-		w = w_i;
 	}
 	Vec4(Vec4& Input)
 	{
@@ -144,10 +273,73 @@ struct Vec4
 		w = Input.w;
 	}
 
+	void InverseSQroot()
+	{
+		x = Q_rsqrt(x);
+		y = Q_rsqrt(y);
+		z = Q_rsqrt(z);
+		w = Q_rsqrt(w);
+	}
+
 	bool operator==(const Vec4& other) const
 	{
-		return false;
+		return this->x == other.x && this->y == other.y && this->z == other.z && this->w == other.w;
 	}
+
+	Vec4 operator+(const Vec4& other) const
+	{
+		return { x + other.x , y + other.y , z + other.z  , w + other.w };
+	}
+
+	Vec4 operator+(const T& scalar) const
+	{
+		return { x + scalar, y + scalar, z + scalar, w + scalar };
+	}
+
+	Vec4 operator-(const Vec4& other) const
+	{
+		return { x - other.x , y - other.y , z - other.z  , w - other.w };
+	}
+
+	Vec4 operator-(const T& scalar) const
+	{
+		return { x - scalar, y - scalar, z - scalar, w - scalar };
+	}
+
+	Vec4 operator*(const T& scalar) const
+	{
+		return { x * scalar, y * scalar, z * scalar, w * scalar };
+	}
+
+	Vec4 operator/(const T& scalar) const
+	{
+		return { x / scalar, y / scalar, z / scalar, w / scalar };
+	}
+
+	Vec4 operator/(const Vec4& other) const
+	{
+		return { x / other.x, y / other.y, z / other.z, w / other.w };
+	}
+
+	Vec4 operator*(const Vec4& other) const
+	{
+		return { x * other.x, y * other.y, z * other.z, w * other.w };
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Vec4& vec)
+	{
+		os << "(" << vec.x << ", " << vec.y << ", "<< vec.z << ", "<<vec.w << ")";
+		return os;
+	}
+
+	void operator()(const Vec4& other)
+	{
+		this->x = other.x;
+		this->y = other.y;
+		this->z = other.z;
+		this->w = other.w;
+	}
+
 };
 
 template<long int size, typename T>
@@ -157,11 +349,21 @@ struct Vec_n
 
 	bool operator==(const Vec_n& other) const
 	{
-		return false;
+		bool result = true;
+
+		for (size_t i = 0; i < size; i++)
+		{
+			result = this->members[i] == other[i] && result;
+			if (!result)
+			{
+				break;
+			}
+		}
+
+		return result;
 	}
 };
 
-int GiveRandomNumf(int min, int max, int sizeofarray, bool exclude_on_off, int numtoexclude);
 
 
 

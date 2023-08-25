@@ -72,6 +72,12 @@ Alpino::Alpino(Vec2<int> WindowSize)
 
 	GameLevel::Level newLevel("level.json");
 
+	Vec4<int> vec1(2, 6 , 10 , 20);
+
+	vec1(vec1 * 2);
+
+	std::cout << "Vector MultiplicationL: " << vec1 << std::endl;
+
 	killua.SetTexture(killua_t);
 	killua.SetAnimData(
 		
