@@ -1,7 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include <vector>
-#include "util/VectorMath.h"
+#include "../util/VectorMath.h"
 #define IDLE 0
 #define MOVING_FRONT 8
 #define MOVING_BACK -1

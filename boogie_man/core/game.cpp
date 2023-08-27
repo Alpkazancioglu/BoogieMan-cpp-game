@@ -6,7 +6,7 @@
 #include "middle_Background.h"
 #include "foreground.h"
 #include <string>
-#include "../LevelHandler.h"
+#include "LevelHandler.h"
 
 #define FORESTPOSY 0
 
@@ -55,8 +55,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 		},
 		0.0f);
 
-
-
+    
 	foreground_o.SetBaseAttributes(t_foreground, ForestScale, { {}, { Pixel2Percent(0), FORESTPOSY}, 0, 0, 0, 160*MoveEverything }, 0.0f);
 	middlebackground_o.SetBaseAttributes(middle_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 110 * MoveEverything }, 0.0f);
 	farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 * MoveEverything }, 0.0f);
@@ -80,7 +79,6 @@ Alpino::Alpino(Vec2<int> WindowSize)
 
 	killua.SetTexture(killua_t);
 	killua.SetAnimData(
-		
 			{0.0f,0.0f,(float)(killua_t.width / 12),(float)killua_t.height}, // rectangle
 			{(getWsize().x / 2) - (killua_t.width / 12),getWsize().y - killua_t.height - 26}, // pos
 			5, // frame number
@@ -109,7 +107,6 @@ Alpino::~Alpino()
 	UnloadTexture(Clouds_t);
 	UnloadTexture(FrontVegetation_t);
 	UnloadTexture(Road_t);
-
 
 	Sky->clear();
 }
@@ -171,7 +168,6 @@ void Alpino::update(RenderTexture2D *fbo)
 			Road.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(Road.Texture->width * Road.scale) , Road.Data.pos.y }, dt, true);
 			FrontVegetation.RenderDuplicateExLoop(5, 0, WHITE, 0, { -(float)(FrontVegetation_t.width * FrontVegetation.scale),FrontVegetation.Data.pos.y }, dt, true);
 		}
-		
 		
 		for (int i = 0; i < sizeofnebula; i++)
 		{

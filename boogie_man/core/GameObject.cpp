@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include <raymath.h>
 #include <iostream>
-#include "util/WindowUtil.h"
+#include "../util/WindowUtil.h"
 
 
 

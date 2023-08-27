@@ -141,14 +141,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="core\game.cpp" />
+    <ClCompile Include="core\GameHandler.cpp" />
+    <ClCompile Include="core\GameObject.cpp" />
+    <ClCompile Include="core\LevelHandler.cpp" />
+    <ClCompile Include="core\Maincpp.cpp" />
     <ClCompile Include="ECS.cpp" />
-    <ClCompile Include="FileHandler.cpp" />
     <ClCompile Include="GameEntity.cpp" />
-    <ClCompile Include="GameHandler.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="LevelHandler.cpp" />
-    <ClCompile Include="Maincpp.cpp" />
-    <ClCompile Include="StopWatch.cpp" />
+    <ClCompile Include="util\FileHandler.cpp" />
+    <ClCompile Include="util\StopWatch.cpp" />
     <ClCompile Include="util\VectorMath.cpp" />
     <ClCompile Include="util\WindowUtil.cpp" />
   </ItemGroup>
@@ -157,17 +157,17 @@
     <ClInclude Include="core\far_background.h" />
     <ClInclude Include="core\foreground.h" />
     <ClInclude Include="core\game.h" />
+    <ClInclude Include="core\GameHandler.h" />
+    <ClInclude Include="core\GameObject.h" />
     <ClInclude Include="core\killua.h" />
+    <ClInclude Include="core\LevelHandler.h" />
     <ClInclude Include="core\middle_Background.h" />
     <ClInclude Include="core\nebula.h" />
     <ClInclude Include="ECS.h" />
-    <ClInclude Include="FileHandler.h" />
     <ClInclude Include="GameEntity.h" />
-    <ClInclude Include="GameHandler.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="LevelHandler.h" />
     <ClInclude Include="rcamera.h" />
-    <ClInclude Include="StopWatch.h" />
+    <ClInclude Include="util\FileHandler.h" />
+    <ClInclude Include="util\StopWatch.h" />
     <ClInclude Include="util\VectorMath.h" />
     <ClInclude Include="util\WindowUtil.h" />
   </ItemGroup>

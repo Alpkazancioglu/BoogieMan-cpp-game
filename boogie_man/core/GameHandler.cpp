@@ -1,11 +1,11 @@
 #include "GameHandler.h"
 #include <algorithm>
 #include <unordered_map>
-#include "core/far_background.h"
-#include "core/killua.h"
-#include "core/nebula.h"
-#include "core/middle_Background.h"
-#include "core/foreground.h"
+#include "far_background.h"
+#include "killua.h"
+#include "nebula.h"
+#include "middle_Background.h"
+#include "foreground.h"
 
 game::game(int screenw_a, int screenh_a)
 {
@@ -50,7 +50,7 @@ void game::initialize(const char* windowname , int fps)
 	MainCamera->target = { 0,0 };
 	MainCamera->offset = { (float)GetMonitorWidth(GetCurrentMonitor()) / 2, (float)GetMonitorHeight(GetCurrentMonitor()) };
 	MainCamera->rotation = 0.0f;
-	MainCamera->zoom = 1.0f;
+	MainCamera->zoom = 1.1f;
 
 	newwatch.stopwatch();
 }
@@ -84,7 +84,10 @@ void game::update()
 	}
 	else
 	{
-		scale = MIN((float)GetScreenWidth() / target->depth.width, ((float)GetScreenHeight()) / target->depth.height);
+//		scale = MIN((float)GetScreenWidth() / target->depth.width, ((float)GetScreenHeight()) / target->depth.height);
+	
+		scale = MIN((float)GetScreenWidth() / getWsize().x, ((float)GetScreenHeight()) / getWsize().y);
+
 	}
 
 }
@@ -105,10 +108,10 @@ void game::draw()
 	AlpinoGame->update(target.get());
 	//AlpinoGame->draw(target.get());
 	/////            ////                     /////
-
+	
 
 	EndMode2D();
-
+	
 
 
 	////      GAME_DRAW_OUT_OF_CAMERA     /////
@@ -131,11 +134,11 @@ void game::draw()
 	{
 		DrawTexturePro(target->texture, { 0.0f, 0.0f, (float)target->texture.width, (float)-target->texture.height }, { (GetScreenWidth() - ((float)GetMonitorWidth(GetCurrentMonitor()) * scale)) * 0.5f - (target->depth.height - GetScreenHeight()), (GetScreenHeight() - ((float)GetMonitorHeight(GetCurrentMonitor()) * scale)) * 0.5f,(float)GetMonitorWidth(GetCurrentMonitor()) * scale + (2*(target->depth.height - GetScreenHeight())), (float)GetMonitorHeight(GetCurrentMonitor()) * scale  }, { 0, 0 }, 0.0f, WHITE);
 	}
-	if(IsWindowFullscreen())
+	else if(IsWindowFullscreen())
 	{
 		DrawTexturePro(target->texture, { 0.0f, 0.0f, (float)target->texture.width, (float)-target->texture.height }, { (GetScreenWidth() - ((float)GetMonitorWidth(GetCurrentMonitor()) * scale)) * 0.5f, (GetScreenHeight() - ((float)GetMonitorHeight(GetCurrentMonitor()) * scale)) * 0.5f,(float)GetMonitorWidth(GetCurrentMonitor()) * scale, (float)GetMonitorHeight(GetCurrentMonitor()) * scale + (target->depth.height - GetScreenHeight()) }, { 0, 0 }, 0.0f, WHITE);
 	}
-	if(!IsWindowMaximized() && !IsWindowFullscreen())
+    else if(!IsWindowMaximized() && !IsWindowFullscreen())
 	{
 		DrawTexturePro(target->texture, { 0.0f, 0.0f, (float)target->texture.width, (float)-target->texture.height }, { (GetScreenWidth() - ((float)GetMonitorWidth(GetCurrentMonitor()) * scale)) * 0.5f, (GetScreenHeight() - ((float)GetMonitorHeight(GetCurrentMonitor()) * scale)) * 0.5f,(float)GetMonitorWidth(GetCurrentMonitor()) * scale, (float)GetMonitorHeight(GetCurrentMonitor()) * scale }, { 0, 0 }, 0.0f, WHITE);
 	}

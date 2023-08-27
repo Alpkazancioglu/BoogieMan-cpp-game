@@ -5,7 +5,7 @@
 #include "../util/WindowUtil.h"
 #include <memory>
 #include <string>
-#include "../GameObject.h"
+#include "GameObject.h"
 #define REAL  0
 #define DUPLICATE  1
 

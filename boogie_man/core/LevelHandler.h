@@ -3,7 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-#include "../include/nlohmann/json.hpp"
+#include "../../include/nlohmann/json.hpp"
 using json = nlohmann::json;
 
 namespace GameLevel
