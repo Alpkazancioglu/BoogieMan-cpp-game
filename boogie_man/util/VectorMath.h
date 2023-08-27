@@ -285,6 +285,11 @@ struct Vec4
 		w = Input.w;
 	}
 
+	Vector4 toVector4()
+	{
+		return { this->x , this->y , this->z  , this->w};
+	}
+
 	void InverseSQroot()
 	{
 		x = Q_rsqrt(x);

@@ -22,7 +22,7 @@ public:
 	void draw();
 	void fullscreen_g(int screenw_a, int screenh_a);
 	void Clean(game* currentgame);
-	void Update_Camera(Vector2 target);
+	void Update_Camera(Vector2 target , Vector2 Offset);
 	float entity_object_pos_calculate_x(float position, Rectangle initialrec);
 	float entity_object_pos_calculate_y(float position, Rectangle initialrec);
 	
