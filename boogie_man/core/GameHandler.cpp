@@ -37,7 +37,7 @@ void game::initialize(const char* windowname , int fps)
 
 	/////            GAME_INIT                /////
 	Vec2<int> screensize(screenw, screenh);
-	AlpinoGame = std::make_unique<Alpino>(screensize);
+	BoogieMan = std::make_unique<Alpino>(screensize);
 	/////            ////                    /////
 
 
@@ -47,7 +47,7 @@ void game::initialize(const char* windowname , int fps)
 	SetTextureFilter(target->texture,TEXTURE_FILTER_BILINEAR);
 
 
-	MainCamera->target = { 0,0 };
+	MainCamera->target = {  BoogieMan->killua.Data.pos.x ,getWsize().y / 2 - (MainCamera->zoom * 60.0f)  };
 	MainCamera->offset = { (float)GetMonitorWidth(GetCurrentMonitor()) / 2, (float)GetMonitorHeight(GetCurrentMonitor()) };
 	MainCamera->rotation = 0.0f;
 	MainCamera->zoom = 1.1f;
@@ -71,7 +71,7 @@ void game::update()
 	//Update_Camera({ AlpinoGame->killuaData.pos.x  + (AlpinoGame->killuaData.rec.width/2),AlpinoGame->killuaData.pos.y });
     //Update_Camera({ 0,AlpinoGame->killuaData.pos.y });
 	//Update_Camera({ (float)getWsize().x / 2 ,AlpinoGame->killuaData.pos.y });
-	Update_Camera({ getWsize().x / 2 ,getWsize().y/2 - (MainCamera->zoom * 60.0f) });
+	Update_Camera({ BoogieMan->killua.Data.pos.x ,getWsize().y/2 - (MainCamera->zoom * 60.0f) });
 	game::fullscreen_g(900, 700);
 
 	if (IsWindowMaximized())
@@ -97,15 +97,23 @@ void game::update()
 void game::draw()
 {
 
+
 	//Loading all the render info onto backbuffer 
 	BeginTextureMode(*target);
 
 	ClearBackground(GRAY);
+	BoogieMan->Sky->Draw();
+
+
+	//BeginMode2D(*MainCamera);
+
+
+	//EndMode2D();
 
 	BeginMode2D(*MainCamera);
 
 	////          GAME_DRAW_CAMERA             /////
-	AlpinoGame->update(target.get());
+	BoogieMan->update(target.get());
 	//AlpinoGame->draw(target.get());
 	/////            ////                     /////
 	

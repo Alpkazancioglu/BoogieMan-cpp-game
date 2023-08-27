@@ -84,7 +84,7 @@ Alpino::Alpino(Vec2<int> WindowSize)
 			5, // frame number
 			0, // running time
 			1.0 / 12.0, // uptade time
-			0 // speed
+			200 // speed
 		);
 	max_high = killua.Data.pos.y - 100;
 
@@ -126,13 +126,14 @@ void Alpino::update(RenderTexture2D *fbo)
 		
 		std::cout << MoveEverything << std::endl;
 		//DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 43, 82, 122 , 255 } , {179 , 181 , 199 , 255});
-		Sky->Draw();
-		 
+		//Sky->Draw();
+
 		////animation update for textures
 		{
 		   fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
 		   killua.updateCharacterTexture(dt, 5, MoveEverything);
 		}
+		/*
 		if (MoveEverything == MOVING_FRONT)
 		{
 			
@@ -183,13 +184,26 @@ void Alpino::update(RenderTexture2D *fbo)
 		{	
 			RotateNebula(nebulas[i]->Data, getWsize().x , i);
 		}
-		
+		*/
+
+		Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
+		castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
+		farbackground_o.RenderDuplicateEx(3, 0, WHITE);
+		middlebackground_o.RenderDuplicateEx(3, 0, WHITE);
+		fog_cloud.RenderDuplicateRec(3, 0, { 255,255,255,220 }, 4, 1);
+		foreground_o.RenderDuplicateEx(3, 0, WHITE);
+		Road.RenderDuplicateEx(3, 0, { 231, 255, 207 , 255 });
+		FrontVegetation.RenderDuplicateEx(5, 0, WHITE);
+
 		CharacterMovement();
-		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos, WHITE);
+
+		std::cout << "KILLUA POS: " << killua.Data.pos << std::endl;
+
+		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos.toVector2(), WHITE);
 		
 		for (int i = 0; i < sizeofnebula; i++)
 		{
-			if (CheckCollisionCircleRec(nebulas[i]->Hitbox.Data.pos, nebulas[i]->Hitbox.radius, Rectangle{ killua.Data.pos.x + 38,killua.Data.pos.y,(float)(killua_t.width / 6) - 38,(float)killua_t.height - 20 }))
+			if (CheckCollisionCircleRec(nebulas[i]->Hitbox.Data.pos.toVector2(), nebulas[i]->Hitbox.radius, Rectangle{killua.Data.pos.x + 38,killua.Data.pos.y,(float)(killua_t.width / 6) - 38,(float)killua_t.height - 20}))
 			{
 				//std::cout << "game is over" << std::endl;
 				//GAMESTAGE = ENDPAGE;

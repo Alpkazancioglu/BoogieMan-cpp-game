@@ -35,7 +35,7 @@ private:
 	Rectangle screenrec;
 
 	ecs* newecs;
-	std::unique_ptr<Alpino> AlpinoGame;
+	std::unique_ptr<Alpino> BoogieMan;
 	std::shared_ptr<RenderTexture2D> target;
 	float scale;
 	stopwatch_t newwatch;

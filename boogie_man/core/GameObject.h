@@ -15,7 +15,7 @@ class ObjectData
 {
 public:
 	Rectangle rec;
-	Vector2 pos;
+	Vec2<float> pos;
 	int frame;
 	float runningtime;
 	float updatetime;
@@ -26,7 +26,7 @@ public:
 
 	}
 
-	ObjectData(Rectangle rec_i, Vector2 pos_i, int frame_i, float runningtime_i, float updatetime_i, int speed_i)
+	ObjectData(Rectangle rec_i, Vec2<float> pos_i, int frame_i, float runningtime_i, float updatetime_i, int speed_i)
 	{
 		rec = rec_i;
 		pos = pos_i;
@@ -36,7 +36,7 @@ public:
 		speed = speed_i;
 	}
 
-	void Set(Rectangle rec_i, Vector2 pos_i, int frame_i, float runningtime_i, float updatetime_i, int speed_i) {
+	void Set(Rectangle rec_i, Vec2<float> pos_i, int frame_i, float runningtime_i, float updatetime_i, int speed_i) {
 		rec = rec_i;
 		pos = pos_i;
 		frame = frame_i;
@@ -73,7 +73,7 @@ public:
 	ObjectData Data;
 	float radius;
 
-	void Set(const Rectangle rec_i, const Vector2 pos_i, int frame_i, float runningtime_i, float updatetime_i, float speed_i, float radius_i)
+	void Set(const Rectangle rec_i, const Vec2<float> pos_i, int frame_i, float runningtime_i, float updatetime_i, float speed_i, float radius_i)
 	{
 		Data.Set(rec_i, pos_i, frame_i, runningtime_i, updatetime_i, speed_i);
 		this->radius = radius_i;
@@ -101,17 +101,17 @@ public:
 	void InitializeTextureFromHeader(unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 	void InitializeTextureFromFile(const char* FilePath);
 	void RenderDuplicateEx(int16 duplicateCount, float distance, Color tint);
-	void RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes , float dt , bool ReverseSpeed);
-	void RenderDuplicateRecLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes, float dt, bool ReverseSpeed, int atlas_cut_x = 1, int atlas_cut_y = 1);
+	void RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vec2<float> StartDes , float dt , bool ReverseSpeed);
+	void RenderDuplicateRecLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vec2<float> StartDes, float dt, bool ReverseSpeed, int atlas_cut_x = 1, int atlas_cut_y = 1);
 	void AllocateRandomDistance(unsigned int duplicateCount, int min, int max, int RandomArrayCount);
 	void RenderDuplicateRandomDisEx(unsigned int duplicateCount, int DistanceArrayoffset, Color tint);
 	void RenderDuplicateRec(int16 duplicateCount, float distance, Color tint, int atlas_cut_x = 1, int atlas_cut_y = 1);
-	void Move(Vector2 pos);
+	void Move(Vec2<float> pos);
 	void IncrementPosition(Vector2 IncrAmount);
 	void Scale(float scale);
 	void SetBaseAttributes(Texture2D& Texture, float scale, ObjectData data, float rotation);
 	void Rotate(float degree);
-	void SetAnimData(Rectangle rec,Vector2 pos,int frame,float runningtime,float updatetime,int speed);
+	void SetAnimData(Rectangle rec, Vec2<float> pos,int frame,float runningtime,float updatetime,int speed);
 	Texture2D* GetTexture();
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);

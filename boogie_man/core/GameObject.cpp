@@ -52,7 +52,7 @@ void GameObject::RenderDuplicateEx(int16 duplicateCount, float distance , Color 
 }
 
 //Draw the object with duplicates and also update the position as a loop
-void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint , float EndDes , Vector2 StartDes , float dt, bool ReverseSpeed)
+void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Color tint , float EndDes , Vec2<float> StartDes , float dt, bool ReverseSpeed)
 {
 	
 	if (ReverseSpeed)
@@ -93,7 +93,7 @@ void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Col
 
 }
 
-void GameObject::RenderDuplicateRecLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vector2 StartDes, float dt, bool ReverseSpeed , int atlas_cut_x, int atlas_cut_y)
+void GameObject::RenderDuplicateRecLoop(int16 duplicateCount, float distance, Color tint, float EndDes, Vec2<float> StartDes, float dt, bool ReverseSpeed , int atlas_cut_x, int atlas_cut_y)
 {
 	if (ReverseSpeed)
 	{
@@ -195,7 +195,7 @@ void GameObject::RenderDuplicateRec(int16 duplicateCount, float distance, Color 
 }
 
 //Move the object to the given position on the screen
-void GameObject::Move(Vector2 pos)
+void GameObject::Move(Vec2<float> pos)
 {
 	this->Data.pos = pos;
 }
@@ -227,7 +227,7 @@ void GameObject::Rotate(float degree)
 }
 
 //Set Data
-void GameObject::SetAnimData(Rectangle rec, Vector2 pos, int frame, float runningtime, float updatetime, int speed)
+void GameObject::SetAnimData(Rectangle rec, Vec2<float> pos, int frame, float runningtime, float updatetime, int speed)
 {
 	this->Data.Set(rec, pos, frame, runningtime, updatetime, speed);
 }
@@ -332,13 +332,14 @@ bool Character::isCharacterGround()
 void Character::updateMovingState(int& MoveEverything)
 {
 	if (IsKeyDown(KEY_D))
-		MoveEverything = MOVING_FRONT;
-
+		//MoveEverything = MOVING_FRONT;
+		this->Data.pos.x += 30;
 	else if (IsKeyDown(KEY_A))
-		MoveEverything = MOVING_BACK;
-
-	else if (IsKeyUp(KEY_A) && IsKeyUp(KEY_D))
-		MoveEverything = 0;
+		//MoveEverything = MOVING_BACK;
+		this->Data.pos.x -= 30;
+	else if (!(IsKeyUp(KEY_A) && IsKeyUp(KEY_D)))
+		//MoveEverything = 0;
+		this->Data.pos.x;
 }
 
 

@@ -14,9 +14,6 @@
 #define ENDPAGE 2
 
 
-
-
-
 class Nebula : public GameObject
 {
 public:
@@ -39,9 +36,6 @@ public:
 	};
 
 };
-
-
-
 
 
 class Alpino
@@ -77,7 +71,6 @@ public:
 	Texture2D t_fog_cloud;
 	Texture2D Clouds_t;
 	Texture2D Road_t;
-
 
 	GameObject farbackground_o;
 	GameObject middlebackground_o;
