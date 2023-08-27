@@ -38,7 +38,7 @@ public:
 };
 
 
-class Alpino
+class BoogieMan
 {
 public:
 
@@ -92,12 +92,13 @@ public:
 
 	
 
-	Alpino(Vec2<int> WindowSize);
-	~Alpino();
+	BoogieMan(Vec2<int> WindowSize);
+	~BoogieMan();
 	
 
 	void update(RenderTexture2D* fbo);
 	void draw(RenderTexture2D* fbo);
+	void drawOffCamera();
 	ObjectData updateAnimdata(ObjectData data, float dt, int maxframe);
 	bool isOnGround(ObjectData data);
 	bool isObjectOut(ObjectData data);

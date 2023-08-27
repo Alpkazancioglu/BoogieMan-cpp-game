@@ -335,14 +335,21 @@ void Character::updateMovingState(int& MoveEverything)
 	std::cout << "SPEED: " << this->Data.speed << std::endl;
 
 	if (IsKeyDown(KEY_D))
-		//MoveEverything = MOVING_FRONT;
+	{
+		MoveEverything = MOVING_FRONT;
 		this->Data.pos.x += this->Data.speed;
+	}
 	else if (IsKeyDown(KEY_A))
-		//MoveEverything = MOVING_BACK;
+	{
+		MoveEverything = MOVING_BACK;
 		this->Data.pos.x -= this->Data.speed;
-	else if (!(IsKeyUp(KEY_A) && IsKeyUp(KEY_D)))
-		//MoveEverything = 0;
+	}
+	else if (!(IsKeyUp(KEY_A) && !IsKeyUp(KEY_D)))
+	{
+		MoveEverything = 0;
 		this->Data.pos.x;
+	}
+		
 }
 
 

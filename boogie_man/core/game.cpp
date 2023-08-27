@@ -10,7 +10,7 @@
 
 #define FORESTPOSY 0
 
-Alpino::Alpino(Vec2<int> WindowSize)
+BoogieMan::BoogieMan(Vec2<int> WindowSize)
 {
 	
 	this->WindowWidth = WindowSize.x;
@@ -78,15 +78,16 @@ Alpino::Alpino(Vec2<int> WindowSize)
 			5, // frame number
 			0, // running time
 			1.0 / 12.0, // uptade time
-			20 // speed
+			5 // speed
 		);
 	max_high = killua.Data.pos.y - 100;
+	killua.scale = 1.0f;
 
 	Sky = std::make_unique<cubemap>(GetRelativeTexturePath("sky/rural_asphalt_road_2k.hdr").c_str() , true , 0.00001f , 512);
 
 }
 
-Alpino::~Alpino()
+BoogieMan::~BoogieMan()
 {
 
 	UnloadTexture(killua_t);
@@ -102,7 +103,7 @@ Alpino::~Alpino()
 	Sky->clear();
 }
 
-void Alpino::update(RenderTexture2D *fbo)
+void BoogieMan::update(RenderTexture2D *fbo)
 {
 
 	switch (this->GAMESTAGE)
@@ -177,7 +178,6 @@ void Alpino::update(RenderTexture2D *fbo)
 		}
 		*/
 
-		Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 		castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
 		farbackground_o.RenderDuplicateEx(3, 0, WHITE);
 		middlebackground_o.RenderDuplicateEx(3, 0, WHITE);
@@ -214,7 +214,27 @@ void Alpino::update(RenderTexture2D *fbo)
 	
 }
 
-void Alpino::draw(RenderTexture2D* fbo)
+void BoogieMan::drawOffCamera()
+{
+	Sky->Draw();
+	Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
+
+	if (MoveEverything == MOVING_FRONT)
+	{
+		castle.RenderDuplicateExLoop(1, 0, { 200,200,200,210 }, -(float)(castle.Texture->width * castle.scale), { getWsize().x,0 }, dt, false);	
+	}
+	else if (MoveEverything == IDLE)
+	{
+		castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
+	}
+	else if (MoveEverything == MOVING_BACK)
+	{
+		castle.RenderDuplicateExLoop(1, 0, { 200,200,200,210 }, getWsize().x, { -(float)(CastleTexture.width * castle.scale), 0 }, dt, true);
+	}
+
+}
+
+void BoogieMan::draw(RenderTexture2D* fbo)
 {
 	switch (this->GAMESTAGE)
 	{
@@ -233,12 +253,12 @@ void Alpino::draw(RenderTexture2D* fbo)
 	}
 }
 
-bool Alpino::isObjectOut(ObjectData data)
+bool BoogieMan::isObjectOut(ObjectData data)
 {
 	return (data.pos.x <= -nebulas[0]->Data.rec.width);
 }
 
-void Alpino::RotateNebula(ObjectData data, int windowwidth,int index)
+void BoogieMan::RotateNebula(ObjectData data, int windowwidth,int index)
 {
 	if (isObjectOut(data))
 	{
@@ -251,7 +271,7 @@ void Alpino::RotateNebula(ObjectData data, int windowwidth,int index)
 	}
 	
 }
-ObjectData  Alpino::updateAnimdata(ObjectData data, float dt, int maxframe)
+ObjectData  BoogieMan::updateAnimdata(ObjectData data, float dt, int maxframe)
 {
 
 	if (!isOnGround(killua.Data) && data == killua.Data || data == killua.Data && MoveEverything == IDLE)
@@ -274,12 +294,12 @@ ObjectData  Alpino::updateAnimdata(ObjectData data, float dt, int maxframe)
 	}
 }
 
-bool Alpino::isOnGround(ObjectData data)
+bool BoogieMan::isOnGround(ObjectData data)
 {
 	return data.pos.y + data.rec.height >= getWsize().y-26;
 }
 
-inline void Alpino::CharacterMovement()
+inline void BoogieMan::CharacterMovement()
 {
 	static float LocalSpeed = killua.Data.speed;
 

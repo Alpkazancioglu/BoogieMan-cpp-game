@@ -37,7 +37,7 @@ void game::initialize(const char* windowname , int fps)
 
 	/////            GAME_INIT                /////
 	Vec2<int> screensize(screenw, screenh);
-	BoogieMan = std::make_unique<Alpino>(screensize);
+	BoogieManGame = std::make_unique<BoogieMan>(screensize);
 	/////            ////                    /////
 
 
@@ -47,7 +47,7 @@ void game::initialize(const char* windowname , int fps)
 	SetTextureFilter(target->texture,TEXTURE_FILTER_BILINEAR);
 
 
-	MainCamera->target = {  BoogieMan->killua.Data.pos.x ,getWsize().y / 2 - (MainCamera->zoom * 60.0f)  };
+	MainCamera->target = { BoogieManGame->killua.Data.pos.x ,getWsize().y / 2 - (MainCamera->zoom * 60.0f)  };
 	MainCamera->offset = { (float)GetMonitorWidth(GetCurrentMonitor()) / 2, (float)GetMonitorHeight(GetCurrentMonitor()) };
 	MainCamera->rotation = 0.0f;
 	MainCamera->zoom = 1.0f;
@@ -68,8 +68,9 @@ void game::update()
 
 	/////            ////                /////
 	
-	Update_Camera({ BoogieMan->killua.Data.pos.x ,getWsize().y/2 - (MainCamera->zoom * 60.0f) },
-		{ (float)getWsize().x / 2 - (BoogieMan->killua.Texture->width * BoogieMan->killua.scale) , (getWsize().y / 2) - (MainCamera->zoom * 60.0f) });
+
+	Update_Camera({ BoogieManGame->killua.Data.pos.x ,getWsize().y/2 - (MainCamera->zoom * 60.0f) },
+		          { (float)getWsize().x / 2 - (BoogieManGame->killua.Data.rec.width * BoogieManGame->killua.scale / 2) , (getWsize().y / 2) - (MainCamera->zoom * 60.0f) } , {1.0f,-10.0f});
 	
 	game::fullscreen_g(900, 700);
 
@@ -101,18 +102,12 @@ void game::draw()
 	BeginTextureMode(*target);
 
 	ClearBackground(GRAY);
-	BoogieMan->Sky->Draw();
-
-
-	//BeginMode2D(*MainCamera);
-
-
-	//EndMode2D();
+	BoogieManGame->drawOffCamera();
 
 	BeginMode2D(*MainCamera);
 
 	////          GAME_DRAW_CAMERA             /////
-	BoogieMan->update(target.get());
+	BoogieManGame->update(target.get());
 	//AlpinoGame->draw(target.get());
 	/////            ////                     /////
 	
@@ -161,14 +156,14 @@ void game::Clean(game* currentgame)
 
 	CloseWindow();
 }
-void game::Update_Camera(Vector2 target, Vector2 Offset)
+void game::Update_Camera(Vector2 target, Vector2 Offset, Vec2<float> Zoom)
 {
 	MainCamera->target = target;
 	MainCamera->offset = Offset;
 	MainCamera->zoom += ((float)GetMouseWheelMove() * 0.05f);
 
-	if (MainCamera->zoom > 1.3f) MainCamera->zoom = 1.3f;
-	else if (MainCamera->zoom < 1.0f) MainCamera->zoom = 1.0f;
+	if (MainCamera->zoom > Zoom.x) MainCamera->zoom = Zoom.x;
+	else if (MainCamera->zoom < Zoom.y) MainCamera->zoom = Zoom.y;
 }
 
 
