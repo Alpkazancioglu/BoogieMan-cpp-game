@@ -1,6 +1,6 @@
 #include "LevelHandler.h"
 #include <iostream>
-#include "util/WindowUtil.h"
+#include "../util/WindowUtil.h"
 #include <algorithm>
 
 GameLevel::Level::Level(const char* filePath)

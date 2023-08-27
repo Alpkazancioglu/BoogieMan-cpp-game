@@ -86,6 +86,7 @@ public:
         }
 
         
+        
     }
 
     
@@ -94,6 +95,8 @@ public:
 	{
         //UpdateCamera(&camera, CAMERA_FIRST_PERSON);
 		UpdateCameraPro(&this->camera,{0,0,0},{0,0,0},0);
+        ClearBackground(RAYWHITE);
+
 		BeginMode3D(this->camera);
 		//ClearBackground(WHITE);
 		rlDisableBackfaceCulling();
@@ -102,8 +105,10 @@ public:
         DrawModel(skybox, { 0,0,0 },1.0f, WHITE);
 		rlEnableBackfaceCulling();
 		rlEnableDepthMask();
-        
 		EndMode3D();
+
+
+
 
 	}
 

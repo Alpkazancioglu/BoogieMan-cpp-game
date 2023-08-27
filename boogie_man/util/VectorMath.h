@@ -3,6 +3,8 @@
 #include <time.h>
 #include <iostream>
 #include <string>
+#include <raylib.h>
+
 
 //Utility functions and definitions//>
 #define MAX(a, b) ((a)>(b)? (a) : (b))
@@ -34,7 +36,7 @@ struct Vec2
 		: x(x), y(y)
 	{
 	}
-	Vec2(Vec2& Input)
+	Vec2(const Vec2& Input)
 	{
 		x = Input.x;
 		y = Input.y;
@@ -56,6 +58,11 @@ struct Vec2
 	{
 		x = Q_rsqrt(x);
 		y = Q_rsqrt(y);
+	}
+
+	Vector2 toVector2()
+	{
+		return { this->x , this->y };
 	}
 
 	bool operator==(const Vec2& other) const
@@ -109,7 +116,7 @@ struct Vec2
 		return os;
 	}
 
-	void operator()(const Vec2& other)
+	void operator()(const Vec2& other) const
 	{
 		this->x = other.x;
 		this->y = other.y;
@@ -163,6 +170,11 @@ struct Vec3
 		x = Q_rsqrt(x);
 		y = Q_rsqrt(y);
 		z = Q_rsqrt(z);
+	}
+
+	Vector3 toVector3()
+	{
+		return { this->x , this->y , this->z };
 	}
 
 	bool operator==(const Vec3& other) const

@@ -5,16 +5,13 @@
 #include "../util/WindowUtil.h"
 #include <memory>
 #include <string>
-#include "../GameObject.h"
+#include "GameObject.h"
 #define REAL  0
 #define DUPLICATE  1
 
 #define INITIALPAGE 0
 #define INGAME 1
 #define ENDPAGE 2
-
-
-
 
 
 class Nebula : public GameObject
@@ -39,9 +36,6 @@ public:
 	};
 
 };
-
-
-
 
 
 class Alpino
@@ -77,7 +71,6 @@ public:
 	Texture2D t_fog_cloud;
 	Texture2D Clouds_t;
 	Texture2D Road_t;
-
 
 	GameObject farbackground_o;
 	GameObject middlebackground_o;

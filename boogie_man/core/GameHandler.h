@@ -5,19 +5,10 @@
 #include <vector>
 #include <bitset>
 #include <memory>
-#include "core/game.h"
-#include "ECS.h"
-#include "FileHandler.h"
-#include "StopWatch.h"
-
-class somestaticclass
-{
-public:
-
-
-	static void foo(){};
-
-};
+#include "game.h"
+#include "../ECS.h"
+#include "../util/FileHandler.h"
+#include "../util/StopWatch.h"
 
 class game
 {
@@ -44,7 +35,7 @@ private:
 	Rectangle screenrec;
 
 	ecs* newecs;
-	std::unique_ptr<Alpino> AlpinoGame;
+	std::unique_ptr<Alpino> BoogieMan;
 	std::shared_ptr<RenderTexture2D> target;
 	float scale;
 	stopwatch_t newwatch;
