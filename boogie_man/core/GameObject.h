@@ -6,7 +6,7 @@
 #define MOVING_FRONT 8
 #define MOVING_BACK -1
 
-class Alpino;
+class BoogieMan;
 
 
 void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);

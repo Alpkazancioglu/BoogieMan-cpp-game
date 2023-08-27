@@ -22,7 +22,7 @@ public:
 	void draw();
 	void fullscreen_g(int screenw_a, int screenh_a);
 	void Clean(game* currentgame);
-	void Update_Camera(Vector2 target , Vector2 Offset);
+	void Update_Camera(Vector2 target , Vector2 Offset , Vec2<float> Zoom);
 	float entity_object_pos_calculate_x(float position, Rectangle initialrec);
 	float entity_object_pos_calculate_y(float position, Rectangle initialrec);
 	
@@ -35,7 +35,7 @@ private:
 	Rectangle screenrec;
 
 	ecs* newecs;
-	std::unique_ptr<Alpino> BoogieMan;
+	std::unique_ptr<BoogieMan> BoogieManGame;
 	std::shared_ptr<RenderTexture2D> target;
 	float scale;
 	stopwatch_t newwatch;
