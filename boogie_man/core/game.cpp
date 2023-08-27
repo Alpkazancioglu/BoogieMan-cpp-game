@@ -78,7 +78,7 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 			5, // frame number
 			0, // running time
 			1.0 / 12.0, // uptade time
-			5 // speed
+			500 // speed
 		);
 	max_high = killua.Data.pos.y - 100;
 	killua.scale = 1.0f;
@@ -303,7 +303,7 @@ inline void BoogieMan::CharacterMovement()
 {
 	static float LocalSpeed = killua.Data.speed;
 
-	killua.updateMovingState(MoveEverything);
+	killua.updateMovingState(MoveEverything,dt);
 	current_high = killua.Data.pos.y;
 	killua.Data.pos.y += LocalSpeed * dt;
 	

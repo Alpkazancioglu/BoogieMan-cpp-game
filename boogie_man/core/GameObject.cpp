@@ -329,27 +329,68 @@ bool Character::isCharacterGround()
 		return Data.pos.y + Data.rec.height >= GetMonitorHeight(GetCurrentMonitor()) - 26;
 }
 
-void Character::updateMovingState(int& MoveEverything)
+void Character::updateMovingState(int& MoveEverything, float dt)
 {
+	const float acceleration = 12.0f;
+	static float localSpeed = 0;
+	static bool Slowing = false;
+	//0 = a;
+	//1 = d;
+	std::cout << "BOOL KEY == " << MoveEverything << "\n";
+	const float maxSpeed = this->Data.speed;
 
-	std::cout << "SPEED: " << this->Data.speed << std::endl;
 
 	if (IsKeyDown(KEY_D))
 	{
+		Slowing = false;
 		MoveEverything = MOVING_FRONT;
-		this->Data.pos.x += this->Data.speed;
+		if (localSpeed < 0)
+			localSpeed += acceleration * 2;
+		else if (localSpeed <= maxSpeed)
+			localSpeed += acceleration;
+
+		this->Data.pos.x += localSpeed * dt;
 	}
+
 	else if (IsKeyDown(KEY_A))
 	{
+		Slowing = false;
 		MoveEverything = MOVING_BACK;
-		this->Data.pos.x -= this->Data.speed;
+		if (localSpeed > 0)
+			localSpeed -= acceleration * 2;
+		else if (localSpeed >= -maxSpeed)
+			localSpeed -= acceleration;
+		this->Data.pos.x += localSpeed * dt;
 	}
-	else if (!(IsKeyUp(KEY_A) && !IsKeyUp(KEY_D)))
+
+	else if (IsKeyReleased(KEY_A) || IsKeyReleased(KEY_D))
 	{
-		MoveEverything = 0;
-		this->Data.pos.x;
+		Slowing = true;
 	}
-		
+
+	if (Slowing)
+	{
+		if (localSpeed >= 0)
+		{
+			localSpeed -= acceleration * 2;
+			this->Data.pos.x += localSpeed * dt;
+			if (localSpeed <= 0)
+			{
+				MoveEverything = IDLE;
+				Slowing = false;
+			}
+		}
+		else
+		{
+			localSpeed += acceleration * 2;
+			this->Data.pos.x += localSpeed * dt;
+			if (localSpeed >= 0)
+			{
+				MoveEverything = IDLE;
+				Slowing = false;
+			}
+		}
+	}
 }
 
 

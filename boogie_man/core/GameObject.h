@@ -3,7 +3,7 @@
 #include <vector>
 #include "../util/VectorMath.h"
 #define IDLE 0
-#define MOVING_FRONT 8
+#define MOVING_FRONT 1
 #define MOVING_BACK -1
 
 class BoogieMan;
@@ -145,7 +145,7 @@ class Character : public GameObject
 public:
 
 	void updateCharacterTexture(float dt, int maxframe,int &MoveEverything);
-	void updateMovingState(int &MoveEverything);
+	void updateMovingState(int &MoveEverything,float dt);
 	bool isCharacterGround();
 
 
