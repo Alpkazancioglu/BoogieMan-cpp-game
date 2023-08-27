@@ -50,7 +50,7 @@ void game::initialize(const char* windowname , int fps)
 	MainCamera->target = {  BoogieMan->killua.Data.pos.x ,getWsize().y / 2 - (MainCamera->zoom * 60.0f)  };
 	MainCamera->offset = { (float)GetMonitorWidth(GetCurrentMonitor()) / 2, (float)GetMonitorHeight(GetCurrentMonitor()) };
 	MainCamera->rotation = 0.0f;
-	MainCamera->zoom = 1.1f;
+	MainCamera->zoom = 1.0f;
 
 	newwatch.stopwatch();
 }
@@ -68,10 +68,9 @@ void game::update()
 
 	/////            ////                /////
 	
-	//Update_Camera({ AlpinoGame->killuaData.pos.x  + (AlpinoGame->killuaData.rec.width/2),AlpinoGame->killuaData.pos.y });
-    //Update_Camera({ 0,AlpinoGame->killuaData.pos.y });
-	//Update_Camera({ (float)getWsize().x / 2 ,AlpinoGame->killuaData.pos.y });
-	Update_Camera({ BoogieMan->killua.Data.pos.x ,getWsize().y/2 - (MainCamera->zoom * 60.0f) });
+	Update_Camera({ BoogieMan->killua.Data.pos.x ,getWsize().y/2 - (MainCamera->zoom * 60.0f) },
+		{ (float)getWsize().x / 2 - (BoogieMan->killua.Texture->width * BoogieMan->killua.scale) , (getWsize().y / 2) - (MainCamera->zoom * 60.0f) });
+	
 	game::fullscreen_g(900, 700);
 
 	if (IsWindowMaximized())
@@ -162,12 +161,10 @@ void game::Clean(game* currentgame)
 
 	CloseWindow();
 }
-void game::Update_Camera(Vector2 target)
+void game::Update_Camera(Vector2 target, Vector2 Offset)
 {
-	
 	MainCamera->target = target;
-	//MainCamera->offset = { (float)getWsize().x /2 , (float)GetMonitorHeight(GetCurrentMonitor()) - AlpinoGame->killua.height - 3 - (MainCamera->zoom * 60.0f)};
-	MainCamera->offset = { (float)getWsize().x / 2 , (getWsize().y / 2) - (MainCamera->zoom * 60.0f) };
+	MainCamera->offset = Offset;
 	MainCamera->zoom += ((float)GetMouseWheelMove() * 0.05f);
 
 	if (MainCamera->zoom > 1.3f) MainCamera->zoom = 1.3f;

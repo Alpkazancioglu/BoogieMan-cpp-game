@@ -71,12 +71,6 @@ Alpino::Alpino(Vec2<int> WindowSize)
 
 	GameLevel::Level newLevel("level.json");
 
-	Vec4<int> vec1(2, 6 , 10 , 20);
-
-	vec1(vec1 * 2);
-
-	std::cout << "Vector MultiplicationL: " << vec1 << std::endl;
-
 	killua.SetTexture(killua_t);
 	killua.SetAnimData(
 			{0.0f,0.0f,(float)(killua_t.width / 12),(float)killua_t.height}, // rectangle
@@ -84,14 +78,11 @@ Alpino::Alpino(Vec2<int> WindowSize)
 			5, // frame number
 			0, // running time
 			1.0 / 12.0, // uptade time
-			200 // speed
+			20 // speed
 		);
 	max_high = killua.Data.pos.y - 100;
 
 	Sky = std::make_unique<cubemap>(GetRelativeTexturePath("sky/rural_asphalt_road_2k.hdr").c_str() , true , 0.00001f , 512);
-
-	//GameLevel::WriteLevel();
-	//GameLevel::ReadLevel();
 
 }
 
@@ -290,33 +281,34 @@ bool Alpino::isOnGround(ObjectData data)
 
 inline void Alpino::CharacterMovement()
 {
+	static float LocalSpeed = killua.Data.speed;
 
 	killua.updateMovingState(MoveEverything);
 	current_high = killua.Data.pos.y;
-	killua.Data.pos.y += killua.Data.speed * dt;
+	killua.Data.pos.y += LocalSpeed * dt;
 	
 	
 	if (isOnGround(killua.Data) && IsKeyDown(KEY_SPACE))
 	{	
 		if (!isOnGround(killua.Data))
 			isPlayerJumped = true;
-		killua.Data.speed = 0;
+		LocalSpeed = 0;
 	}
 	else if (isOnGround(killua.Data))
 	{
 		isMaxHeightReached = false;
-		killua.Data.speed = 0;
+		LocalSpeed = 0;
 		isPlayerJumped = false;
 	}
 	else
 	{
-		killua.Data.speed += gravity * dt;
+		LocalSpeed += gravity * dt;
 	}
 	if (max_high >= current_high)
 		isMaxHeightReached = true;
 	if (IsKeyDown(KEY_SPACE) && !isMaxHeightReached && !isPlayerJumped)
 	{
-		killua.Data.speed = -300;
+		LocalSpeed = -300;
 	}
 	else if (IsKeyReleased(KEY_SPACE))
 	{
