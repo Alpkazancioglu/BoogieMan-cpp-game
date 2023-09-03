@@ -331,65 +331,96 @@ bool Character::isCharacterGround()
 
 void Character::updateMovingState(int& MoveEverything, float dt)
 {
-	const float acceleration = 12.0f;
+	const float acceleration = 16.0f;
 	static float localSpeed = 0;
 	static bool Slowing = false;
-	//0 = a;
-	//1 = d;
-	std::cout << "BOOL KEY == " << MoveEverything << "\n";
-	const float maxSpeed = this->Data.speed;
+	static float maxSpeed = this->Data.speed;
+	if (IsKeyDown(KEY_LEFT_SHIFT))
+	{
+		maxSpeed = this->Data.speed * 2;
+	}
 
+	std::cout << "localspeed : " << localSpeed << std::endl;
+	if (IsKeyReleased(KEY_A) || IsKeyReleased(KEY_D) || IsKeyReleased(KEY_LEFT_SHIFT))
+	{
+		Slowing = true;
+		maxSpeed = this->Data.speed;
+	}
 
 	if (IsKeyDown(KEY_D))
 	{
-		Slowing = false;
-		MoveEverything = MOVING_FRONT;
-		if (localSpeed < 0)
-			localSpeed += acceleration * 2;
-		else if (localSpeed <= maxSpeed)
-			localSpeed += acceleration;
+		if (localSpeed <= this->Data.speed)
+			Slowing = false;
+		if (!Slowing)
+		{
 
-		this->Data.pos.x += localSpeed * dt;
+			MoveEverything = MOVING_FRONT;
+			if (localSpeed < 0)
+				localSpeed += acceleration * 6;
+
+			if (localSpeed <= maxSpeed)
+				localSpeed += acceleration;
+
+			this->Data.pos.x += localSpeed * dt;
+		}
 	}
 
 	else if (IsKeyDown(KEY_A))
 	{
-		Slowing = false;
-		MoveEverything = MOVING_BACK;
-		if (localSpeed > 0)
-			localSpeed -= acceleration * 2;
-		else if (localSpeed >= -maxSpeed)
-			localSpeed -= acceleration;
-		this->Data.pos.x += localSpeed * dt;
-	}
+		if (localSpeed >= -this->Data.speed)
+			Slowing = false;
+		if (!Slowing)
+		{
+			MoveEverything = MOVING_BACK;
+			if (localSpeed > 0)
+				localSpeed -= acceleration * 6;
 
-	else if (IsKeyReleased(KEY_A) || IsKeyReleased(KEY_D))
-	{
-		Slowing = true;
+			else if (localSpeed >= -maxSpeed)
+				localSpeed -= acceleration;
+
+			this->Data.pos.x += localSpeed * dt;
+		}
 	}
 
 	if (Slowing)
 	{
-		if (localSpeed >= 0)
+
+		if (localSpeed > 0)
 		{
-			localSpeed -= acceleration * 2;
+
+			if (localSpeed >= Data.speed)
+				localSpeed -= acceleration * 2;
+
+			else
+				localSpeed -= acceleration * 10;
+
 			this->Data.pos.x += localSpeed * dt;
+
 			if (localSpeed <= 0)
 			{
 				MoveEverything = IDLE;
+				localSpeed = 0;
 				Slowing = false;
 			}
 		}
-		else
+
+		else if (localSpeed < 0)
 		{
-			localSpeed += acceleration * 2;
+			if (localSpeed >= -Data.speed)
+				localSpeed += acceleration * 2;
+
+			else
+				localSpeed += acceleration * 10;
+
 			this->Data.pos.x += localSpeed * dt;
 			if (localSpeed >= 0)
 			{
 				MoveEverything = IDLE;
+				localSpeed = 0;
 				Slowing = false;
 			}
 		}
+
 	}
 }
 

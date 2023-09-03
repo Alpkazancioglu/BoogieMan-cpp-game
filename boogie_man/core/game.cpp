@@ -85,6 +85,7 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 
 	Sky = std::make_unique<cubemap>(GetRelativeTexturePath("sky/rural_asphalt_road_2k.hdr").c_str() , true , 0.00001f , 512);
 
+
 }
 
 BoogieMan::~BoogieMan()
@@ -185,6 +186,7 @@ void BoogieMan::update(RenderTexture2D *fbo)
 		foreground_o.RenderDuplicateEx(3, 0, WHITE);
 		Road.RenderDuplicateEx(3, 0, { 231, 255, 207 , 255 });
 		FrontVegetation.RenderDuplicateEx(5, 0, WHITE);
+
 
 		CharacterMovement();
 
@@ -292,6 +294,8 @@ ObjectData  BoogieMan::updateAnimdata(ObjectData data, float dt, int maxframe)
 
 		}
 	}
+
+	return data;
 }
 
 bool BoogieMan::isOnGround(ObjectData data)

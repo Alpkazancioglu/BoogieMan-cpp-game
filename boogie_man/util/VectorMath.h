@@ -116,7 +116,7 @@ struct Vec2
 		return os;
 	}
 
-	void operator()(const Vec2& other) const
+	void operator()(const Vec2& other) 
 	{
 		this->x = other.x;
 		this->y = other.y;

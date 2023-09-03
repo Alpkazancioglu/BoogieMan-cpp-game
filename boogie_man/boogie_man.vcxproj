@@ -131,12 +131,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)include\glew-2.1.0-win32\glew-2.1.0\include\GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)include\glew-2.1.0-win32\glew-2.1.0\lib\Release\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -148,6 +151,8 @@
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="GameEntity.cpp" />
     <ClCompile Include="util\FileHandler.cpp" />
+    <ClCompile Include="util\InputHandler.cpp" />
+    <ClCompile Include="util\Shader.cpp" />
     <ClCompile Include="util\StopWatch.cpp" />
     <ClCompile Include="util\VectorMath.cpp" />
     <ClCompile Include="util\WindowUtil.cpp" />
@@ -167,12 +172,16 @@
     <ClInclude Include="GameEntity.h" />
     <ClInclude Include="rcamera.h" />
     <ClInclude Include="util\FileHandler.h" />
+    <ClInclude Include="util\InputHandler.h" />
+    <ClInclude Include="util\Shader.h" />
     <ClInclude Include="util\StopWatch.h" />
     <ClInclude Include="util\VectorMath.h" />
     <ClInclude Include="util\WindowUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="level.json" />
+    <None Include="textures\shaders\Basic.fs" />
+    <None Include="textures\shaders\Basic.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

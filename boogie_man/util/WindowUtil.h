@@ -4,8 +4,13 @@
 #include <rlgl.h>
 #include "VectorMath.h"
 #include <iostream>
-
+//#include <glew.h>
 //#include "../rcamera.h"
+#include <glew.h>
+#include "../util/Shader.h"
+#include "../../include/glm/gtc/type_ptr.hpp"
+#include "../../include/glm/gtc/matrix_transform.hpp"
+
 
 #include <raymath.h>
 #include <string>
@@ -19,10 +24,13 @@
 #endif
 
 
-
 Vec2<float> getWsize();
 std::string GetRelativeTexturePath(std::string textureName);
 float Pixel2Percent(int Pixel);
+glm::mat4 RaylibMatrix2Mat4(Matrix matrix);
+Matrix glmMat4ToRaylibMatrix(const glm::mat4& glmMatrix);
+Vec2<float> ScreenToWorldCoord(Vec2<float> screenCoord);
+glm::mat4 CalculateCameraMatrix(Camera2D& camera);
 
 class cubemap
 {
@@ -33,6 +41,7 @@ public:
 	Shader CubeMapShader;
     Texture2D panorama;
     float CameraRotationSpeed;
+
 
     TextureCubemap HDRItoCubeMap(Shader shader, Texture2D panorama, int size, int format);
 
@@ -55,6 +64,7 @@ public:
             TextFormat(GetRelativeTexturePath("skybox.fs").c_str(), GLSL_VERSION));
 
         int UseHDRuniform = useHDR ? 1 : 0;
+
 
         MaterialMapIndex cubeMapIndex = MATERIAL_MAP_CUBEMAP;
 
@@ -107,7 +117,7 @@ public:
 		rlEnableDepthMask();
 		EndMode3D();
 
-
+        
 
 
 	}
@@ -119,6 +129,27 @@ public:
         UnloadTexture(panorama);
 
 	}
+
+};
+
+
+class InstancedTexture2D
+{
+public:
+
+    InstancedTexture2D(int instanceCount, Texture2D &texture2draw , std::vector<glm::vec3> &positionoffsets);
+    void draw(Color tint);
+    void draw(Camera2D& camera, Color tint);
+    void clean();
+
+private:
+
+    Texture2D* texture;
+    std::unique_ptr<Util::Shader> instanceShader;
+    GLuint vbo, vao;
+    std::vector<glm::vec3> offsets;
+    int OffsetBufferIndex;
+    int instanceAmount;
 
 };
 

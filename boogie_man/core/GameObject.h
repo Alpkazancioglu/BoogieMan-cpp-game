@@ -138,7 +138,10 @@ public:
 	std::vector<int> RandomDistances;
 };
 
+class Item
+{
 
+};
 
 class Character : public GameObject
 {
@@ -148,6 +151,9 @@ public:
 	void updateMovingState(int &MoveEverything,float dt);
 	bool isCharacterGround();
 
+private:
+
+	std::vector<Item> ItemStorage;
 
 };
 

@@ -58,7 +58,7 @@ public:
 	float max_high;
 	float current_high;
 	bool isPlayerJumped;
-	int MoveEverything = 1;
+	int MoveEverything = 0;
 	
 	Texture2D killua_t;
 	Texture2D far_background;
