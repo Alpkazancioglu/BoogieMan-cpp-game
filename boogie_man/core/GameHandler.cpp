@@ -6,6 +6,11 @@
 #include "nebula.h"
 #include "middle_Background.h"
 #include "foreground.h"
+#include <glew.h>
+
+
+Texture2D texture_T;
+std::unique_ptr<InstancedTexture2D> insTex;
 
 game::game(int screenw_a, int screenh_a)
 {
@@ -22,6 +27,7 @@ game::game(int screenw_a, int screenh_a)
 //Baslatma
 void game::initialize(const char* windowname , int fps)
 {
+
 	InitWindow(screenw , screenh , windowname);
 	if (!IsWindowReady())
 	{
@@ -34,19 +40,46 @@ void game::initialize(const char* windowname , int fps)
 
 	SetTargetFPS(fps);
 
+	if (glewInit() != GLEW_OK)
+	{
+		std::cout << "ERROR initializing the glew module" << std::endl;
+		CloseWindow();
+	}
 
+	glViewport(0, 0, getWsize().x, getWsize().y);
+
+	texture_T = LoadTexture(GetRelativeTexturePath("woodenlogwithroots.png").c_str());
+
+	int count = 60;
+
+	std::vector<glm::vec3> offsets;
+	offsets.resize(count);
+	int index = 0;
+	float offset = 0.0f;
+
+	for (int y = 0; y < count; y += 1)
+	{
+			glm::vec3 translation;
+			translation.x = (float)y  + y * offset;
+			translation.y = 1.0f;
+			translation.z = 1.0f / GiveRandomNumf(4,7,100,false,11);
+			//translation.z = 0.7f ;
+			offsets[index++] = translation;
+	}
+	
+	insTex = std::make_unique<InstancedTexture2D>(count, texture_T, offsets);
+
+	
 	/////            GAME_INIT                /////
 	Vec2<int> screensize(screenw, screenh);
 	BoogieManGame = std::make_unique<BoogieMan>(screensize);
 	/////            ////                    /////
 
-
-
 	target = std::make_shared<RenderTexture>();
 	*target = LoadRenderTexture(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
 	SetTextureFilter(target->texture,TEXTURE_FILTER_BILINEAR);
 
-
+	
 	MainCamera->target = { BoogieManGame->killua.Data.pos.x ,getWsize().y / 2 - (MainCamera->zoom * 60.0f)  };
 	MainCamera->offset = { (float)GetMonitorWidth(GetCurrentMonitor()) / 2, (float)GetMonitorHeight(GetCurrentMonitor()) };
 	MainCamera->rotation = 0.0f;
@@ -68,10 +101,14 @@ void game::update()
 
 	/////            ////                /////
 	
-
-	Update_Camera({ BoogieManGame->killua.Data.pos.x ,getWsize().y/2 - (MainCamera->zoom * 60.0f) },
-		          { (float)getWsize().x / 2 - (BoogieManGame->killua.Data.rec.width * BoogieManGame->killua.scale / 2) , (getWsize().y / 2) - (MainCamera->zoom * 60.0f) } , {1.0f,-10.0f});
+	//Update_Camera({ BoogieManGame->killua.Data.pos.x ,getWsize().y/2 - (MainCamera->zoom * 60.0f) },
+		         // { (float)getWsize().x / 2 - (BoogieManGame->killua.Data.rec.width * BoogieManGame->killua.scale / 2) , (getWsize().y / 2) - (MainCamera->zoom * 60.0f) } , {1.0f,-10.0f});
+	//std::cout << "IMAGE WIDTH: " << (BoogieManGame->killua.Data.rec.width * BoogieManGame->killua.scale / 2) << std::endl;
 	
+	Update_Camera({ BoogieManGame->killua.Data.pos.x + (BoogieManGame->killua.Data.rec.width * BoogieManGame->killua.scale / 2),getWsize().y / 2 },
+		{ (float)getWsize().x / 2  , (getWsize().y / 2) }, { 1.0f,-10.0f });
+
+
 	game::fullscreen_g(900, 700);
 
 	if (IsWindowMaximized())
@@ -97,23 +134,29 @@ void game::update()
 void game::draw()
 {
 
-
 	//Loading all the render info onto backbuffer 
 	BeginTextureMode(*target);
 
+	
+
 	ClearBackground(GRAY);
 	BoogieManGame->drawOffCamera();
+	
 
 	BeginMode2D(*MainCamera);
+	
 
 	////          GAME_DRAW_CAMERA             /////
 	BoogieManGame->update(target.get());
+	insTex->draw(*MainCamera,{255,255,255,255});
+
 	//AlpinoGame->draw(target.get());
 	/////            ////                     /////
-	
+
+	// Disable blending
 
 	EndMode2D();
-	
+
 
 
 	////      GAME_DRAW_OUT_OF_CAMERA     /////
@@ -154,6 +197,9 @@ void game::Clean(game* currentgame)
 	delete newecs;
 	delete currentgame;
 
+	UnloadTexture(texture_T);
+	insTex->clean();
+	
 	CloseWindow();
 }
 void game::Update_Camera(Vector2 target, Vector2 Offset, Vec2<float> Zoom)

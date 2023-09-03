@@ -38,7 +38,11 @@
         "x": 1,
         "y": 1
       },
-      "reverseSpeed": false
+      "reverseSpeed": false,
+      "PositionType": "global",
+      "CollisionBoxes": {
+
+      }
     },
 
     "Object2": {

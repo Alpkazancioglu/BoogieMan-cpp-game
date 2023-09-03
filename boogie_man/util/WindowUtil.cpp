@@ -1,5 +1,6 @@
 #include "WindowUtil.h"
 #include <iostream>
+#include "VectorMath.h"
 
 
 Vec2<float> getWsize()
@@ -29,6 +30,62 @@ float Pixel2Percent(int Pixel)
     return (getWsize().y * Pixel) / 1080;
 }
 
+glm::mat4 RaylibMatrix2Mat4(Matrix matrix)
+{
+    glm::mat4 finalMat(1.0f);
+    
+    finalMat[0][0] = matrix.m0;
+    finalMat[0][1] = matrix.m1;
+    finalMat[0][2] = matrix.m2;
+    finalMat[0][3] = matrix.m3;
+    finalMat[1][0] = matrix.m4;
+    finalMat[1][1] = matrix.m5;
+    finalMat[1][2] = matrix.m6;
+    finalMat[1][3] = matrix.m7;
+    finalMat[2][0] = matrix.m8;
+    finalMat[2][1] = matrix.m9;
+    finalMat[2][2] = matrix.m10;
+    finalMat[2][3] = matrix.m11;
+    finalMat[3][0] = matrix.m12;
+    finalMat[3][1] = matrix.m13;
+    finalMat[3][2] = matrix.m14;
+    finalMat[3][3] = matrix.m15;
+
+    return finalMat;
+}
+
+Matrix glmMat4ToRaylibMatrix(const glm::mat4& glmMatrix)
+{
+    Matrix raylibMatrix;
+
+    raylibMatrix.m0 = glmMatrix[0][0];
+    raylibMatrix.m1 = glmMatrix[1][0];
+    raylibMatrix.m2 = glmMatrix[2][0];
+    raylibMatrix.m3 = glmMatrix[3][0];
+
+    raylibMatrix.m4 = glmMatrix[0][1];
+    raylibMatrix.m5 = glmMatrix[1][1];
+    raylibMatrix.m6 = glmMatrix[2][1];
+    raylibMatrix.m7 = glmMatrix[3][1];
+
+    raylibMatrix.m8 = glmMatrix[0][2];
+    raylibMatrix.m9 = glmMatrix[1][2];
+    raylibMatrix.m10 = glmMatrix[2][2];
+    raylibMatrix.m11 = glmMatrix[3][2];
+
+    raylibMatrix.m12 = glmMatrix[0][3];
+    raylibMatrix.m13 = glmMatrix[1][3];
+    raylibMatrix.m14 = glmMatrix[2][3];
+    raylibMatrix.m15 = glmMatrix[3][3];
+
+    return raylibMatrix;
+}
+
+Vec2<float> ScreenToWorldCoord(Vec2<float> screenCoord)
+{
+    return screenCoord / getWsize();
+}
+
 TextureCubemap cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, int size, int format)
 {
     TextureCubemap cubemap = { 0 };
@@ -50,16 +107,6 @@ TextureCubemap cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, int siz
    
     Matrix matFboProjection = MatrixPerspective(90.0 * DEG2RAD, 1.0, RL_CULL_DISTANCE_NEAR, RL_CULL_DISTANCE_FAR);
     rlSetUniformMatrix(shader.locs[SHADER_LOC_MATRIX_PROJECTION], matFboProjection);
-
-    
-    /*Matrix fboViews[6] = {
-        MatrixLookAt({ 0.0f, 0.0f, 0.0f }, { 1.0f,  0.0f,  0.0f },  { 0.0f, -1.0f,  0.0f }),
-        MatrixLookAt({ 0.0f, 0.0f, 0.0f }, { -1.0f,  0.0f,  0.0f },  { 0.0f, -1.0f,  0.0f }),
-        MatrixLookAt( { 0.0f, 0.0f, 0.0f },  { 0.0f,  1.0f,  0.0f },  { 0.0f,  0.0f,  1.0f }),
-        MatrixLookAt( { 0.0f, 0.0f, 0.0f }, { 0.0f, -1.0f,  0.0f },  { 0.0f,  0.0f, -1.0f }),
-        MatrixLookAt({ 0.0f, 0.0f, 0.0f },  { 0.0f,  0.0f,  1.0f },  { 0.0f, -1.0f,  0.0f }),
-        MatrixLookAt( { 0.0f, 0.0f, 0.0f }, { 0.0f,  0.0f, -1.0f },  { 0.0f, -1.0f,  0.0f })
-    };*/
 
     Matrix fboViews[6] = {
           MatrixLookAt({ 0.0f, 0.0f, 0.0f }, { -1.0f,  0.0f,  0.0f },  { 0.0f, 1.0f,  0.0f }),
@@ -108,4 +155,141 @@ TextureCubemap cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, int siz
     cubemap.format = format;
 
     return cubemap;
+}
+
+
+
+InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &texture2draw, std::vector<glm::vec3> &positionoffsets)
+{
+
+    instanceShader = std::make_unique<Util::Shader>(GetRelativeTexturePath("shaders/Basic.vs").c_str(), GetRelativeTexturePath("shaders/Basic.fs").c_str());
+
+    float vertices[] = {
+    -0.5f, -0.5f,0.0f, 0.0f, 0.0f,
+     0.5f, -0.5f,0.0f, -1.0f, 0.0f,
+     0.5f,  0.5f,0.0f, -1.0f, -1.0f,
+    -0.5f,  0.5f,0.0f, 0.0f, -1.0f
+    };
+
+    texture = &texture2draw;
+
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+
+    glBindVertexArray(vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+
+ 
+    offsets.assign(positionoffsets.begin(), positionoffsets.end());
+
+    offsets.resize(500);
+    
+    for (size_t i = positionoffsets.size(); i < 500; i++)
+    {
+        offsets[i] = { 0,0 , 0 };
+    }
+
+    std::cout << "Offsets :";
+
+    for (size_t i = 0; i < offsets.size(); i++)
+    {
+        std::cout << "(" << offsets[i].x << " , " << offsets[i].y << " , " << offsets[i].z<< ")";
+    }
+
+    std::cout << "\n";
+
+    instanceAmount = instanceCount;
+
+    Util::UseShaderProgram(instanceShader->GetID());
+
+    glUniform3fv(glGetUniformLocation(instanceShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
+    
+    Util::UseShaderProgram(0);
+
+}
+
+void InstancedTexture2D::draw(Color tint)
+{
+    glUseProgram(instanceShader->GetID());
+
+    Vector4 tintColor = ColorNormalize(tint);
+
+    glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x, tintColor.y, tintColor.z, tintColor.w);
+
+    glm::mat4 projectionMatrix = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+
+    glUniformMatrix4fv(glGetUniformLocation(instanceShader->GetID(), "cameraMat"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture->id);
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "tex"), GL_TEXTURE0);
+
+
+    glBindVertexArray(vao);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instanceAmount);
+    glBindVertexArray(0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(0);
+
+    glUseProgram(0);
+}
+
+void InstancedTexture2D::draw(Camera2D& camera , Color tint)
+{
+    
+    glUseProgram(instanceShader->GetID());
+
+    Vector4 tintColor = ColorNormalize(tint);
+    
+    glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x , tintColor.y , tintColor.z , tintColor.w);
+
+    glm::mat4 projectionMatrix = CalculateCameraMatrix(camera);
+
+    glUniformMatrix4fv(glGetUniformLocation(instanceShader->GetID(), "cameraMat"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture->id);
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "tex"), GL_TEXTURE0);
+
+    glBindVertexArray(vao);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instanceAmount);
+    glBindVertexArray(0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(0);
+
+    glUseProgram(0);
+}
+
+void InstancedTexture2D::clean()
+{
+    glDeleteBuffers(1, &vbo);
+    glDeleteVertexArrays(1, &vao);
+    Util::DeleteShaderProgram(instanceShader->GetID());
+}
+
+glm::mat4 CalculateCameraMatrix(Camera2D& camera)
+{
+    float zoom = camera.zoom;
+
+    Vec2<float> offset(camera.offset.x * 2, camera.offset.y * 2);
+    offset(ScreenToWorldCoord(offset));
+
+    Vec2<float> target(((camera.target.x) / getWsize().x) * zoom * 2, ((camera.target.y / getWsize().y) * zoom * 2));
+
+    glm::mat4 projectionMatrix = glm::ortho((-1.0f + target.x) / zoom, (1.0f + target.x) / zoom, (-1.0f + target.y) / zoom, (1.0f + target.y) / zoom, -1.0f, 1.0f);
+
+    return projectionMatrix;
 }

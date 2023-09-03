@@ -18,41 +18,28 @@ T stopwatch_t::returncurrenttime()
 
 int stopwatch_t::returnseconds()
 {
-	seconds = duration_cast<int>((std::chrono::steady_clock::now() - start)) % 61;
+	auto duration = std::chrono::steady_clock::now() - start;
+	seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count() % 60;
 	return seconds;
 }
 
 int stopwatch_t::returnminutes()
 {
-
-	if ((seconds == 60) && (clockchecker[0] == 1))
-	{
-		mins++;
-		clockchecker[0] = false;
-	}
-	if (seconds == 59)
-	{
-		clockchecker[0] = true;
-	}
-
+	auto duration = std::chrono::steady_clock::now() - start;
+	int totalSeconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+	mins = (totalSeconds / 60) % 60;
 	return mins;
 }
 
+
 int stopwatch_t::returnhours()
 {
-	if ((mins == 60) && (clockchecker[1] == 1))
-	{
-		hours++;
-		mins = 0;
-		clockchecker[1] = false;
-	}
-	if (mins == 59)
-	{
-		clockchecker[1] = true;
-	}
-
+	auto duration = std::chrono::steady_clock::now() - start;
+	int totalSeconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+	hours = totalSeconds / 3600; 
 	return hours;
 }
+
 
 void stopwatch_t::resetstopwatch()
 {
