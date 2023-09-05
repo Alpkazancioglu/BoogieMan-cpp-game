@@ -2,6 +2,8 @@
 #include <raylib.h>
 #include <vector>
 #include "../util/VectorMath.h"
+#include "../util/WindowUtil.h"
+
 #define IDLE 0
 #define MOVING_FRONT 1
 #define MOVING_BACK -1
@@ -92,6 +94,13 @@ struct AnimBackground
 	bool duplicate;
 };
 
+enum Direction {
+	UP,
+	RIGHT,
+	DOWN,
+	LEFT
+};
+
 class GameObject
 {
 public:
@@ -116,6 +125,8 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
+	static Direction VectorDirection(glm::vec2 target);
+	
 
 	inline bool operator< (GameObject& other)
 	{
@@ -138,6 +149,19 @@ public:
 	std::vector<int> RandomDistances;
 };
 
+class InstancedGameObject : public GameObject
+{
+public:
+	void SetInstancing(int instanceCount, std::vector<glm::vec3> positionoffsets, Util::Shader& instanceShader);
+	void SetInstancing(int instanceCount, std::vector<glm::vec3> positionoffsets);
+
+	~InstancedGameObject();
+
+	std::unique_ptr<bgGL::InstancedTexture2D> InstancedTexture = nullptr;
+private:
+
+};
+
 class Item
 {
 
@@ -148,7 +172,7 @@ class Character : public GameObject
 public:
 
 	void updateCharacterTexture(float dt, int maxframe,int &MoveEverything);
-	void updateMovingState(int &MoveEverything,float dt);
+	void updateMovingState(int& MoveEverything, float dt, ObjectData obstacle);
 	bool isCharacterGround();
 
 private:

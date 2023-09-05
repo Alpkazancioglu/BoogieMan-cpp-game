@@ -71,6 +71,12 @@ public:
 	Texture2D t_fog_cloud;
 	Texture2D Clouds_t;
 	Texture2D Road_t;
+	Texture2D WoodFront_t;
+
+	InstancedGameObject WoodFront;
+	InstancedGameObject ForestFront;
+	InstancedGameObject Road;
+
 
 	GameObject farbackground_o;
 	GameObject middlebackground_o;
@@ -80,14 +86,14 @@ public:
 	GameObject Clouds;
 	GameObject FrontVegetation;
 	GameObject castle;
-	GameObject Road;
+	GameObject WoodenLogWithRoots;
 
+	ObjectData woodcol;
 
 	Character killua;
 
-	std::unique_ptr<cubemap> Sky;
-		
-	
+	std::unique_ptr<bgGL::cubemap> Sky;
+
 	std::unique_ptr<Nebula> nebulas[8];
 
 	
@@ -96,11 +102,11 @@ public:
 	~BoogieMan();
 	
 
-	void update(RenderTexture2D* fbo);
+	void update(RenderTexture2D* fbo , Camera2D &MainCamera);
 	void draw(RenderTexture2D* fbo);
 	void drawOffCamera();
 	ObjectData updateAnimdata(ObjectData data, float dt, int maxframe);
-	bool isOnGround(ObjectData data);
+	bool isOnGround();
 	bool isObjectOut(ObjectData data);
 	void RotateNebula(ObjectData data, int windowwidth,int index);	
 	void CharacterMovement();

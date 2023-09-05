@@ -260,6 +260,25 @@ void GameObject::SetTexture(Texture2D &texture)
 
 
 
+void InstancedGameObject::SetInstancing(int instanceCount, std::vector<glm::vec3> positionoffsets, Util::Shader& instanceShader)
+{
+	InstancedTexture = std::make_unique<bgGL::InstancedTexture2D>(instanceCount, *this->Texture, positionoffsets, instanceShader);
+}
+
+void InstancedGameObject::SetInstancing(int instanceCount, std::vector<glm::vec3> positionoffsets)
+{
+	InstancedTexture = std::make_unique<bgGL::InstancedTexture2D>(instanceCount, *this->Texture, positionoffsets);
+}
+
+InstancedGameObject::~InstancedGameObject()
+{
+	if (InstancedTexture != nullptr)
+	{
+		this->InstancedTexture->clean();
+	}
+}
+
+
 
 void Character::updateCharacterTexture(float dt, int maxframe,int &MoveEverything)
 {
@@ -329,8 +348,12 @@ bool Character::isCharacterGround()
 		return Data.pos.y + Data.rec.height >= GetMonitorHeight(GetCurrentMonitor()) - 26;
 }
 
-void Character::updateMovingState(int& MoveEverything, float dt)
+void Character::updateMovingState(int& MoveEverything, float dt, ObjectData obstacle)
 {
+
+	int direction = GameObject::VectorDirection({ this->Data.pos.x - obstacle.pos.x,obstacle.pos.y - this->Data.pos.y });
+
+
 	const float acceleration = 16.0f;
 	static float localSpeed = 0;
 	static bool Slowing = false;
@@ -343,42 +366,59 @@ void Character::updateMovingState(int& MoveEverything, float dt)
 	std::cout << "localspeed : " << localSpeed << std::endl;
 	if (IsKeyReleased(KEY_A) || IsKeyReleased(KEY_D) || IsKeyReleased(KEY_LEFT_SHIFT))
 	{
+
 		Slowing = true;
 		maxSpeed = this->Data.speed;
 	}
 
 	if (IsKeyDown(KEY_D))
 	{
-		if (localSpeed <= this->Data.speed)
-			Slowing = false;
-		if (!Slowing)
+		if ((CheckCollisionRecs({ this->Data.pos.x,this->Data.pos.y,(float)this->Texture->width / 13,(float)this->Texture->height }, obstacle.rec) && direction == LEFT))
 		{
+			localSpeed = 0;
+			MoveEverything = IDLE;
+		}
+		else
+		{
+			if (localSpeed <= this->Data.speed)
+				Slowing = false;
+			if (!Slowing)
+			{
 
-			MoveEverything = MOVING_FRONT;
-			if (localSpeed < 0)
-				localSpeed += acceleration * 6;
+				MoveEverything = MOVING_FRONT;
+				if (localSpeed < 0)
+					localSpeed += acceleration * 6;
 
-			if (localSpeed <= maxSpeed)
-				localSpeed += acceleration;
+				if (localSpeed <= maxSpeed)
+					localSpeed += acceleration;
 
-			this->Data.pos.x += localSpeed * dt;
+				this->Data.pos.x += localSpeed * dt;
+			}
 		}
 	}
-
 	else if (IsKeyDown(KEY_A))
 	{
-		if (localSpeed >= -this->Data.speed)
-			Slowing = false;
-		if (!Slowing)
+		if ((CheckCollisionRecs({ this->Data.pos.x,this->Data.pos.y,(float)this->Texture->width / 13,(float)this->Texture->height }, obstacle.rec) && direction == RIGHT))
 		{
-			MoveEverything = MOVING_BACK;
-			if (localSpeed > 0)
-				localSpeed -= acceleration * 6;
+			localSpeed = 0;
+			MoveEverything = IDLE;
+		}
+		else
+		{
 
-			else if (localSpeed >= -maxSpeed)
-				localSpeed -= acceleration;
+			if (localSpeed >= -this->Data.speed)
+				Slowing = false;
+			if (!Slowing)
+			{
+				MoveEverything = MOVING_BACK;
+				if (localSpeed > 0)
+					localSpeed -= acceleration * 6;
 
-			this->Data.pos.x += localSpeed * dt;
+				else if (localSpeed >= -maxSpeed)
+					localSpeed -= acceleration;
+
+				this->Data.pos.x += localSpeed * dt;
+			}
 		}
 	}
 
@@ -424,6 +464,29 @@ void Character::updateMovingState(int& MoveEverything, float dt)
 	}
 }
 
+Direction GameObject::VectorDirection(glm::vec2 target)
+{
+	glm::vec2 compass[] = {
+		glm::vec2(0.0f, 1.0f),    // up
+		glm::vec2(1.0f, 0.0f),    // right
+		glm::vec2(0.0f, -1.0f),    // down
+		glm::vec2(-1.0f, 0.0f)    // left
+	};
+	float max = 0.05f;
+	unsigned int best_match = -1;
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		float dot_product = glm::dot(glm::normalize(target), compass[i]);
+		if (dot_product > max)
+		{
+			max = dot_product;
+			best_match = i;
+		}
+	}
+	return (Direction)best_match;
+
+}
+
 
 //Load a texture from a header file consists of an image byte array
 void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
@@ -436,3 +499,4 @@ void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned i
 	image.mipmaps = mipmaps;
 	*texture = LoadTextureFromImage(image);
 }
+
