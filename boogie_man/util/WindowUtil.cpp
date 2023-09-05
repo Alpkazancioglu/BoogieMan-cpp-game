@@ -25,12 +25,12 @@ std::string GetRelativeTexturePath(std::string textureName)
 	return (WorkingDir + "/textures/" + textureName);
 }
 
-float Pixel2Percent(int Pixel)
+float bgGL::Pixel2Percent(int Pixel)
 {
     return (getWsize().y * Pixel) / 1080;
 }
 
-glm::mat4 RaylibMatrix2Mat4(Matrix matrix)
+glm::mat4 bgGL::RaylibMatrix2Mat4(Matrix matrix)
 {
     glm::mat4 finalMat(1.0f);
     
@@ -54,7 +54,7 @@ glm::mat4 RaylibMatrix2Mat4(Matrix matrix)
     return finalMat;
 }
 
-Matrix glmMat4ToRaylibMatrix(const glm::mat4& glmMatrix)
+Matrix bgGL::glmMat4ToRaylibMatrix(const glm::mat4& glmMatrix)
 {
     Matrix raylibMatrix;
 
@@ -81,12 +81,153 @@ Matrix glmMat4ToRaylibMatrix(const glm::mat4& glmMatrix)
     return raylibMatrix;
 }
 
-Vec2<float> ScreenToWorldCoord(Vec2<float> screenCoord)
+Vec2<float> bgGL::ScreenToWorldCoord(Vec2<float> screenCoord)
 {
     return screenCoord / getWsize();
 }
 
-TextureCubemap cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, int size, int format)
+std::vector<glm::vec3> bgGL::MakeInstanceOffsetArray(int InstanceCount, Vec2<float> position, Vec2<float> offsetBetween, float scale)
+{
+
+    std::vector<glm::vec3> offsets;
+    offsets.resize(InstanceCount);
+
+    for (int instanceID = 0; instanceID < InstanceCount; instanceID += 1)
+    {
+        glm::vec3 translation;
+        translation.x = position.x + (instanceID * offsetBetween.x);
+        translation.y = position.y + (instanceID * offsetBetween.y);
+        translation.z = scale;
+        offsets[instanceID] = translation;
+    }
+
+    return offsets;
+}
+
+std::vector<glm::vec3> bgGL::MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, float scale, Vec2<float>* position)
+{
+    bool defaultState = false;
+    if (position == nullptr)
+    {
+        position = new Vec2<float>;
+        defaultState = true;
+    }
+   
+    std::vector<glm::vec3> offsets;
+    offsets.resize(InstanceCount);
+
+    for (int instanceID = 0; instanceID < InstanceCount; instanceID += 1)
+    {
+        if (defaultState)
+        {
+            position->SetValues(instanceID, instanceID);
+        }
+
+        glm::vec3 translation;
+        translation.x = position->x + (instanceID * offsetBetween.x);
+        translation.y = position->y + (instanceID * offsetBetween.y);
+        translation.z = scale;
+        offsets[instanceID] = translation;
+    }
+
+    if (defaultState)
+    {
+        delete position;
+    }
+
+    return offsets;
+}
+
+
+std::vector<glm::vec3> bgGL::MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, float scale, float position_y, float* position_x)
+{
+    bool defaultState = false;
+    if (position_x == nullptr)
+    {
+        position_x = new float;
+        defaultState = true;
+    }
+
+    std::vector<glm::vec3> offsets;
+    offsets.resize(InstanceCount);
+
+    for (int instanceID = 0; instanceID < InstanceCount; instanceID += 1)
+    {
+        if (defaultState)
+        {
+            *position_x = instanceID;
+        }
+
+        glm::vec3 translation;
+        translation.x = *position_x + (instanceID * offsetBetween.x);
+        translation.y = position_y + (instanceID * offsetBetween.y);
+        translation.z = scale;
+        offsets[instanceID] = translation;
+    }
+
+    if (defaultState)
+    {
+        delete position_x;
+    }
+
+    return offsets;
+}
+
+std::vector<glm::vec3> bgGL::MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, std::function<float()> scale, float position_y, float* position_x)
+{
+    bool defaultState = false;
+    if (position_x == nullptr)
+    {
+        position_x = new float;
+        defaultState = true;
+    }
+
+    std::vector<glm::vec3> offsets;
+    offsets.resize(InstanceCount);
+
+    for (int instanceID = 0; instanceID < InstanceCount; instanceID += 1)
+    {
+        if (defaultState)
+        {
+            *position_x = instanceID;
+        }
+
+        glm::vec3 translation;
+        translation.x = *position_x + (instanceID * offsetBetween.x);
+        translation.y = position_y + (instanceID * offsetBetween.y);
+        translation.z = scale();
+        offsets[instanceID] = translation;
+    }
+
+    if (defaultState)
+    {
+        delete position_x;
+    }
+
+    return offsets;
+}
+
+std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, std::function<float()> scale, float position_y, std::function<float()> position_x)
+{
+    std::vector<glm::vec3> offsets;
+    offsets.resize(InstanceCount);
+
+    for (int instanceID = 0; instanceID < InstanceCount; instanceID += 1)
+    {
+        glm::vec3 translation;
+        translation.x = position_x() + (instanceID * offsetBetween.x);
+        translation.y = position_y + (instanceID * offsetBetween.y);
+        translation.z = scale();
+        offsets[instanceID] = translation;
+    }
+    return offsets;
+}
+
+
+
+
+
+TextureCubemap bgGL::cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, int size, int format)
 {
     TextureCubemap cubemap = { 0 };
 
@@ -159,7 +300,7 @@ TextureCubemap cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, int siz
 
 
 
-InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &texture2draw, std::vector<glm::vec3> &positionoffsets)
+bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &texture2draw, std::vector<glm::vec3> &positionoffsets)
 {
 
     instanceShader = std::make_unique<Util::Shader>(GetRelativeTexturePath("shaders/Basic.vs").c_str(), GetRelativeTexturePath("shaders/Basic.fs").c_str());
@@ -213,13 +354,89 @@ InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &texture2dr
 
     Util::UseShaderProgram(instanceShader->GetID());
 
+    float aspect_ratio_hw = (float)texture->height / getWsize().y;
+    float aspect_ratio_wh = (float)texture->width / getWsize().x;
+
+    glm::mat4 ImageScaleRatioMat(1.0f);
+    ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(aspect_ratio_wh, aspect_ratio_hw, 1.0f));
+    ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(3.0f, 3.0f, 3.0f));
+    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
+
     glUniform3fv(glGetUniformLocation(instanceShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
     
     Util::UseShaderProgram(0);
 
 }
 
-void InstancedTexture2D::draw(Color tint)
+bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount, Texture2D& texture2draw, std::vector<glm::vec3>& positionoffsets, Util::Shader &instanceShader)
+{
+
+    *this->instanceShader = instanceShader;
+
+    float vertices[] = {
+    -0.5f, -0.5f,0.0f, 0.0f, 0.0f,
+     0.5f, -0.5f,0.0f, -1.0f, 0.0f,
+     0.5f,  0.5f,0.0f, -1.0f, -1.0f,
+    -0.5f,  0.5f,0.0f, 0.0f, -1.0f
+    };
+
+    texture = &texture2draw;
+
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+
+    glBindVertexArray(vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glBindVertexArray(0);
+
+
+    offsets.assign(positionoffsets.begin(), positionoffsets.end());
+
+    offsets.resize(500);
+
+    for (size_t i = positionoffsets.size(); i < 500; i++)
+    {
+        offsets[i] = { 0,0 , 0 };
+    }
+
+    std::cout << "Offsets :";
+
+    for (size_t i = 0; i < offsets.size(); i++)
+    {
+        std::cout << "(" << offsets[i].x << " , " << offsets[i].y << " , " << offsets[i].z << ")";
+    }
+
+    std::cout << "\n";
+
+    instanceAmount = instanceCount;
+
+    Util::UseShaderProgram(this->instanceShader->GetID());
+
+    float aspect_ratio_hw = (float)texture->height / getWsize().y;
+    float aspect_ratio_wh = (float)texture->width / getWsize().x;
+
+    glm::mat4 ImageScaleRatioMat(1.0f);
+    ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(aspect_ratio_wh, aspect_ratio_hw, 1.0f));
+    ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(3.0f, 3.0f, 3.0f));
+    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
+
+    glUniform3fv(glGetUniformLocation(this->instanceShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
+
+    Util::UseShaderProgram(0);
+
+}
+
+void bgGL::InstancedTexture2D::draw(Color tint)
 {
     glUseProgram(instanceShader->GetID());
 
@@ -246,7 +463,7 @@ void InstancedTexture2D::draw(Color tint)
     glUseProgram(0);
 }
 
-void InstancedTexture2D::draw(Camera2D& camera , Color tint)
+void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, float ParallaxCoefficient)
 {
     
     glUseProgram(instanceShader->GetID());
@@ -255,7 +472,7 @@ void InstancedTexture2D::draw(Camera2D& camera , Color tint)
     
     glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x , tintColor.y , tintColor.z , tintColor.w);
 
-    glm::mat4 projectionMatrix = CalculateCameraMatrix(camera);
+    glm::mat4 projectionMatrix = CalculateCameraMatrix(camera , ParallaxCoefficient);
 
     glUniformMatrix4fv(glGetUniformLocation(instanceShader->GetID(), "cameraMat"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
@@ -273,14 +490,14 @@ void InstancedTexture2D::draw(Camera2D& camera , Color tint)
     glUseProgram(0);
 }
 
-void InstancedTexture2D::clean()
+void bgGL::InstancedTexture2D::clean()
 {
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
     Util::DeleteShaderProgram(instanceShader->GetID());
 }
 
-glm::mat4 CalculateCameraMatrix(Camera2D& camera)
+glm::mat4 bgGL::CalculateCameraMatrix(Camera2D& camera)
 {
     float zoom = camera.zoom;
 
@@ -293,3 +510,16 @@ glm::mat4 CalculateCameraMatrix(Camera2D& camera)
 
     return projectionMatrix;
 }
+
+glm::mat4 bgGL::CalculateCameraMatrix(Camera2D& camera, float ParallaxCoefficient)
+{
+    float zoom = camera.zoom;
+    
+    Vec2<float> target(((camera.target.x) / getWsize().x) * zoom * ParallaxCoefficient, ((camera.target.y / getWsize().y) * zoom * ParallaxCoefficient));
+    
+    glm::mat4 projectionMatrix = glm::ortho((-1.0f + target.x) / zoom, (1.0f + target.x) / zoom, (-1.0f + target.y) / zoom, (1.0f + target.y) / zoom, -1.0f, 1.0f);
+    
+    return projectionMatrix;
+}
+
+

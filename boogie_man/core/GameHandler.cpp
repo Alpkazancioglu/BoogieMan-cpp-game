@@ -9,8 +9,6 @@
 #include <glew.h>
 
 
-Texture2D texture_T;
-std::unique_ptr<InstancedTexture2D> insTex;
 
 game::game(int screenw_a, int screenh_a)
 {
@@ -48,26 +46,10 @@ void game::initialize(const char* windowname , int fps)
 
 	glViewport(0, 0, getWsize().x, getWsize().y);
 
-	texture_T = LoadTexture(GetRelativeTexturePath("woodenlogwithroots.png").c_str());
-
-	int count = 60;
-
-	std::vector<glm::vec3> offsets;
-	offsets.resize(count);
-	int index = 0;
-	float offset = 0.0f;
-
-	for (int y = 0; y < count; y += 1)
-	{
-			glm::vec3 translation;
-			translation.x = (float)y  + y * offset;
-			translation.y = 1.0f;
-			translation.z = 1.0f / GiveRandomNumf(4,7,100,false,11);
-			//translation.z = 0.7f ;
-			offsets[index++] = translation;
-	}
 	
-	insTex = std::make_unique<InstancedTexture2D>(count, texture_T, offsets);
+
+	
+	
 
 	
 	/////            GAME_INIT                /////
@@ -133,7 +115,6 @@ void game::update()
 //Ekrana cizilicek yer
 void game::draw()
 {
-
 	//Loading all the render info onto backbuffer 
 	BeginTextureMode(*target);
 
@@ -142,20 +123,19 @@ void game::draw()
 	ClearBackground(GRAY);
 	BoogieManGame->drawOffCamera();
 	
-
-	BeginMode2D(*MainCamera);
+	
+	//BeginMode2D(*MainCamera);
 	
 
 	////          GAME_DRAW_CAMERA             /////
-	BoogieManGame->update(target.get());
-	insTex->draw(*MainCamera,{255,255,255,255});
+	BoogieManGame->update(target.get() , *MainCamera);
 
 	//AlpinoGame->draw(target.get());
 	/////            ////                     /////
 
-	// Disable blending
+	//EndMode2D();
+	
 
-	EndMode2D();
 
 
 
@@ -189,6 +169,7 @@ void game::draw()
 	}
 
 	EndDrawing();
+
 }
 
 void game::Clean(game* currentgame)
@@ -197,9 +178,6 @@ void game::Clean(game* currentgame)
 	delete newecs;
 	delete currentgame;
 
-	UnloadTexture(texture_T);
-	insTex->clean();
-	
 	CloseWindow();
 }
 void game::Update_Camera(Vector2 target, Vector2 Offset, Vec2<float> Zoom)
