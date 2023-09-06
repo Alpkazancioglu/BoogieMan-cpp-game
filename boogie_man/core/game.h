@@ -105,6 +105,7 @@ public:
 	void update(RenderTexture2D* fbo , Camera2D &MainCamera);
 	void draw(RenderTexture2D* fbo);
 	void drawOffCamera();
+	void drawOffFBO();
 	ObjectData updateAnimdata(ObjectData data, float dt, int maxframe);
 	bool isOnGround();
 	bool isObjectOut(ObjectData data);

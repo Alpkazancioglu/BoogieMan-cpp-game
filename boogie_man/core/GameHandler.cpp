@@ -115,6 +115,8 @@ void game::update()
 //Ekrana cizilicek yer
 void game::draw()
 {
+	BoogieManGame->drawOffFBO();
+
 	//Loading all the render info onto backbuffer 
 	BeginTextureMode(*target);
 
@@ -135,7 +137,7 @@ void game::draw()
 
 	//EndMode2D();
 	
-
+	
 
 
 

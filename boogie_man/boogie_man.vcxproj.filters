@@ -130,5 +130,17 @@
     <None Include="textures\shaders\Basic.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="textures\skybox.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="textures\skybox.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="textures\cubemap.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="textures\cubemap.vs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
