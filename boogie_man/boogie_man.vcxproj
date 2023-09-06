@@ -180,8 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="level.json" />
+    <None Include="textures\cubemap.fs" />
+    <None Include="textures\cubemap.vs" />
     <None Include="textures\shaders\Basic.fs" />
     <None Include="textures\shaders\Basic.vs" />
+    <None Include="textures\skybox.fs" />
+    <None Include="textures\skybox.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -65,7 +65,7 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	//farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
 
 	Road.SetBaseAttributes(t_foreground, 0.8f, { {}, { 0,getWsize().y - 120}, 0, 0, 0, 180 * MoveEverything }, 0.0f);
-	Road.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, 2.6f, 0.6f));
+	Road.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, 2.6f, 0.5f));
 
 
 	std::cout<< "size" << getWsize().x / 2 << std::endl;
@@ -89,7 +89,7 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	max_high = killua.Data.pos.y - 100;
 	killua.scale = 1.0f;
 
-	Sky = std::make_unique<bgGL::cubemap>(GetRelativeTexturePath("sky/rural_asphalt_road_2k.hdr").c_str() , true , 0.00001f , 512);
+	Sky = std::make_unique<bgGL::cubemap>(GetRelativeTexturePath("sky/Two_sided_background2.hdr").c_str() , true , -0.11f , 512);
 	
 	WoodFront.SetTexture(WoodFront_t);
 	WoodFront.SetInstancing(100, bgGL::MakeInstanceOffsetArray(100, { 0,0 }, []() -> float {return (1.0f / GiveRandomNumf(3, 6, 100, false, 11)) * 4; }, 1.2f));
@@ -106,7 +106,6 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 
 BoogieMan::~BoogieMan()
 {
-
 	UnloadTexture(killua_t);
 	UnloadTexture(nebula);
 	UnloadTexture(far_background);
@@ -118,7 +117,6 @@ BoogieMan::~BoogieMan()
 	UnloadTexture(Road_t);
 	UnloadTexture(WoodFront_t);
 	
-
 	Sky->clear();
 }
 
@@ -175,15 +173,14 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
 		farbackground_o.RenderDuplicateEx(3, 0, WHITE);
 		middlebackground_o.RenderDuplicateEx(3, 0, WHITE);
-		fog_cloud.RenderDuplicateRec(3, 0, { 255,255,255,220 }, 4, 1);
 		foreground_o.RenderDuplicateEx(3, 0, WHITE);
 		//Road.RenderDuplicateEx(3, 0, { 231, 255, 207 , 255 });
 		FrontVegetation.RenderDuplicateEx(5, 0, WHITE);
+		fog_cloud.RenderDuplicateRec(3, 0, { 255,255,255,220 }, 4, 1);
 
 		END_INTERNAL_CAMERA;
 
-
-		Road.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, 2.2);
+		Road.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 },*Sky->GetFBOtexture(), 1.8);
 
 
 
@@ -197,8 +194,8 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		
 		END_INTERNAL_CAMERA;
 
-		WoodFront.InstancedTexture->draw(MainCamera, GRAY, 2.5);
-		ForestFront.InstancedTexture->draw(MainCamera, GRAY, 2.6);
+		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), 2.5);
+		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), 2.6);
 
 
 		for (int i = 0; i < sizeofnebula; i++)
@@ -235,7 +232,11 @@ void BoogieMan::drawOffCamera()
 		break;
 	case INGAME:
 
-		Sky->Draw();
+		Sky->drawFBO();
+
+
+		//std::cout << "AVERAGE SKY COLOR: (" << averageSkyColor.r << " , " << averageSkyColor.g << " , " << averageSkyColor.b << " , " << averageSkyColor.a << ")" << std::endl;
+
 		Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 
 		if (MoveEverything == MOVING_FRONT)
@@ -259,6 +260,11 @@ void BoogieMan::drawOffCamera()
 		break;
 	}
 
+}
+
+void BoogieMan::drawOffFBO()
+{
+	Sky->Draw();
 }
 
 void BoogieMan::draw(RenderTexture2D* fbo)

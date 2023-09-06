@@ -299,7 +299,6 @@ TextureCubemap bgGL::cubemap::HDRItoCubeMap(Shader shader, Texture2D panorama, i
 }
 
 
-
 bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &texture2draw, std::vector<glm::vec3> &positionoffsets)
 {
 
@@ -463,7 +462,7 @@ void bgGL::InstancedTexture2D::draw(Color tint)
     glUseProgram(0);
 }
 
-void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, float ParallaxCoefficient)
+void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D SkyFBO, float ParallaxCoefficient)
 {
     
     glUseProgram(instanceShader->GetID());
@@ -479,6 +478,24 @@ void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, float Paralla
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id);
     glUniform1i(glGetUniformLocation(instanceShader->GetID(), "tex"), GL_TEXTURE0);
+
+    glActiveTexture(GL_TEXTURE0 + 1);
+    glBindTexture(GL_TEXTURE_2D, SkyFBO.id);
+    // Set the minimum LOD level (e.g., 0.0)
+    //float minLOD = 0.0f;
+    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, minLOD);
+
+    // Set the maximum LOD level (e.g., 4.0)
+    //float maxLOD = 1.0f;
+    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, maxLOD);
+    glGenerateMipmap(GL_TEXTURE_2D); // /!\ Allocate the mipmaps /!\
+    
+ 
+
+    //glGenerateMipmap(GL_TEXTURE0 + 1);
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "skytexture"), 1);
+
+
 
     glBindVertexArray(vao);
     glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instanceAmount);
