@@ -76,7 +76,7 @@ public:
 	InstancedGameObject WoodFront;
 	InstancedGameObject ForestFront;
 	InstancedGameObject Road;
-
+	InstancedGameObject ForestMid;
 
 	GameObject farbackground_o;
 	GameObject middlebackground_o;

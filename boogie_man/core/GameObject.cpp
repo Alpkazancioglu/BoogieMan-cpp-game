@@ -350,9 +350,13 @@ bool Character::isCharacterGround()
 
 void Character::updateMovingState(int& MoveEverything, float dt, ObjectData obstacle)
 {
+	Vec2<float> CharacterCenter(bgGL::FindCenterAABB({ this->Data.pos.x, this->Data.pos.y, this->Data.rec.width, this->Data.rec.height }));
+	Vec2<float> ObstacleCenter(bgGL::FindCenterAABB({ obstacle.pos.x, obstacle.pos.y, obstacle.rec.width, obstacle.rec.height }));
+	Vec2<float> target(CharacterCenter - ObstacleCenter);
 
-	int direction = GameObject::VectorDirection({ this->Data.pos.x - obstacle.pos.x,obstacle.pos.y - this->Data.pos.y });
+	DrawLine(ObstacleCenter.x, ObstacleCenter.y, CharacterCenter.x, CharacterCenter.y, RED);
 
+	int direction = GameObject::VectorDirection({ target.x , target.y },  obstacle.rec.height/this->Data.rec.height);
 
 	const float acceleration = 16.0f;
 	static float localSpeed = 0;
@@ -464,7 +468,7 @@ void Character::updateMovingState(int& MoveEverything, float dt, ObjectData obst
 	}
 }
 
-Direction GameObject::VectorDirection(glm::vec2 target)
+Direction GameObject::VectorDirection(glm::vec2 target , float HeightCoeff)
 {
 	glm::vec2 compass[] = {
 		glm::vec2(0.0f, 1.0f),    // up
@@ -472,12 +476,16 @@ Direction GameObject::VectorDirection(glm::vec2 target)
 		glm::vec2(0.0f, -1.0f),    // down
 		glm::vec2(-1.0f, 0.0f)    // left
 	};
-	float max = 0.05f;
+	float max = 0.0f;
 	unsigned int best_match = -1;
 	for (unsigned int i = 0; i < 4; i++)
 	{
-		float dot_product = glm::dot(glm::normalize(target), compass[i]);
-		if (dot_product > max)
+		glm::vec2 TargetVector(target.x / getWsize().x, (target.y / getWsize().y) * HeightCoeff);
+		std::cout << "TargetVector: " << Vec2<float>(TargetVector.x , TargetVector.y) << std::endl;
+		float dot_product = glm::dot(TargetVector, compass[i]);
+		std::cout << "dot_product: " << dot_product << std::endl;
+
+		if (dot_product >= max)
 		{
 			max = dot_product;
 			best_match = i;

@@ -125,7 +125,7 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
-	static Direction VectorDirection(glm::vec2 target);
+	static Direction VectorDirection(glm::vec2 target, float HeightCoeff);
 	
 
 	inline bool operator< (GameObject& other)

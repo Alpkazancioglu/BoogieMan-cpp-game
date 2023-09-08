@@ -5,8 +5,7 @@
 
 Vec2<float> getWsize()
 {
-	Vec2<float> temp(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
-	return temp;
+    return Vec2<float>(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()));
 }
 
 std::string GetRelativeTexturePath(std::string textureName)
@@ -360,7 +359,6 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &text
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(aspect_ratio_wh, aspect_ratio_hw, 1.0f));
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(3.0f, 3.0f, 3.0f));
     glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
-
     glUniform3fv(glGetUniformLocation(instanceShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
     
     Util::UseShaderProgram(0);
@@ -428,7 +426,6 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount, Texture2D& textu
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(aspect_ratio_wh, aspect_ratio_hw, 1.0f));
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(3.0f, 3.0f, 3.0f));
     glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
-
     glUniform3fv(glGetUniformLocation(this->instanceShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
 
     Util::UseShaderProgram(0);
@@ -449,7 +446,7 @@ void bgGL::InstancedTexture2D::draw(Color tint)
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id);
-    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "tex"), GL_TEXTURE0);
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "texture0"), GL_TEXTURE0);
 
 
     glBindVertexArray(vao);
@@ -477,7 +474,7 @@ void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D Sky
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id);
-    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "tex"), GL_TEXTURE0);
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "texture0"), GL_TEXTURE0);
 
     glActiveTexture(GL_TEXTURE0 + 1);
     glBindTexture(GL_TEXTURE_2D, SkyFBO.id);
@@ -490,12 +487,8 @@ void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D Sky
     //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, maxLOD);
     glGenerateMipmap(GL_TEXTURE_2D); // /!\ Allocate the mipmaps /!\
     
- 
-
     //glGenerateMipmap(GL_TEXTURE0 + 1);
     glUniform1i(glGetUniformLocation(instanceShader->GetID(), "skytexture"), 1);
-
-
 
     glBindVertexArray(vao);
     glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instanceAmount);
@@ -517,26 +510,24 @@ void bgGL::InstancedTexture2D::clean()
 glm::mat4 bgGL::CalculateCameraMatrix(Camera2D& camera)
 {
     float zoom = camera.zoom;
-
     Vec2<float> offset(camera.offset.x * 2, camera.offset.y * 2);
     offset(ScreenToWorldCoord(offset));
-
     Vec2<float> target(((camera.target.x) / getWsize().x) * zoom * 2, ((camera.target.y / getWsize().y) * zoom * 2));
-
     glm::mat4 projectionMatrix = glm::ortho((-1.0f + target.x) / zoom, (1.0f + target.x) / zoom, (-1.0f + target.y) / zoom, (1.0f + target.y) / zoom, -1.0f, 1.0f);
-
     return projectionMatrix;
 }
 
 glm::mat4 bgGL::CalculateCameraMatrix(Camera2D& camera, float ParallaxCoefficient)
 {
     float zoom = camera.zoom;
-    
     Vec2<float> target(((camera.target.x) / getWsize().x) * zoom * ParallaxCoefficient, ((camera.target.y / getWsize().y) * zoom * ParallaxCoefficient));
-    
     glm::mat4 projectionMatrix = glm::ortho((-1.0f + target.x) / zoom, (1.0f + target.x) / zoom, (-1.0f + target.y) / zoom, (1.0f + target.y) / zoom, -1.0f, 1.0f);
-    
     return projectionMatrix;
+}
+
+Vec2<float> bgGL::FindCenterAABB(Vec4<float> rec)
+{
+    return Vec2<float>(rec.x + (rec.z/2) , rec.y + (rec.w/2));
 }
 
 

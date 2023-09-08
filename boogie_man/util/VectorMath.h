@@ -258,10 +258,10 @@ struct Vec4
 	}
 
 	Vec4(const T& x, const T& y, const T& z, const T& w)
-		: x(x), y(y), z(z), w(w)
+		: x(x), y(y), z(z), w(w) 
 	{
 	}
-	Vec4(Vec4& Input)
+	Vec4(const Vec4 &Input)
 	{
 		x = Input.x;
 		y = Input.y;
@@ -349,7 +349,7 @@ struct Vec4
 		return os;
 	}
 
-	void operator()(const Vec4& other)
+	void operator()(const Vec4& other) 
 	{
 		this->x = other.x;
 		this->y = other.y;
