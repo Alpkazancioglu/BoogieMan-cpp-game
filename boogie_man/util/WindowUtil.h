@@ -37,6 +37,7 @@ namespace bgGL
     Vec2<float> ScreenToWorldCoord(Vec2<float> screenCoord);
     glm::mat4 CalculateCameraMatrix(Camera2D& camera);
     glm::mat4 CalculateCameraMatrix(Camera2D& camera, float ParallaxCoefficient);
+    Vec2<float> FindCenterAABB(Vec4<float> rec);
 
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> position, Vec2<float> offsetBetween, float scale);
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, float scale, Vec2<float> *position = nullptr);

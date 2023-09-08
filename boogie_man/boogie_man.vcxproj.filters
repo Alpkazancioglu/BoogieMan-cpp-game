@@ -142,5 +142,11 @@
     <None Include="textures\cubemap.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="textures\shaders\bloom.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="textures\shaders\pixelizer.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

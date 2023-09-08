@@ -11,6 +11,10 @@
 #define FORESTPOSY 0
 #define GROUND getWsize().y-26
 
+Shader BloomShader;
+Shader PixelShader;
+
+
 BoogieMan::BoogieMan(Vec2<int> WindowSize)
 {
 	
@@ -95,13 +99,20 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	WoodFront.SetInstancing(100, bgGL::MakeInstanceOffsetArray(100, { 0,0 }, []() -> float {return (1.0f / GiveRandomNumf(3, 6, 100, false, 11)) * 4; }, 1.2f));
 	
 	ForestFront.SetTexture(t_foreground);
-	ForestFront.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, []() -> float {return GiveRandomNumf(2, 3, 100, false, 11); }, 0.4f));
+	ForestFront.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, []() -> float {return GiveRandomNumf(1, 2, 100, false, 11); }, 0.2f));
+
+	ForestMid.SetTexture(middle_background);
+	ForestMid.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, []() -> float {return GiveRandomNumf(2, 3, 100, false, 11); }, 0.4f));
+
 
 	WoodenLogWithRoots.SetBaseAttributes(WoodFront_t, 2.0f, { {},{-700,900},0,0,0,0 }, 0.0f);
 
 	woodcol(WoodenLogWithRoots.Data);
 	woodcol.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
+	woodcol.pos({ woodcol.rec.x, woodcol.rec.y });
 
+	BloomShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/bloom.fs").c_str(), 330));
+	PixelShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/pixelizer.fs").c_str(), 330));
 }
 
 BoogieMan::~BoogieMan()
@@ -116,6 +127,9 @@ BoogieMan::~BoogieMan()
 	UnloadTexture(FrontVegetation_t);
 	UnloadTexture(Road_t);
 	UnloadTexture(WoodFront_t);
+
+	UnloadShader(BloomShader);
+	UnloadShader(PixelShader);
 	
 	Sky->clear();
 }
@@ -129,6 +143,9 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 
 		break;
 	case INGAME:
+
+		ForestMid.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), 1.7);
+
 
 		BEGIN_INTERNAL_CAMERA(MainCamera);
 
@@ -189,13 +206,21 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		
 		BEGIN_INTERNAL_CAMERA(MainCamera);
 		
-		CharacterMovement();		
+		CharacterMovement();	
+
+
+		BeginShaderMode(BloomShader);
 		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos.toVector2(), WHITE);
+		EndShaderMode();
+
 		
 		END_INTERNAL_CAMERA;
 
+		BeginShaderMode(BloomShader);
+
 		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), 2.5);
 		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), 2.6);
+		EndShaderMode();
 
 
 		for (int i = 0; i < sizeofnebula; i++)
@@ -233,9 +258,6 @@ void BoogieMan::drawOffCamera()
 	case INGAME:
 
 		Sky->drawFBO();
-
-
-		//std::cout << "AVERAGE SKY COLOR: (" << averageSkyColor.r << " , " << averageSkyColor.g << " , " << averageSkyColor.b << " , " << averageSkyColor.a << ")" << std::endl;
 
 		Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 
@@ -332,7 +354,7 @@ ObjectData  BoogieMan::updateAnimdata(ObjectData data, float dt, int maxframe)
 bool BoogieMan::isOnGround()
 {
 
-	int direction = GameObject::VectorDirection({ killua.Data.pos.x + (killua.Texture->width / 26) - woodcol.pos.x,woodcol.pos.y - killua.Data.pos.y });
+	int direction = GameObject::VectorDirection({ killua.Data.pos.x + (killua.Texture->width / 26) - woodcol.pos.x,woodcol.pos.y - killua.Data.pos.y } , 1);
 
 	if (CheckCollisionRecs({ killua.Data.pos.x,killua.Data.pos.y,(float)killua.Texture->width / 13,(float)killua.Texture->height }, woodcol.rec) && direction == UP)
 	{
