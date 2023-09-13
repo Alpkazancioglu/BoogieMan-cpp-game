@@ -38,13 +38,20 @@ namespace bgGL
     glm::mat4 CalculateCameraMatrix(Camera2D& camera);
     glm::mat4 CalculateCameraMatrix(Camera2D& camera, float ParallaxCoefficient);
     Vec2<float> FindCenterAABB(Vec4<float> rec);
+    void ClearColorBufferBit(Color color);
+    RenderTexture2D GetCurrentFBO();
+    void SetCurrentFBOtracker(RenderTexture2D FBO);
+    void BindDefaultFBO();
+
+
+    void BindFBO(RenderTexture2D &fbo);
 
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> position, Vec2<float> offsetBetween, float scale);
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, float scale, Vec2<float> *position = nullptr);
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, float scale, float position_y, float* position_x = nullptr);
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, std::function<float()> scale, float position_y, float* position_x = nullptr);
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, std::function<float()> scale, float position_y, std::function<float()> position_x);
-
+    
 
     class cubemap
     {
@@ -128,12 +135,13 @@ namespace bgGL
         {
             //UpdateCamera(&camera, CAMERA_FIRST_PERSON);
             
-            BeginTextureMode(SkyFbo);
+
+            //BeginTextureMode(SkyFbo);
+            bgGL::BindFBO(SkyFbo);
 
             //ClearBackground(RAYWHITE);
-         
             UpdateCameraPro(&this->camera, { 0,0,0 }, { 0,0,0 }, 0);
-            
+         
             BeginMode3D(this->camera);
             ClearBackground(WHITE);
             rlDisableBackfaceCulling();
@@ -144,19 +152,25 @@ namespace bgGL
             Util::UseShaderProgram(skybox.materials[0].shader.id);
        
             glUniform1f(glGetUniformLocation(skybox.materials[0].shader.id, "rotationAngle"), RotationAngle);
-          
+            glDepthMask(GL_FALSE);
+            glDepthFunc(GL_LEQUAL);
             DrawModel(skybox, { 0,0,0 }, 1.0f, WHITE);
             rlEnableBackfaceCulling();
             rlEnableDepthMask();
             EndMode3D();
 
-            EndTextureMode();
+            //EndTextureMode();
+            bgGL::BindDefaultFBO();
+
+            glDepthFunc(GL_LESS);
+            glDepthMask(GL_TRUE);
 
         }
 
         void drawFBO()
         {
-            ClearBackground(WHITE);
+            //ClearBackground(WHITE);
+            bgGL::ClearColorBufferBit(WHITE);
             DrawTexturePro(SkyFbo.texture, { 0,0,(float)SkyFbo.texture.width,-(float)SkyFbo.texture.height }, { 0,0,getWsize().x,getWsize().y }, { 0,0 }, 0.0f, WHITE);
         }
 
@@ -175,6 +189,73 @@ namespace bgGL
     };
 
 
+    class shadowmap
+    {
+    public:
+
+        shadowmap(uint shadowMapWidth, uint shadowMapHeight)
+        {
+
+            glGenFramebuffers(1, &shadowMapfbo);
+
+            this->shadowMapWidth = shadowMapWidth;
+            this->shadowMapHeight = shadowMapHeight;
+
+            glGenTextures(1, &shadowMap);
+            glBindTexture(GL_TEXTURE_2D, shadowMap);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, this->shadowMapWidth, this->shadowMapHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+            float clampcolor[] = { 1.0f,1.0f,1.0f,1.0f };
+            glTextureParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, clampcolor);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, shadowMapfbo);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0);
+            glDrawBuffer(GL_NONE);
+            glReadBuffer(GL_NONE);
+
+            GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+            if (result == GL_FRAMEBUFFER_COMPLETE)
+            {
+                std::cerr << "Framebuffer is complete." << "\n";
+
+            }
+            else
+            {
+                std::cerr << "Framebuffer is not complete." << "\n";
+
+            }
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        };
+
+        ~shadowmap()
+        {
+            glDeleteFramebuffers(1, &shadowMapfbo);
+            glDeleteTextures(1, &shadowMap);
+        };
+
+        GLuint GetShadowMapFBO() { return this->shadowMapfbo; };
+        uint GetShadowMapImage() { return this->shadowMap; };
+        Vec2<uint> GetShadowMapSize() { return { this->shadowMapWidth, this->shadowMapHeight }; };
+        glm::mat4 GetLightProjection() { return this->lp; };
+
+    private:
+
+        GLuint shadowMapfbo;
+        GLuint shadowMap;
+        uint shadowMapWidth;
+        glm::mat4 lp;
+        uint shadowMapHeight;
+
+    };
+
+
+
+
     class InstancedTexture2D
     {
     public:
@@ -183,17 +264,24 @@ namespace bgGL
         InstancedTexture2D(int instanceCount, Texture2D& texture2draw, std::vector<glm::vec3>& positionoffsets , Util::Shader &instanceShader);
         Util::Shader GetShader() { return *this->instanceShader; };
         void draw(Color tint);
-        void draw(Camera2D& camera, Color tint,Texture2D SkyFBO, float ParallaxCoefficient = 2.0f);
+        void draw(Camera2D& camera, Color tint, Texture2D SkyFBO, float ParallaxCoefficient = 2.0f);
+        void draw(Camera2D& camera, Color tint,Texture2D SkyFBO,GLuint ShadowMap,  float ParallaxCoefficient = 2.0f);
+        void drawShadowMap(Camera2D& camera, float ParallaxCoefficient = 2.0f);
         void clean();
 
     private:
 
         Texture2D* texture;
         std::unique_ptr<Util::Shader> instanceShader;
+        std::unique_ptr<Util::Shader> ShadowMapShader;
         GLuint vbo, vao;
         std::vector<glm::vec3> offsets;
         int OffsetBufferIndex;
         int instanceAmount;
+
+
+        Camera camera3d;
+       
 
     };
 

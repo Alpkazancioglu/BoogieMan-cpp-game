@@ -280,19 +280,26 @@ InstancedGameObject::~InstancedGameObject()
 
 
 
-void Character::updateCharacterTexture(float dt, int maxframe,int &MoveEverything)
+bool Character::alpCheckCollision(ObjectData obstacle)
 {
 	
-		if (!isCharacterGround())
+	return CheckCollisionRecs({ this->Data.pos.x + this->CurrentSpeed.x,this->Data.pos.y+this->CurrentSpeed.y,this->Data.rec.width,this->Data.rec.height }, { obstacle.rec });
+}
+
+void Character::updateCharacterTexture(float dt, int maxframe,ObjectData obstacle)
+{
+	
+		
+		if (!isOnGround(obstacle))
 		{	
 			
-			if (MoveEverything == 1)
+			if (this->MovingStatus == 1)
 			{
 				this->Data.frame = 0;
 				this->Data.rec.x = Data.frame * Data.rec.width;
 			
 			}
-			else if (MoveEverything == -1)
+			else if (this->MovingStatus == -1)
 			{
 				this->Data.frame = 11;
 				this->Data.rec.x = Data.frame * Data.rec.width;
@@ -300,7 +307,7 @@ void Character::updateCharacterTexture(float dt, int maxframe,int &MoveEverythin
 		}
 		
 		
-		else if (MoveEverything == 1)
+		else if (this->MovingStatus == 1)
 		{
 			this->Data.runningtime += dt;
 			
@@ -320,7 +327,7 @@ void Character::updateCharacterTexture(float dt, int maxframe,int &MoveEverythin
 				
 			}
 		}
-		else if (MoveEverything == -1)
+		else if (this->MovingStatus == -1)
 		{
 
 			this->Data.runningtime += dt;
@@ -340,34 +347,153 @@ void Character::updateCharacterTexture(float dt, int maxframe,int &MoveEverythin
 		}
 
 }
-	
-
-
-bool Character::isCharacterGround()
+bool Character::isOnGround(ObjectData object)
 {
-		return Data.pos.y + Data.rec.height >= GetMonitorHeight(GetCurrentMonitor()) - 26;
+	/*Vec2<float> CharacterCenter(bgGL::FindCenterAABB({killua.Data.pos.x, killua.Data.pos.y, killua.Data.rec.width, killua.Data.rec.height}));
+	Vec2<float> ObstacleCenter(bgGL::FindCenterAABB({ woodcol.pos.x, woodcol.pos.y, woodcol.rec.width, woodcol.rec.height }));
+	Vec2<float> target(CharacterCenter - ObstacleCenter);
+	*/
+	
+	//std::cout << "direction : " << direction << std::endl;
+	if (this->alpCheckCollision(object) && this->direction == UP) return true;
+
+	
+	return this->Data.pos.y + this->Data.rec.height >= GROUND;
 }
 
-void Character::updateMovingState(int& MoveEverything, float dt, ObjectData obstacle)
+/*Direction Character::CheckDirection(ObjectData object)
 {
-	Vec2<float> CharacterCenter(bgGL::FindCenterAABB({ this->Data.pos.x, this->Data.pos.y, this->Data.rec.width, this->Data.rec.height }));
-	Vec2<float> ObstacleCenter(bgGL::FindCenterAABB({ obstacle.pos.x, obstacle.pos.y, obstacle.rec.width, obstacle.rec.height }));
-	Vec2<float> target(CharacterCenter - ObstacleCenter);
+	int direction = GameObject::DirectionRelativeToObject(this->Data, object);
+	return (Direction)direction;
+}
+*/
 
-	DrawLine(ObstacleCenter.x, ObstacleCenter.y, CharacterCenter.x, CharacterCenter.y, RED);
+Direction Character::DirectionRelativeToObject (ObjectData obstacle)
+{
+	static int fix = 0;
+	static bool allow = false;
+	
+	double angle = atan2((obstacle.rec.y+fix) - (this->Data.pos.y + this->Data.rec.height), (this->Data.pos.x + this->Data.rec.width / 2) - (obstacle.rec.x + obstacle.rec.width / 2)) * 180 / PI;
+	angle = fmod(angle, 360);
+	if (angle < 0) angle += 360;
+	if (angle == 360) angle = 0;
+	
+	std::cout << " Angle :: " << fix << std::endl;
 
-	int direction = GameObject::VectorDirection({ target.x , target.y },  obstacle.rec.height/this->Data.rec.height);
+	if (this->alpCheckCollision(obstacle) && angle >= 0 && angle < 180)
+		allow = true;
+	
+	if (allow && !this->alpCheckCollision(obstacle))
+	{
+		if(angle < 90)
+		{
+			allow = false;
+			fix = 0;
+			return RIGHT;
+		}
+		else
+		{
+			allow = false;
+			fix = 0;
+			return  LEFT;
+		}
+	
+	}
+	
+	
+	
+	if (angle >= 0 && angle < 180)
+	{
+		fix = 20;
+		
+		return UP;
+	}
+	
+	
+	else if (angle > 270 && angle <= 360)
+	{
+		fix = 0;
+		return RIGHT;
+	}
+	
+	else if (angle >= 180 && angle <= 270)
+	{
+		fix = 0;
+		return LEFT;
+	}
+}
 
-	const float acceleration = 16.0f;
-	static float localSpeed = 0;
+
+
+
+
+
+void Character::CharacterMove(float dt,ObjectData obstacle)
+{
+	
+	this->direction = this->DirectionRelativeToObject(obstacle);
+	std::cout << "DIRECTION = " << this->direction << std::endl;
+	bool IsOnGround = this->isOnGround(obstacle);
+	bool IsColliding = this->alpCheckCollision(obstacle);
+	
+	static bool isMaxHeightReached = false;
+	static bool isPlayerJumped = false;
 	static bool Slowing = false;
+	
+	float current_high = this->Data.pos.y;
+	static Vec2<float> LocalSpeed = {};
+	static float max_high = this->Data.pos.y - 100;
+	
+	std::cout << "SPEED" << this->CurrentSpeed << std::endl;
+	std::cout << "isonground " << IsOnGround << std::endl;
+	std::cout <<"iscolliding" << IsColliding << std::endl;
 	static float maxSpeed = this->Data.speed;
+	const float gravity = 1000;
+	const float acceleration = 16.0f;
+	this->CurrentSpeed = LocalSpeed*dt;
+	this->Data.pos.y += LocalSpeed.y * dt;
+	
+	//Y axis Movement
+	
+	if (IsOnGround && IsKeyDown(KEY_SPACE))
+	{
+		if (!IsOnGround)
+			isPlayerJumped = true;
+		
+		
+		LocalSpeed.y = 0;
+	}
+	else if (IsOnGround)
+	{
+		max_high = this->Data.pos.y - 100;
+		isMaxHeightReached = false;
+		LocalSpeed.y = 0;
+		isPlayerJumped = false;
+	}
+	else
+	{
+		LocalSpeed.y += gravity * dt;
+	}
+	if (max_high >= current_high)
+		isMaxHeightReached = true;
+	
+	if (IsKeyDown(KEY_SPACE) && !isMaxHeightReached && !isPlayerJumped)
+	{
+		LocalSpeed.y = -300;
+	}
+	else if (IsKeyReleased(KEY_SPACE))
+	{
+		isMaxHeightReached = true;
+	}
+	
+	// X Axis Movement
+	
 	if (IsKeyDown(KEY_LEFT_SHIFT))
 	{
 		maxSpeed = this->Data.speed * 2;
 	}
 
-	std::cout << "localspeed : " << localSpeed << std::endl;
+	
 	if (IsKeyReleased(KEY_A) || IsKeyReleased(KEY_D) || IsKeyReleased(KEY_LEFT_SHIFT))
 	{
 
@@ -377,51 +503,56 @@ void Character::updateMovingState(int& MoveEverything, float dt, ObjectData obst
 
 	if (IsKeyDown(KEY_D))
 	{
-		if ((CheckCollisionRecs({ this->Data.pos.x,this->Data.pos.y,(float)this->Texture->width / 13,(float)this->Texture->height }, obstacle.rec) && direction == LEFT))
+		if (( IsColliding && this->direction == LEFT))
 		{
-			localSpeed = 0;
-			MoveEverything = IDLE;
+			this->Data.pos.x = obstacle.pos.x - this->Data.rec.width;
+			LocalSpeed.x = 0;
+			this->MovingStatus = IDLE;
 		}
+		
 		else
 		{
-			if (localSpeed <= this->Data.speed)
+			if (LocalSpeed.x <= this->Data.speed)
 				Slowing = false;
+			
 			if (!Slowing)
 			{
 
-				MoveEverything = MOVING_FRONT;
-				if (localSpeed < 0)
-					localSpeed += acceleration * 6;
+				this->MovingStatus = MOVING_FRONT;
+				if (LocalSpeed.x < 0)
+					LocalSpeed.x += acceleration * 6;
 
-				if (localSpeed <= maxSpeed)
-					localSpeed += acceleration;
+				if (LocalSpeed.x <= maxSpeed)
+					LocalSpeed.x += acceleration;
 
-				this->Data.pos.x += localSpeed * dt;
+				this->Data.pos.x += LocalSpeed.x * dt;
 			}
 		}
 	}
 	else if (IsKeyDown(KEY_A))
 	{
-		if ((CheckCollisionRecs({ this->Data.pos.x,this->Data.pos.y,(float)this->Texture->width / 13,(float)this->Texture->height }, obstacle.rec) && direction == RIGHT))
+		if ((IsColliding && this->direction == RIGHT))
 		{
-			localSpeed = 0;
-			MoveEverything = IDLE;
+			this->Data.pos.x = obstacle.pos.x + obstacle.rec.width;
+			LocalSpeed.x = 0;
+			this->MovingStatus = IDLE;
 		}
+		
 		else
 		{
 
-			if (localSpeed >= -this->Data.speed)
+			if (LocalSpeed.x >= -this->Data.speed)
 				Slowing = false;
 			if (!Slowing)
 			{
-				MoveEverything = MOVING_BACK;
-				if (localSpeed > 0)
-					localSpeed -= acceleration * 6;
+				this->MovingStatus = MOVING_BACK;
+				if (LocalSpeed.x > 0)
+					LocalSpeed.x -= acceleration * 6;
 
-				else if (localSpeed >= -maxSpeed)
-					localSpeed -= acceleration;
+				if (LocalSpeed.x >= -maxSpeed)
+					LocalSpeed.x -= acceleration;
 
-				this->Data.pos.x += localSpeed * dt;
+				this->Data.pos.x += LocalSpeed.x * dt;
 			}
 		}
 	}
@@ -429,43 +560,48 @@ void Character::updateMovingState(int& MoveEverything, float dt, ObjectData obst
 	if (Slowing)
 	{
 
-		if (localSpeed > 0)
+		if (LocalSpeed.x > 0)
 		{
 
-			if (localSpeed >= Data.speed)
-				localSpeed -= acceleration * 2;
+			if (LocalSpeed.x >= this->Data.speed)
+				LocalSpeed.x -= acceleration * 2;
 
 			else
-				localSpeed -= acceleration * 10;
+				LocalSpeed.x -= acceleration * 10;
 
-			this->Data.pos.x += localSpeed * dt;
+			this->Data.pos.x += LocalSpeed.x * dt;
 
-			if (localSpeed <= 0)
+			if (LocalSpeed.x <= 0)
 			{
-				MoveEverything = IDLE;
-				localSpeed = 0;
+				this->MovingStatus = IDLE;
+				LocalSpeed.x = 0; 
 				Slowing = false;
 			}
 		}
 
-		else if (localSpeed < 0)
+		else if (LocalSpeed.x < 0)
 		{
-			if (localSpeed >= -Data.speed)
-				localSpeed += acceleration * 2;
+			if (LocalSpeed.x <= -this->Data.speed)
+				LocalSpeed.x += acceleration * 2;
 
 			else
-				localSpeed += acceleration * 10;
+				LocalSpeed.x += acceleration * 10;
 
-			this->Data.pos.x += localSpeed * dt;
-			if (localSpeed >= 0)
+			this->Data.pos.x += LocalSpeed.x * dt;
+			if (LocalSpeed.x >= 0)
 			{
-				MoveEverything = IDLE;
-				localSpeed = 0;
+				this->MovingStatus = IDLE;
+				LocalSpeed.x = 0;
 				Slowing = false;
 			}
 		}
 
 	}
+
+
+
+
+
 }
 
 Direction GameObject::VectorDirection(glm::vec2 target , float HeightCoeff)
@@ -481,9 +617,9 @@ Direction GameObject::VectorDirection(glm::vec2 target , float HeightCoeff)
 	for (unsigned int i = 0; i < 4; i++)
 	{
 		glm::vec2 TargetVector(target.x / getWsize().x, (target.y / getWsize().y) * HeightCoeff);
-		std::cout << "TargetVector: " << Vec2<float>(TargetVector.x , TargetVector.y) << std::endl;
+		//std::cout << "TargetVector: " << Vec2<float>(TargetVector.x , TargetVector.y) << std::endl;
 		float dot_product = glm::dot(TargetVector, compass[i]);
-		std::cout << "dot_product: " << dot_product << std::endl;
+		//std::cout << "dot_product: " << dot_product << std::endl;
 
 		if (dot_product >= max)
 		{
@@ -494,6 +630,9 @@ Direction GameObject::VectorDirection(glm::vec2 target , float HeightCoeff)
 	return (Direction)best_match;
 
 }
+
+
+
 
 
 //Load a texture from a header file consists of an image byte array

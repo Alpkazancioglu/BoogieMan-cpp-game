@@ -302,6 +302,7 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &text
 {
 
     instanceShader = std::make_unique<Util::Shader>(GetRelativeTexturePath("shaders/Basic.vs").c_str(), GetRelativeTexturePath("shaders/Basic.fs").c_str());
+    ShadowMapShader = std::make_unique<Util::Shader>(GetRelativeTexturePath("shaders/Basic.vs").c_str(), GetRelativeTexturePath("shaders/ShadowMap.fs").c_str());
 
     float vertices[] = {
     -0.5f, -0.5f,0.0f, 0.0f, 0.0f,
@@ -358,10 +359,22 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &text
     glm::mat4 ImageScaleRatioMat(1.0f);
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(aspect_ratio_wh, aspect_ratio_hw, 1.0f));
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(3.0f, 3.0f, 3.0f));
-    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
+    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "ratioMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
     glUniform3fv(glGetUniformLocation(instanceShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
     
+    Util::UseShaderProgram(ShadowMapShader->GetID());
+
+    glUniformMatrix4fv(glGetUniformLocation(this->ShadowMapShader->GetID(), "ratioMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
+    glUniform3fv(glGetUniformLocation(ShadowMapShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
+
     Util::UseShaderProgram(0);
+
+    camera3d = { 0 };
+    camera3d.position = { 1.0f, 1.0f, 1.0f };
+    camera3d.target = { 4.0f, 1.0f, 4.0f };
+    camera3d.up = { 0.0f, 1.0f, 0.0f };
+    camera3d.fovy = 45.0f;
+    camera3d.projection = CAMERA_PERSPECTIVE;
 
 }
 
@@ -425,7 +438,7 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount, Texture2D& textu
     glm::mat4 ImageScaleRatioMat(1.0f);
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(aspect_ratio_wh, aspect_ratio_hw, 1.0f));
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(3.0f, 3.0f, 3.0f));
-    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
+    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "ratioMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
     glUniform3fv(glGetUniformLocation(this->instanceShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
 
     Util::UseShaderProgram(0);
@@ -459,16 +472,18 @@ void bgGL::InstancedTexture2D::draw(Color tint)
     glUseProgram(0);
 }
 
-void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D SkyFBO, float ParallaxCoefficient)
+void bgGL::InstancedTexture2D::draw(Camera2D& camera, Color tint, Texture2D SkyFBO, float ParallaxCoefficient)
 {
-    
     glUseProgram(instanceShader->GetID());
 
     Vector4 tintColor = ColorNormalize(tint);
-    
-    glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x , tintColor.y , tintColor.z , tintColor.w);
 
-    glm::mat4 projectionMatrix = CalculateCameraMatrix(camera , ParallaxCoefficient);
+    glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x, tintColor.y, tintColor.z, tintColor.w);
+
+    glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, ParallaxCoefficient / 10));
+    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
+
+    glm::mat4 projectionMatrix = CalculateCameraMatrix(camera, ParallaxCoefficient);
 
     glUniformMatrix4fv(glGetUniformLocation(instanceShader->GetID(), "cameraMat"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
@@ -478,17 +493,13 @@ void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D Sky
 
     glActiveTexture(GL_TEXTURE0 + 1);
     glBindTexture(GL_TEXTURE_2D, SkyFBO.id);
-    // Set the minimum LOD level (e.g., 0.0)
-    //float minLOD = 0.0f;
-    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, minLOD);
 
-    // Set the maximum LOD level (e.g., 4.0)
-    //float maxLOD = 1.0f;
-    //glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, maxLOD);
-    glGenerateMipmap(GL_TEXTURE_2D); // /!\ Allocate the mipmaps /!\
-    
-    //glGenerateMipmap(GL_TEXTURE0 + 1);
+    glGenerateMipmap(GL_TEXTURE_2D);
     glUniform1i(glGetUniformLocation(instanceShader->GetID(), "skytexture"), 1);
+
+    glActiveTexture(GL_TEXTURE0 + 2);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "shadowMap"), 2);
 
     glBindVertexArray(vao);
     glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instanceAmount);
@@ -496,8 +507,92 @@ void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D Sky
 
     glBindTexture(GL_TEXTURE_2D, 0);
     glActiveTexture(0);
-
     glUseProgram(0);
+}
+
+void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D SkyFBO  ,GLuint ShadowMap, float ParallaxCoefficient)
+{    
+    glUseProgram(instanceShader->GetID());
+
+    Vector4 tintColor = ColorNormalize(tint);
+    
+    glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x , tintColor.y , tintColor.z , tintColor.w);
+
+    glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, ParallaxCoefficient / 10));
+    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
+
+    glm::mat4 projectionMatrix = CalculateCameraMatrix(camera , ParallaxCoefficient);
+    
+    glUniformMatrix4fv(glGetUniformLocation(instanceShader->GetID(), "cameraMat"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture->id);
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "texture0"), GL_TEXTURE0);
+
+    glActiveTexture(GL_TEXTURE0 + 1);
+    glBindTexture(GL_TEXTURE_2D, SkyFBO.id);
+    
+    glGenerateMipmap(GL_TEXTURE_2D); 
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "skytexture"), 1);
+
+    glActiveTexture(GL_TEXTURE0 + 2);
+    glBindTexture(GL_TEXTURE_2D, ShadowMap);
+    glUniform1i(glGetUniformLocation(instanceShader->GetID(), "shadowMap"), 2);
+
+    glBindVertexArray(vao);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instanceAmount);
+    glBindVertexArray(0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(0);
+    glUseProgram(0);
+
+
+
+}
+
+void bgGL::InstancedTexture2D::drawShadowMap(Camera2D& camera, float ParallaxCoefficient)
+{
+
+    glUseProgram(ShadowMapShader->GetID());
+
+    //glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x, tintColor.y, tintColor.z, tintColor.w);
+
+    //glm::mat4 projectionMatrix = CalculateCameraMatrix(camera , ParallaxCoefficient);
+    glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, ParallaxCoefficient / 10));
+    glUniformMatrix4fv(glGetUniformLocation(this->ShadowMapShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
+
+    
+    UpdateCamera(&camera3d, CAMERA_FIRST_PERSON);
+
+    float zoom = camera.zoom;
+    Vec2<float> target(((camera.target.x) / getWsize().x) * zoom * ParallaxCoefficient, ((camera.target.y / getWsize().y) * zoom * ParallaxCoefficient));
+    glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), getWsize().x / getWsize().y, -10.0f, 10.0f);
+
+    std::cout << "Camera: " << camera3d.target.x << " " << camera3d.target.y << " " << camera3d.target.z << std::endl;
+    projectionMatrix = glm::lookAt(glm::vec3(camera3d.position.x, camera3d.position.y, camera3d.position.z), glm::vec3(camera3d.position.x + camera3d.target.x, camera3d.position.y + camera3d.target.y, camera3d.position.z + camera3d.target.z), glm::vec3(0.0, 1.0f, 0.0f));
+    glm::vec3 LightPos(0.0, 0.3f, -0.2f);
+    //projectionMatrix = glm::lookAt(LightPos + glm::vec3(camera.target.x / getWsize().x, 0.0f, 0.0f), glm::vec3(camera.target.x / getWsize().x, 0, 0), glm::vec3(0.0, 1.0f, 0.0f));
+
+
+
+    glUniformMatrix4fv(glGetUniformLocation(ShadowMapShader->GetID(), "cameraMat"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture->id);
+    glUniform1i(glGetUniformLocation(ShadowMapShader->GetID(), "texture0"), GL_TEXTURE0);
+
+    glBindVertexArray(vao);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, instanceAmount);
+    glBindVertexArray(0);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(0);
+    glUseProgram(0);
+
+   
+    
+
 }
 
 void bgGL::InstancedTexture2D::clean()
@@ -505,6 +600,7 @@ void bgGL::InstancedTexture2D::clean()
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
     Util::DeleteShaderProgram(instanceShader->GetID());
+    Util::DeleteShaderProgram(this->ShadowMapShader->GetID());
 }
 
 glm::mat4 bgGL::CalculateCameraMatrix(Camera2D& camera)
@@ -523,6 +619,7 @@ glm::mat4 bgGL::CalculateCameraMatrix(Camera2D& camera, float ParallaxCoefficien
     Vec2<float> target(((camera.target.x) / getWsize().x) * zoom * ParallaxCoefficient, ((camera.target.y / getWsize().y) * zoom * ParallaxCoefficient));
     glm::mat4 projectionMatrix = glm::ortho((-1.0f + target.x) / zoom, (1.0f + target.x) / zoom, (-1.0f + target.y) / zoom, (1.0f + target.y) / zoom, -1.0f, 1.0f);
     return projectionMatrix;
+
 }
 
 Vec2<float> bgGL::FindCenterAABB(Vec4<float> rec)
@@ -530,4 +627,37 @@ Vec2<float> bgGL::FindCenterAABB(Vec4<float> rec)
     return Vec2<float>(rec.x + (rec.z/2) , rec.y + (rec.w/2));
 }
 
+void bgGL::ClearColorBufferBit(Color color)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(color.r, color.g, color.b, color.a);
+}
+
+
+
+static RenderTexture2D CurrentBindFBO;
+
+RenderTexture2D bgGL::GetCurrentFBO()
+{
+    return CurrentBindFBO;
+}
+
+void bgGL::SetCurrentFBOtracker(RenderTexture2D FBO)
+{
+    CurrentBindFBO = FBO;
+}
+
+void bgGL::BindFBO(RenderTexture2D &fbo)
+{
+    BeginTextureMode(fbo);
+    bgGL::SetCurrentFBOtracker(fbo);
+}
+
+void bgGL::BindDefaultFBO()
+{
+    EndTextureMode();
+    RenderTexture2D fbo;
+    fbo.id = 0;
+    bgGL::SetCurrentFBOtracker(fbo);
+}
 

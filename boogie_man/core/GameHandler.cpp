@@ -115,19 +115,23 @@ void game::update()
 //Ekrana cizilicek yer
 void game::draw()
 {
-	BoogieManGame->drawOffFBO();
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	BoogieManGame->drawOffFBO(*this->MainCamera);
 
 	//Loading all the render info onto backbuffer 
-	BeginTextureMode(*target);
+	//BeginTextureMode(*target);
+	bgGL::BindFBO(*target);
 
 	
 
-	ClearBackground(GRAY);
+	//ClearBackground(GRAY);
+	bgGL::ClearColorBufferBit(GRAY);
 	BoogieManGame->drawOffCamera();
 	
 	
 	//BeginMode2D(*MainCamera);
-	
+
 
 	////          GAME_DRAW_CAMERA             /////
 	BoogieManGame->update(target.get() , *MainCamera);
@@ -150,12 +154,13 @@ void game::draw()
 	/////            ////                /////
 	
 
-	EndTextureMode();
-
+	//EndTextureMode();
+	bgGL::BindDefaultFBO();
 
 	//Loading to frontbuffer
 	BeginDrawing();
-	ClearBackground(WHITE);
+	//ClearBackground(WHITE);
+	bgGL::ClearColorBufferBit(WHITE);
 	
 	if (IsWindowMaximized())
 	{
@@ -171,7 +176,6 @@ void game::draw()
 	}
 
 	EndDrawing();
-
 }
 
 void game::Clean(game* currentgame)

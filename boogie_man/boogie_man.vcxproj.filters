@@ -148,5 +148,8 @@
     <None Include="textures\shaders\pixelizer.fs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
+    <None Include="textures\shaders\ShadowMap.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

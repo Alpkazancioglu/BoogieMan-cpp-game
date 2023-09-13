@@ -7,7 +7,9 @@ out vec2 fragTexCoord;
 
 uniform vec3 offsets[500];
 uniform mat4 cameraMat;
+uniform mat4 ratioMat;
 uniform mat4 modelMat;
+
 
 void main()
 {
@@ -18,5 +20,5 @@ void main()
    
    vec3 pos =  Vpos;
    vec3 finalPos = vec3(offsets[gl_InstanceID].z) * vec3(pos.x + offset.x, pos.y + offset.y , pos.z);
-   gl_Position = cameraMat * modelMat * vec4(finalPos.x, finalPos.y , finalPos.z , 1.0) ;
+   gl_Position = cameraMat * ratioMat * modelMat *vec4(finalPos.x, finalPos.y , finalPos.z , 1.0) ;
 }
