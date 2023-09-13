@@ -186,6 +186,7 @@
     <None Include="textures\shaders\Basic.vs" />
     <None Include="textures\shaders\bloom.fs" />
     <None Include="textures\shaders\pixelizer.fs" />
+    <None Include="textures\shaders\ShadowMap.fs" />
     <None Include="textures\skybox.fs" />
     <None Include="textures\skybox.vs" />
   </ItemGroup>

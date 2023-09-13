@@ -7,6 +7,8 @@
 #define IDLE 0
 #define MOVING_FRONT 1
 #define MOVING_BACK -1
+#define GROUND getWsize().y-26
+
 
 class BoogieMan;
 
@@ -95,9 +97,9 @@ struct AnimBackground
 };
 
 enum Direction {
-	UP,
-	RIGHT,
 	DOWN,
+	RIGHT,
+	UP,
 	LEFT
 };
 
@@ -170,14 +172,24 @@ class Item
 class Character : public GameObject
 {
 public:
-
-	void updateCharacterTexture(float dt, int maxframe,int &MoveEverything);
+	
+	int direction;
+	int MovingStatus;
+	Vec2<float> CurrentSpeed;
+	
+	bool alpCheckCollision(ObjectData obstacle);
+	void updateCharacterTexture(float dt, int maxframe,ObjectData obstacle);
 	void updateMovingState(int& MoveEverything, float dt, ObjectData obstacle);
-	bool isCharacterGround();
+	void CharacterMove(float dt,ObjectData obstacle);
+	bool isOnGround(ObjectData object);
+	Direction DirectionRelativeToObject(ObjectData obstacle);
+	
+	Direction CheckDirection(ObjectData object);
+
 
 private:
 
 	std::vector<Item> ItemStorage;
-
+	
 };
 

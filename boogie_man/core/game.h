@@ -96,7 +96,7 @@ public:
 
 	std::unique_ptr<Nebula> nebulas[8];
 
-	
+	std::unique_ptr<bgGL::shadowmap> ShadowMap;
 
 	BoogieMan(Vec2<int> WindowSize);
 	~BoogieMan();
@@ -105,12 +105,8 @@ public:
 	void update(RenderTexture2D* fbo , Camera2D &MainCamera);
 	void draw(RenderTexture2D* fbo);
 	void drawOffCamera();
-	void drawOffFBO();
-	ObjectData updateAnimdata(ObjectData data, float dt, int maxframe);
-	bool isOnGround();
-	bool isObjectOut(ObjectData data);
-	void RotateNebula(ObjectData data, int windowwidth,int index);	
-	void CharacterMovement();
+	void drawOffFBO(Camera2D &MainCamera);
+	
 private:
 
 };

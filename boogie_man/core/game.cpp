@@ -113,6 +113,8 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 
 	BloomShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/bloom.fs").c_str(), 330));
 	PixelShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/pixelizer.fs").c_str(), 330));
+
+	ShadowMap = std::make_unique<bgGL::shadowmap>(2048, 2048);
 }
 
 BoogieMan::~BoogieMan()
@@ -144,7 +146,7 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		break;
 	case INGAME:
 
-		ForestMid.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), 1.7);
+		ForestMid.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), ShadowMap->GetShadowMapImage(), 1.7);
 
 
 		BEGIN_INTERNAL_CAMERA(MainCamera);
@@ -152,40 +154,15 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		dt = GetFrameTime();
 
 		
-		std::cout << MoveEverything << std::endl;
 		//DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 43, 82, 122 , 255 } , {179 , 181 , 199 , 255});
 		//Sky->Draw();
 
 		////animation update for textures
 		{
-		   fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
-		   killua.updateCharacterTexture(dt, 5, MoveEverything);
+		   //fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
+		   killua.updateCharacterTexture(dt, 5, woodcol);
 		}
-		/*
-		if (MoveEverything == MOVING_FRONT)
-		{
-			
-			Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
-			castle.RenderDuplicateExLoop(1, 0, { 200,200,200,210 }, -(float)(castle.Texture->width * castle.scale), { getWsize().x,0 }, dt, false);
-			farbackground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
-			middlebackground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
-			fog_cloud.RenderDuplicateRecLoop(3, 0, { 255,255,255,220 }, -(float)(fog_cloud.Data.rec.width * fog_cloud.scale), { 0 , 450 }, dt, false , 4);
-			foreground_o.RenderDuplicateExLoop(3, 0, WHITE, -(float)(foreground_o.Texture->width * foreground_o.scale), { 0 , FORESTPOSY }, dt, false);
-			Road.RenderDuplicateExLoop(3, 0, { 231, 255, 207 , 255}, -(float)(Road.Texture->width * Road.scale), {0 , Road.Data.pos.y}, dt, false);
-			FrontVegetation.RenderDuplicateExLoop(5, 0, { WHITE }, -(float)(FrontVegetation_t.width * FrontVegetation.scale), { 0,FrontVegetation.Data.pos.y }, dt, false);
-		}
-		else if (MoveEverything == MOVING_BACK)
-		{
-			Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
-			castle.RenderDuplicateExLoop(1, 0, { 200,200,200,210 }, getWsize().x, { -(float)(CastleTexture.width * castle.scale), 0 }, dt, true);
-			farbackground_o.RenderDuplicateExLoop(3, 0, WHITE,  0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , FORESTPOSY }, dt, true);
-			middlebackground_o.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , FORESTPOSY }, dt, true);
-			fog_cloud.RenderDuplicateRecLoop(3, 0, { 255,255,255,220 }, 0, { -(float)(fog_cloud.Data.rec.width * fog_cloud.scale) , 450 }, dt, true , 4);
-			foreground_o.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(foreground_o.Texture->width * foreground_o.scale) , FORESTPOSY }, dt, true);
-			Road.RenderDuplicateExLoop(3, 0, WHITE, 0, { -(float)(Road.Texture->width * Road.scale) , Road.Data.pos.y }, dt, true);
-			FrontVegetation.RenderDuplicateExLoop(5, 0, WHITE, 0, { -(float)(FrontVegetation_t.width * FrontVegetation.scale),FrontVegetation.Data.pos.y }, dt, true);
-		}
-		*/
+		
 
 		castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
 		farbackground_o.RenderDuplicateEx(3, 0, WHITE);
@@ -197,7 +174,7 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 
 		END_INTERNAL_CAMERA;
 
-		Road.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 },*Sky->GetFBOtexture(), 1.8);
+		Road.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 },*Sky->GetFBOtexture(), ShadowMap->GetShadowMapImage(), 1.8);
 
 
 
@@ -205,23 +182,19 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 
 		
 		BEGIN_INTERNAL_CAMERA(MainCamera);
-		
-		CharacterMovement();	
 
+		//CharacterMovement();	
+		DrawRectangleRec(woodcol.rec, RED);
 
+		killua.CharacterMove(dt, woodcol);
 		BeginShaderMode(BloomShader);
 		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos.toVector2(), WHITE);
 		EndShaderMode();
 
-		
 		END_INTERNAL_CAMERA;
 
-		BeginShaderMode(BloomShader);
-
-		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), 2.5);
-		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), 2.6);
-		EndShaderMode();
-
+		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(),ShadowMap->GetShadowMapImage(), 2.5);
+		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMap->GetShadowMapImage(), 2.6);
 
 		for (int i = 0; i < sizeofnebula; i++)
 		{
@@ -258,7 +231,7 @@ void BoogieMan::drawOffCamera()
 	case INGAME:
 
 		Sky->drawFBO();
-
+		
 		Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 
 		if (MoveEverything == MOVING_FRONT)
@@ -284,9 +257,36 @@ void BoogieMan::drawOffCamera()
 
 }
 
-void BoogieMan::drawOffFBO()
+void BoogieMan::drawOffFBO(Camera2D& MainCamera)
 {
 	Sky->Draw();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, ShadowMap->GetShadowMapFBO());
+
+	rlDisableBackfaceCulling();
+	rlEnableDepthTest();
+	glEnable(GL_STENCIL_TEST);
+
+	bgGL::ClearColorBufferBit(WHITE);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glViewport(0, 0,this->ShadowMap->GetShadowMapSize().x, this->ShadowMap->GetShadowMapSize().y);
+
+	
+
+	glBindTexture(GL_TEXTURE_2D, ShadowMap->GetShadowMapImage());
+
+
+	WoodFront.InstancedTexture->drawShadowMap(MainCamera, 2.5);
+	ForestFront.InstancedTexture->drawShadowMap(MainCamera, 2.6);
+
+	
+
+	glViewport(0, 0, getWsize().x, getWsize().y);
+
+	rlEnableBackfaceCulling();
+	rlDisableDepthTest();
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 }
 
 void BoogieMan::draw(RenderTexture2D* fbo)
@@ -305,104 +305,6 @@ void BoogieMan::draw(RenderTexture2D* fbo)
 		break;
 	default:
 		break;
-	}
-}
-
-bool BoogieMan::isObjectOut(ObjectData data)
-{
-	return (data.pos.x <= -nebulas[0]->Data.rec.width);
-}
-
-void BoogieMan::RotateNebula(ObjectData data, int windowwidth,int index)
-{
-	if (isObjectOut(data))
-	{
-		int temp_i;
-		temp_i = index - 1;
-		if (temp_i == -1)
-			temp_i = sizeofnebula - 1;
-		nebulas[index]->Data.pos.x = nebulas[temp_i]->Data.pos.x+300;
-		nebulas[index]->Hitbox.Data.pos.x = nebulas[temp_i]->Hitbox.Data.pos.x + 300;
-	}
-	
-}
-ObjectData  BoogieMan::updateAnimdata(ObjectData data, float dt, int maxframe)
-{
-
-	if (!isOnGround() && data == killua.Data || data == killua.Data && MoveEverything == IDLE)
-	{
-		return data;
-	}
-	else
-	{
-		data.runningtime += dt;
-		if (data.updatetime - data.runningtime <= 0)
-		{
-			data.runningtime = 0.0;
-			data.rec.x = data.frame * data.rec.width;
-			data.frame++;
-			if (data.frame > maxframe)
-				data.frame = 0;
-			return data;
-
-		}
-	}
-
-	return data;
-}
-
-bool BoogieMan::isOnGround()
-{
-
-	int direction = GameObject::VectorDirection({ killua.Data.pos.x + (killua.Texture->width / 26) - woodcol.pos.x,woodcol.pos.y - killua.Data.pos.y } , 1);
-
-	if (CheckCollisionRecs({ killua.Data.pos.x,killua.Data.pos.y,(float)killua.Texture->width / 13,(float)killua.Texture->height }, woodcol.rec) && direction == UP)
-	{
-		return true;
-	}
-
-	return killua.Data.pos.y + killua.Data.rec.height >= GROUND;
-}
-
-inline void BoogieMan::CharacterMovement()
-{
-
-
-	std::cout << " collison" << max_high << std::endl;
-	DrawRectangleRec({ killua.Data.pos.x,killua.Data.pos.y,(float)killua.Texture->width / 13,(float)killua.Texture->height }, WHITE);
-	DrawRectangleRec(woodcol.rec, WHITE);
-	static float LocalSpeed = killua.Data.speed;
-	killua.updateMovingState(MoveEverything, dt, woodcol);
-	current_high = killua.Data.pos.y;
-	killua.Data.pos.y += LocalSpeed * dt;
-
-
-	if (isOnGround() && IsKeyDown(KEY_SPACE))
-	{
-		if (!isOnGround())
-			isPlayerJumped = true;
-		LocalSpeed = 0;
-	}
-	else if (isOnGround())
-	{
-		max_high = killua.Data.pos.y - 100;
-		isMaxHeightReached = false;
-		LocalSpeed = 0;
-		isPlayerJumped = false;
-	}
-	else
-	{
-		LocalSpeed += gravity * dt;
-	}
-	if (max_high >= current_high)
-		isMaxHeightReached = true;
-	if (IsKeyDown(KEY_SPACE) && !isMaxHeightReached && !isPlayerJumped)
-	{
-		LocalSpeed = -300;
-	}
-	else if (IsKeyReleased(KEY_SPACE))
-	{
-		isMaxHeightReached = true;
 	}
 }
 
