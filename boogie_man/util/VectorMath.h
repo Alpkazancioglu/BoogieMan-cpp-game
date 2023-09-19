@@ -4,7 +4,8 @@
 #include <iostream>
 #include <string>
 #include <raylib.h>
-
+#include "../../include/glm/gtc/type_ptr.hpp"
+#include "../../include/glm/gtc/matrix_transform.hpp"
 
 //Utility functions and definitions//>
 #define MAX(a, b) ((a)>(b)? (a) : (b))
@@ -37,6 +38,16 @@ struct Vec2
 	{
 	}
 	Vec2(const Vec2& Input)
+	{
+		x = Input.x;
+		y = Input.y;
+	}
+	Vec2(const glm::vec2& Input)
+	{
+		x = Input.x;
+		y = Input.y;
+	}
+	Vec2(const Vector2& Input)
 	{
 		x = Input.x;
 		y = Input.y;
@@ -74,13 +85,28 @@ struct Vec2
 	{
 		return { x + other.x , y + other.y };
 	}
-
+	Vec2 operator+(const glm::vec2& other) const
+	{
+		return { x + other.x , y + other.y };
+	}
+	Vec2 operator+(const Vector2& other) const
+	{
+		return { x + other.x , y + other.y };
+	}
 	Vec2 operator+(const T& scalar) const
 	{
 		return { x + scalar, y + scalar };
 	}
 
 	Vec2 operator-(const Vec2& other) const
+	{
+		return { x - other.x , y - other.y };
+	}
+	Vec2 operator-(const glm::vec2& other) const
+	{
+		return { x - other.x , y - other.y };
+	}
+	Vec2 operator-(const Vector2& other) const
 	{
 		return { x - other.x , y - other.y };
 	}
@@ -100,12 +126,30 @@ struct Vec2
 		return { x / scalar, y / scalar };
 	}
 
+
 	Vec2 operator/(const Vec2& other) const
 	{
 		return { x / other.x, y / other.y };
 	}
+	Vec2 operator/(const glm::vec2& other) const
+	{
+		return { x / other.x, y / other.y };
+	}
+	Vec2 operator/(const Vector2& other) const
+	{
+		return { x / other.x, y / other.y };
+	}
+
 
 	Vec2 operator*(const Vec2& other) const
+	{
+		return { x * other.x, y * other.y };
+	}
+	Vec2 operator*(const glm::vec2& other) const
+	{
+		return { x * other.x, y * other.y };
+	}
+	Vec2 operator*(const Vector2& other) const
 	{
 		return { x * other.x, y * other.y };
 	}
@@ -121,6 +165,7 @@ struct Vec2
 		this->x = other.x;
 		this->y = other.y;
 	}
+	
 
 };
 
@@ -145,6 +190,18 @@ struct Vec3
 	{
 	}
 	Vec3(Vec3& Input)
+	{
+		x = Input.x;
+		y = Input.y;
+		z = Input.z;
+	}
+	Vec3(glm::vec3& Input)
+	{
+		x = Input.x;
+		y = Input.y;
+		z = Input.z;
+	}
+	Vec3(Vector3& Input)
 	{
 		x = Input.x;
 		y = Input.y;
@@ -268,6 +325,20 @@ struct Vec4
 		z = Input.z;
 		w = Input.w;
 	}
+	Vec4(const glm::vec4& Input)
+	{
+		x = Input.x;
+		y = Input.y;
+		z = Input.z;
+		w = Input.w;
+	}
+	Vec4(const Vector4& Input)
+	{
+		x = Input.x;
+		y = Input.y;
+		z = Input.z;
+		w = Input.w;
+	}
 
 	void SetValues(T x_i, T y_i, T z_i, T w_i)
 	{
@@ -356,6 +427,7 @@ struct Vec4
 		this->z = other.z;
 		this->w = other.w;
 	}
+	
 
 };
 

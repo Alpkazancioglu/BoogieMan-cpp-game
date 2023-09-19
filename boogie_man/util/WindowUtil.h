@@ -181,7 +181,7 @@ namespace bgGL
             UnloadShader(skybox.materials[0].shader);
             UnloadTexture(skybox.materials[0].maps[MATERIAL_MAP_CUBEMAP].texture);
             UnloadTexture(panorama);
-
+            UnloadRenderTexture(this->SkyFbo);
         }
 
         
@@ -266,7 +266,7 @@ namespace bgGL
         void draw(Color tint);
         void draw(Camera2D& camera, Color tint, Texture2D SkyFBO, float ParallaxCoefficient = 2.0f);
         void draw(Camera2D& camera, Color tint,Texture2D SkyFBO,GLuint ShadowMap,  float ParallaxCoefficient = 2.0f);
-        void drawShadowMap(Camera2D& camera, float ParallaxCoefficient = 2.0f);
+        void drawShadowMap(Camera2D& camera, glm::vec3 LightPos, float ParallaxCoefficient = 2.0f);
         void clean();
 
     private:
@@ -279,10 +279,12 @@ namespace bgGL
         int OffsetBufferIndex;
         int instanceAmount;
 
+        //Store the inputs so send them to gpu only when they are changed
+        Color tint;
+        float ParallaxCoefficient;
 
-        Camera camera3d;
-       
-
+        glm::vec3 LightPosition;
+        glm::mat4 LightProjection;
     };
 
 }

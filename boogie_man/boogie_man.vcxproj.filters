@@ -119,6 +119,9 @@
     <ClInclude Include="util\Shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="QuadTreeCollision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="level.json">
@@ -149,6 +152,9 @@
       <Filter>Resource Files\Shaders</Filter>
     </None>
     <None Include="textures\shaders\ShadowMap.fs">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="textures\shaders\ShadowMap.vs">
       <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>

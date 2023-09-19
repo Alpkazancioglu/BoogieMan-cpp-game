@@ -302,14 +302,19 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &text
 {
 
     instanceShader = std::make_unique<Util::Shader>(GetRelativeTexturePath("shaders/Basic.vs").c_str(), GetRelativeTexturePath("shaders/Basic.fs").c_str());
-    ShadowMapShader = std::make_unique<Util::Shader>(GetRelativeTexturePath("shaders/Basic.vs").c_str(), GetRelativeTexturePath("shaders/ShadowMap.fs").c_str());
+    ShadowMapShader = std::make_unique<Util::Shader>(GetRelativeTexturePath("shaders/ShadowMap.vs").c_str(), GetRelativeTexturePath("shaders/ShadowMap.fs").c_str());
+    
+    //this->instanceShader = instanceShader_i;
+    //this->ShadowMapShader = ShadowMapShader_i;
 
     float vertices[] = {
-    -0.5f, -0.5f,0.0f, 0.0f, 0.0f,
-     0.5f, -0.5f,0.0f, -1.0f, 0.0f,
-     0.5f,  0.5f,0.0f, -1.0f, -1.0f,
-    -0.5f,  0.5f,0.0f, 0.0f, -1.0f
+        // Position (X, Y, Z)    Normal (NX, NY, NZ)    Texture Coordinates (U, V)
+        -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,     0.0f, 0.0f, // Bottom-left
+         0.5f, -0.5f, 0.0f,     0.0f, 0.0f, 1.0f,     1.0f, 0.0f, // Bottom-right
+         0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,     1.0f, -1.0f, // Top-right
+        -0.5f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f,     0.0f, -1.0f, // Top-left
     };
+
 
     texture = &texture2draw;
 
@@ -321,10 +326,12 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &text
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -357,8 +364,9 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &text
     float aspect_ratio_wh = (float)texture->width / getWsize().x;
 
     glm::mat4 ImageScaleRatioMat(1.0f);
+    //ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(3.0f, 3.0f, 3.0f));
     ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(aspect_ratio_wh, aspect_ratio_hw, 1.0f));
-    ImageScaleRatioMat = glm::scale(ImageScaleRatioMat, glm::vec3(3.0f, 3.0f, 3.0f));
+
     glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "ratioMat"), 1, GL_FALSE, glm::value_ptr(ImageScaleRatioMat));
     glUniform3fv(glGetUniformLocation(instanceShader->GetID(), "offsets"), 500, (GLfloat*)&offsets[0]);
     
@@ -369,12 +377,7 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &text
 
     Util::UseShaderProgram(0);
 
-    camera3d = { 0 };
-    camera3d.position = { 1.0f, 1.0f, 1.0f };
-    camera3d.target = { 4.0f, 1.0f, 4.0f };
-    camera3d.up = { 0.0f, 1.0f, 0.0f };
-    camera3d.fovy = 45.0f;
-    camera3d.projection = CAMERA_PERSPECTIVE;
+    
 
 }
 
@@ -409,9 +412,7 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount, Texture2D& textu
 
     glBindVertexArray(0);
 
-
     offsets.assign(positionoffsets.begin(), positionoffsets.end());
-
     offsets.resize(500);
 
     for (size_t i = positionoffsets.size(); i < 500; i++)
@@ -481,6 +482,8 @@ void bgGL::InstancedTexture2D::draw(Camera2D& camera, Color tint, Texture2D SkyF
     glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x, tintColor.y, tintColor.z, tintColor.w);
 
     glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, ParallaxCoefficient / 10));
+    modelMat = glm::scale(modelMat, glm::vec3(3.0f, 3.0f, 3.0f));
+
     glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
 
     glm::mat4 projectionMatrix = CalculateCameraMatrix(camera, ParallaxCoefficient);
@@ -514,16 +517,30 @@ void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D Sky
 {    
     glUseProgram(instanceShader->GetID());
 
-    Vector4 tintColor = ColorNormalize(tint);
-    
-    glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x , tintColor.y , tintColor.z , tintColor.w);
+    if (this->tint.r != tint.r && this->tint.g != tint.g && this->tint.b != tint.b)
+    {
+        this->tint = tint;
 
-    glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, ParallaxCoefficient / 10));
-    glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
+        Vector4 tintColor = ColorNormalize(tint);
+        glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x, tintColor.y, tintColor.z, tintColor.w);
+    }
+    if (this->ParallaxCoefficient != ParallaxCoefficient)
+    {
+        this->ParallaxCoefficient = ParallaxCoefficient;
 
+        //modelMat = glm::scale(modelMat, glm::vec3(3.0f, 3.0f, 3.0f));
+        glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, ParallaxCoefficient ));
+        glUniformMatrix4fv(glGetUniformLocation(this->instanceShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
+    }
+   
     glm::mat4 projectionMatrix = CalculateCameraMatrix(camera , ParallaxCoefficient);
     
     glUniformMatrix4fv(glGetUniformLocation(instanceShader->GetID(), "cameraMat"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+    glUniform3f(glGetUniformLocation(instanceShader->GetID(), "LightPosition"), LightPosition.x, LightPosition.y, LightPosition.z);
+
+    glUniformMatrix4fv(glGetUniformLocation(instanceShader->GetID(), "LightProjection"), 1, GL_FALSE, glm::value_ptr(LightProjection));
+
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id);
@@ -547,36 +564,41 @@ void bgGL::InstancedTexture2D::draw(Camera2D& camera , Color tint, Texture2D Sky
     glActiveTexture(0);
     glUseProgram(0);
 
-
-
 }
 
-void bgGL::InstancedTexture2D::drawShadowMap(Camera2D& camera, float ParallaxCoefficient)
+void bgGL::InstancedTexture2D::drawShadowMap(Camera2D& camera, glm::vec3 LightPos, float ParallaxCoefficient)
 {
 
     glUseProgram(ShadowMapShader->GetID());
 
-    //glUniform4f(glGetUniformLocation(instanceShader->GetID(), "tint"), tintColor.x, tintColor.y, tintColor.z, tintColor.w);
 
     //glm::mat4 projectionMatrix = CalculateCameraMatrix(camera , ParallaxCoefficient);
-    glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, ParallaxCoefficient / 10));
+    glm::mat4 modelMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, ParallaxCoefficient));
+    
     glUniformMatrix4fv(glGetUniformLocation(this->ShadowMapShader->GetID(), "modelMat"), 1, GL_FALSE, glm::value_ptr(modelMat));
 
     
-    UpdateCamera(&camera3d, CAMERA_FIRST_PERSON);
 
     float zoom = camera.zoom;
-    Vec2<float> target(((camera.target.x) / getWsize().x) * zoom * ParallaxCoefficient, ((camera.target.y / getWsize().y) * zoom * ParallaxCoefficient));
-    glm::mat4 projectionMatrix = glm::perspective(glm::radians(45.0f), getWsize().x / getWsize().y, -10.0f, 10.0f);
-
-    std::cout << "Camera: " << camera3d.target.x << " " << camera3d.target.y << " " << camera3d.target.z << std::endl;
-    projectionMatrix = glm::lookAt(glm::vec3(camera3d.position.x, camera3d.position.y, camera3d.position.z), glm::vec3(camera3d.position.x + camera3d.target.x, camera3d.position.y + camera3d.target.y, camera3d.position.z + camera3d.target.z), glm::vec3(0.0, 1.0f, 0.0f));
-    glm::vec3 LightPos(0.0, 0.3f, -0.2f);
-    //projectionMatrix = glm::lookAt(LightPos + glm::vec3(camera.target.x / getWsize().x, 0.0f, 0.0f), glm::vec3(camera.target.x / getWsize().x, 0, 0), glm::vec3(0.0, 1.0f, 0.0f));
+    //std::cout << "Camera: " << camera3d.target.x << " " << camera3d.target.y << " " << camera3d.target.z << std::endl;
 
 
+    //glm::mat4 LightProj = glm::lookAt(glm::vec3(camera3d.position.x, camera3d.position.y, camera3d.position.z), glm::vec3(camera3d.position.x + camera3d.target.x, camera3d.position.y + camera3d.target.y, camera3d.position.z + camera3d.target.z), glm::vec3(0.0, 1.0f, 0.0f));
+    //glm::mat4 LightProj = glm::perspective(glm::radians(45.0f), getWsize().x / getWsize().y, -10.0f, 10.0f);
+    glm::mat4 projectionMatrix = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -5.0f, 5.0f);
+    //glm::mat4 projectionMatrix = CalculateCameraMatrix(camera, ParallaxCoefficient);
+    
+    glm::vec3 CameraTarget(camera.target.x / getWsize().x , camera.target.y / getWsize().y, 0.0f);
+    CameraTarget = CameraTarget * 2.0f;
+    //glm::vec3 LightPos(0.0, 0.3f, -0.2f);
+    LightProjection = glm::lookAt(LightPos + CameraTarget, CameraTarget, glm::vec3(0.0f, 1.0f, 0.0f));
 
-    glUniformMatrix4fv(glGetUniformLocation(ShadowMapShader->GetID(), "cameraMat"), 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+    this->LightPosition = LightPos;
+    //glm::mat4 LightProj = glm::lookAt(LightPosition + glm::vec3(camera.target.x / getWsize().x, 0.0f, 0.0f), glm::vec3(camera.target.x / getWsize().x, 0, 0), glm::vec3(0.0, 1.0f, 0.0f));
+   
+    LightProjection = projectionMatrix * LightProjection;
+
+    glUniformMatrix4fv(glGetUniformLocation(ShadowMapShader->GetID(), "LightProjection"), 1, GL_FALSE, glm::value_ptr(LightProjection));
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture->id);
@@ -590,15 +612,13 @@ void bgGL::InstancedTexture2D::drawShadowMap(Camera2D& camera, float ParallaxCoe
     glActiveTexture(0);
     glUseProgram(0);
 
-   
-    
-
 }
 
 void bgGL::InstancedTexture2D::clean()
 {
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
+
     Util::DeleteShaderProgram(instanceShader->GetID());
     Util::DeleteShaderProgram(this->ShadowMapShader->GetID());
 }
@@ -617,7 +637,7 @@ glm::mat4 bgGL::CalculateCameraMatrix(Camera2D& camera, float ParallaxCoefficien
 {
     float zoom = camera.zoom;
     Vec2<float> target(((camera.target.x) / getWsize().x) * zoom * ParallaxCoefficient, ((camera.target.y / getWsize().y) * zoom * ParallaxCoefficient));
-    glm::mat4 projectionMatrix = glm::ortho((-1.0f + target.x) / zoom, (1.0f + target.x) / zoom, (-1.0f + target.y) / zoom, (1.0f + target.y) / zoom, -1.0f, 1.0f);
+    glm::mat4 projectionMatrix = glm::ortho((-1.0f + target.x) / zoom, (1.0f + target.x) / zoom, (-1.0f + target.y) / zoom, (1.0f + target.y) / zoom, -5.0f,5.0f);
     return projectionMatrix;
 
 }
