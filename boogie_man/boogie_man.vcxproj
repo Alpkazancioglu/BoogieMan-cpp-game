@@ -150,6 +150,7 @@
     <ClCompile Include="core\Maincpp.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="GameEntity.cpp" />
+    <ClCompile Include="QuadTreeCollision.cpp" />
     <ClCompile Include="util\FileHandler.cpp" />
     <ClCompile Include="util\InputHandler.cpp" />
     <ClCompile Include="util\Shader.cpp" />

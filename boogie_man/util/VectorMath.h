@@ -71,6 +71,12 @@ struct Vec2
 		y = Q_rsqrt(y);
 	}
 
+	template<typename CastType>
+	Vec2<CastType> Cast()
+	{
+		return { (CastType)x , (CastType)y };
+	}
+
 	Vector2 toVector2()
 	{
 		return { this->x , this->y };
@@ -80,6 +86,35 @@ struct Vec2
 	{
 		return this->x == other.x && this->y == other.y;
 	}
+
+	bool operator>(const Vec2& other) const
+	{
+		return this->x > other.x && this->y > other.y;
+	}
+	bool operator<(const Vec2& other) const
+	{
+		return this->x < other.x && this->y < other.y;
+	}
+
+	bool operator<=(const Vec2& other) const
+	{
+		return this->x <= other.x && this->y <= other.y;
+	}
+	bool operator>=(const Vec2& other) const
+	{
+		return this->x >= other.x && this->y >= other.y;
+	}
+
+	bool operator>(const T& scalar) const
+	{
+		return this->x > scalar && this->y > scalar;
+	}
+	bool operator<(const T& scalar) const
+	{
+		return this->x < scalar && this->y < scalar;
+	}
+	
+
 
 	Vec2 operator+(const Vec2& other) const
 	{
@@ -229,6 +264,12 @@ struct Vec3
 		z = Q_rsqrt(z);
 	}
 
+	template<typename CastType>
+	Vec3<CastType> Cast()
+	{
+		return { (CastType)x , (CastType)y , (CastType)z};
+	}
+
 	Vector3 toVector3()
 	{
 		return { this->x , this->y , this->z };
@@ -238,6 +279,35 @@ struct Vec3
 	{
 		return this->x == other.x && this->y == other.y && this->z == other.z;
 	}
+
+	bool operator>(const Vec3& other) const
+	{
+		return this->x > other.x && this->y > other.y && this->z > other.z;
+	}
+	bool operator<(const Vec3& other) const
+	{
+		return this->x < other.x && this->y < other.y && this->z < other.z;
+	}
+
+	bool operator>=(const Vec3& other) const
+	{
+		return this->x >= other.x && this->y >= other.y && this->z >= other.z;
+	}
+	bool operator<=(const Vec3& other) const
+	{
+		return this->x <= other.x && this->y <= other.y && this->z <= other.z;
+	}
+
+	bool operator>(const T& scalar) const
+	{
+		return this->x > scalar && this->y > scalar && this->z > scalar;
+	}
+	bool operator<(const T& scalar) const
+	{
+		return this->x < scalar && this->y < scalar && this->z < scalar;
+	}
+
+
 
 	Vec3 operator+(const Vec3& other) const
 	{
@@ -369,9 +439,42 @@ struct Vec4
 		w = Q_rsqrt(w);
 	}
 
+	template<typename CastType>
+	Vec4<CastType> Cast()
+	{
+		return { (CastType)x , (CastType)y , (CastType)z , (CastType)w };
+	}
+
 	bool operator==(const Vec4& other) const
 	{
 		return this->x == other.x && this->y == other.y && this->z == other.z && this->w == other.w;
+	}
+	bool operator>(const Vec4& other) const
+	{
+		return this->x > other.x && this->y > other.y && this->z > other.z && this->w > other.w;
+	}
+	bool operator<(const Vec4& other) const
+	{
+		return this->x < other.x && this->y < other.y && this->z < other.z && this->w < other.w;
+	}
+
+	bool operator>=(const Vec4& other) const
+	{
+		return this->x >= other.x && this->y >= other.y && this->z >= other.z && this->w >= other.w;
+	}
+	bool operator<=(const Vec4& other) const
+	{
+		return this->x <= other.x && this->y <= other.y && this->z <= other.z && this->w <= other.w;
+	}
+
+
+	bool operator>(const T& scalar) const
+	{
+		return this->x > scalar && this->y > scalar && this->z > scalar && this->w > scalar;
+	}
+	bool operator<(const T& scalar) const
+	{
+		return this->x < scalar && this->y < scalar && this->z < scalar && this->w < scalar;
 	}
 
 	Vec4 operator+(const Vec4& other) const
