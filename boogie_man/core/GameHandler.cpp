@@ -111,7 +111,7 @@ void game::update()
 
 }
 
-
+ 
 //Ekrana cizilicek yer
 void game::draw()
 {
@@ -135,7 +135,16 @@ void game::draw()
 
 	////          GAME_DRAW_CAMERA             /////
 	BoogieManGame->update(target.get() , *MainCamera);
+	
+	if (IsKeyPressed(KEY_M))
+	{
+		DrawShadowMapFBO = !DrawShadowMapFBO;
+	}
 
+	if (DrawShadowMapFBO)
+	{
+		DrawTexturePro(BoogieManGame->ShadowMapFBO->texture, { 0,0,(float)BoogieManGame->ShadowMapFBO->texture.width,-(float)BoogieManGame->ShadowMapFBO->texture.height }, { 0,0,getWsize().x / 3,getWsize().y / 3 }, { 0,0 }, 0.0f, WHITE);
+	}
 	//AlpinoGame->draw(target.get());
 	/////            ////                     /////
 

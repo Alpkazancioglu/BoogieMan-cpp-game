@@ -1,15 +1,17 @@
 #version 330 core
 
 in vec2 fragTexCoord;
+in vec3 currentpos;
+in vec3 Normal;
+in vec4 LightPosProj;
 
-in vec2 texcoord;
 uniform sampler2D texture0;
 uniform sampler2D skytexture;
 uniform sampler2D shadowMap;
-
+uniform vec3 LightPosition;
+uniform vec4 tint;
 
 out vec4 FragColor;
-uniform vec4 tint;
 
  float ShadowCalculation(vec4 fragPosLightSpace , vec3 lightDir ,vec3 normal)
  {
@@ -53,9 +55,30 @@ void main()
     vec3 colorEvened = vec3((color.x + color.y + color.z) / 3);
     colorEvened = colorEvened.x < AmbientAmount ? vec3(AmbientAmount) : colorEvened;
     color = mix(vec4( colorEvened, 1.0f) , color , 0.05) ;
+    
+  
+    vec3 lightvec = (LightPosition - currentpos);
+    vec3 lightDirection = normalize(lightvec);
 
-    //FragColor = tint * color * texture(texture0,fragTexCoord);
+    float Shadow = ShadowCalculation(LightPosProj , lightDirection , Normal);
+
+    vec3 projCoords = LightPosProj.xyz / LightPosProj.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+
+    float ambient = 1.5f;
+    
     //FragColor = tint * texture(shadowMap , -fragTexCoord);
-    FragColor = vec4(vec3(texture(shadowMap , -fragTexCoord).r),1.0f);
+   // FragColor = vec4(vec3(texture(shadowMap , projCoords.xy).r),1.0f);
+    //FragColor = vec4(vec3(gl_FragCoord.z),1.0f);
+    //vec4 textureColor = texture(texture0 , fragTexCoord);
+   // if(textureColor.w < 0.5)
+   // {
+    //  discard;
+    //}
+    //FragColor = vec4(vec3((1.0f - Shadow)),1.0f);
+     //FragColor = tint * color * texture(texture0,fragTexCoord);
+
+    FragColor = tint * color * vec4(vec3(1.0f - Shadow) + ambient,1.0f) * texture(texture0,fragTexCoord);
 
 }

@@ -170,6 +170,7 @@
     <ClInclude Include="core\nebula.h" />
     <ClInclude Include="ECS.h" />
     <ClInclude Include="GameEntity.h" />
+    <ClInclude Include="QuadTreeCollision.h" />
     <ClInclude Include="rcamera.h" />
     <ClInclude Include="util\FileHandler.h" />
     <ClInclude Include="util\InputHandler.h" />
@@ -187,6 +188,7 @@
     <None Include="textures\shaders\bloom.fs" />
     <None Include="textures\shaders\pixelizer.fs" />
     <None Include="textures\shaders\ShadowMap.fs" />
+    <None Include="textures\shaders\ShadowMap.vs" />
     <None Include="textures\skybox.fs" />
     <None Include="textures\skybox.vs" />
   </ItemGroup>

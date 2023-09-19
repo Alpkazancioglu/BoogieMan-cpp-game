@@ -96,7 +96,10 @@ public:
 
 	std::unique_ptr<Nebula> nebulas[8];
 
-	std::unique_ptr<bgGL::shadowmap> ShadowMap;
+	//std::unique_ptr<bgGL::shadowmap> ShadowMap;
+	std::unique_ptr<RenderTexture2D> ShadowMapFBO;
+	Camera camera3d;
+
 
 	BoogieMan(Vec2<int> WindowSize);
 	~BoogieMan();

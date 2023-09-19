@@ -282,7 +282,6 @@ InstancedGameObject::~InstancedGameObject()
 
 bool Character::alpCheckCollision(ObjectData obstacle)
 {
-	
 	return CheckCollisionRecs({ this->Data.pos.x + this->CurrentSpeed.x,this->Data.pos.y+this->CurrentSpeed.y,this->Data.rec.width,this->Data.rec.height }, { obstacle.rec });
 }
 

@@ -39,6 +39,8 @@ private:
 	std::shared_ptr<RenderTexture2D> target;
 	float scale;
 	stopwatch_t newwatch;
+
+	bool DrawShadowMapFBO = true;
 };
 
 

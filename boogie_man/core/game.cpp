@@ -93,16 +93,16 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	max_high = killua.Data.pos.y - 100;
 	killua.scale = 1.0f;
 
-	Sky = std::make_unique<bgGL::cubemap>(GetRelativeTexturePath("sky/Two_sided_background2.hdr").c_str() , true , -0.11f , 512);
+	Sky = std::make_unique<bgGL::cubemap>(GetRelativeTexturePath("sky/Two_sided_background2.hdr").c_str() , true , -0.11f , 256);
 	
 	WoodFront.SetTexture(WoodFront_t);
-	WoodFront.SetInstancing(100, bgGL::MakeInstanceOffsetArray(100, { 0,0 }, []() -> float {return (1.0f / GiveRandomNumf(3, 6, 100, false, 11)) * 4; }, 1.2f));
+	WoodFront.SetInstancing(100, bgGL::MakeInstanceOffsetArray(100, { 0,0 }, []() -> float {return (GiveRandomNumf(1, 3, 100, false, 11)) * 4; }, 1.2f));
 	
 	ForestFront.SetTexture(t_foreground);
-	ForestFront.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, []() -> float {return GiveRandomNumf(1, 2, 100, false, 11); }, 0.2f));
+	ForestFront.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, []() -> float {return GiveRandomNumf(5, 6, 100, false, 11); }, 0.2f));
 
 	ForestMid.SetTexture(middle_background);
-	ForestMid.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, []() -> float {return GiveRandomNumf(2, 3, 100, false, 11); }, 0.4f));
+	ForestMid.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, []() -> float {return GiveRandomNumf(6, 8, 100, false, 11); }, 0.4f));
 
 
 	WoodenLogWithRoots.SetBaseAttributes(WoodFront_t, 2.0f, { {},{-700,900},0,0,0,0 }, 0.0f);
@@ -114,7 +114,16 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	BloomShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/bloom.fs").c_str(), 330));
 	PixelShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/pixelizer.fs").c_str(), 330));
 
-	ShadowMap = std::make_unique<bgGL::shadowmap>(2048, 2048);
+	//ShadowMap = std::make_unique<bgGL::shadowmap>(1024, 1024);
+	ShadowMapFBO = std::make_unique<RenderTexture2D>(LoadRenderTexture(4096,4096));
+
+	camera3d = { 0 };
+	camera3d.position = { 1.0f, 1.0f, 1.0f };
+	camera3d.target = { 4.0f, 1.0f, 4.0f };
+	camera3d.up = { 0.0f, 1.0f, 0.0f };
+	camera3d.fovy = 45.0f;
+	camera3d.projection = CAMERA_PERSPECTIVE;
+
 }
 
 BoogieMan::~BoogieMan()
@@ -129,9 +138,11 @@ BoogieMan::~BoogieMan()
 	UnloadTexture(FrontVegetation_t);
 	UnloadTexture(Road_t);
 	UnloadTexture(WoodFront_t);
+	UnloadRenderTexture(*ShadowMapFBO);
 
 	UnloadShader(BloomShader);
 	UnloadShader(PixelShader);
+
 	
 	Sky->clear();
 }
@@ -146,7 +157,9 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		break;
 	case INGAME:
 
-		ForestMid.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), ShadowMap->GetShadowMapImage(), 1.7);
+		BEGIN_INTERNAL_CAMERA(MainCamera);
+		ForestMid.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 1.7);
+		END_INTERNAL_CAMERA;
 
 
 		BEGIN_INTERNAL_CAMERA(MainCamera);
@@ -164,17 +177,17 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		}
 		
 
-		castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
-		farbackground_o.RenderDuplicateEx(3, 0, WHITE);
-		middlebackground_o.RenderDuplicateEx(3, 0, WHITE);
-		foreground_o.RenderDuplicateEx(3, 0, WHITE);
+		//castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
+		//farbackground_o.RenderDuplicateEx(3, 0, WHITE);
+		//middlebackground_o.RenderDuplicateEx(3, 0, WHITE);
+		//foreground_o.RenderDuplicateEx(3, 0, WHITE);
 		//Road.RenderDuplicateEx(3, 0, { 231, 255, 207 , 255 });
 		FrontVegetation.RenderDuplicateEx(5, 0, WHITE);
 		fog_cloud.RenderDuplicateRec(3, 0, { 255,255,255,220 }, 4, 1);
 
 		END_INTERNAL_CAMERA;
 
-		Road.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 },*Sky->GetFBOtexture(), ShadowMap->GetShadowMapImage(), 1.8);
+		Road.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 },*Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 1.8);
 
 
 
@@ -187,14 +200,14 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		DrawRectangleRec(woodcol.rec, RED);
 
 		killua.CharacterMove(dt, woodcol);
-		BeginShaderMode(BloomShader);
+
 		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos.toVector2(), WHITE);
-		EndShaderMode();
 
 		END_INTERNAL_CAMERA;
 
-		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(),ShadowMap->GetShadowMapImage(), 2.5);
-		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMap->GetShadowMapImage(), 2.6);
+		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 2.6);
+		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 2.8);
+
 
 		for (int i = 0; i < sizeofnebula; i++)
 		{
@@ -232,6 +245,7 @@ void BoogieMan::drawOffCamera()
 
 		Sky->drawFBO();
 		
+		
 		Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 
 		if (MoveEverything == MOVING_FRONT)
@@ -261,32 +275,39 @@ void BoogieMan::drawOffFBO(Camera2D& MainCamera)
 {
 	Sky->Draw();
 
-	glBindFramebuffer(GL_FRAMEBUFFER, ShadowMap->GetShadowMapFBO());
-
-	rlDisableBackfaceCulling();
-	rlEnableDepthTest();
-	glEnable(GL_STENCIL_TEST);
+	//glBindFramebuffer(GL_FRAMEBUFFER, ShadowMap->GetShadowMapFBO());
+	BeginTextureMode(*ShadowMapFBO);
+	glDisable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_NOTEQUAL | GL_LESS);
 
 	bgGL::ClearColorBufferBit(WHITE);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glViewport(0, 0,this->ShadowMap->GetShadowMapSize().x, this->ShadowMap->GetShadowMapSize().y);
+	glViewport(0, 0, ShadowMapFBO->texture.width, ShadowMapFBO->texture.height);
 
+	//glBindTexture(GL_TEXTURE_2D, ShadowMap->GetShadowMapImage());
+    UpdateCamera(&camera3d, CAMERA_FIRST_PERSON);
 	
+	//Vec2<float> mousePos({ GetMouseX()/getWsize().x , GetMouseY() / getWsize().y});
+	//mousePos(mousePos * 2.0f - 1.0f);
+	//glm::vec3 LightPosition(0.0f, 0.0f, 0.1f);
+	//glm::vec3 LightPosition(mousePos.x , mousePos.y, 0.1f);
+    glm::vec3 LightPosition(camera3d.target.x , camera3d.target.y, camera3d.target.z);
+	std::cout << "LIGHT POSITION: " << LightPosition.x << " " << LightPosition.y << " " << LightPosition.z << std::endl;
 
-	glBindTexture(GL_TEXTURE_2D, ShadowMap->GetShadowMapImage());
+	//glm::vec3 LightPosition(camera3d.target.x, camera3d.target.y, camera3d.target.z);
+	ForestMid.InstancedTexture->drawShadowMap(MainCamera,LightPosition, 1.7);
+	Road.InstancedTexture->drawShadowMap(MainCamera, LightPosition,1.8);
+	ForestFront.InstancedTexture->drawShadowMap(MainCamera, LightPosition, 2.6);
+	WoodFront.InstancedTexture->drawShadowMap(MainCamera, LightPosition, 2.8);
 
-
-	WoodFront.InstancedTexture->drawShadowMap(MainCamera, 2.5);
-	ForestFront.InstancedTexture->drawShadowMap(MainCamera, 2.6);
-
-	
 
 	glViewport(0, 0, getWsize().x, getWsize().y);
-
-	rlEnableBackfaceCulling();
-	rlDisableDepthTest();
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+	glCullFace(GL_BACK);
+	glDepthFunc(GL_LESS);
+	glDisable(GL_DEPTH_TEST);
+	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	EndTextureMode();
 }
 
 void BoogieMan::draw(RenderTexture2D* fbo)
