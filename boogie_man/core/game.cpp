@@ -7,6 +7,7 @@
 #include "foreground.h"
 #include <string>
 #include "LevelHandler.h"
+#include "../util/Log.h"
 
 #define FORESTPOSY 0
 #define GROUND getWsize().y-26
@@ -124,6 +125,14 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	camera3d.fovy = 45.0f;
 	camera3d.projection = CAMERA_PERSPECTIVE;
 
+	objects.push_back(&Road);
+	objects.push_back(&ForestMid);
+	objects.push_back(&ForestFront);
+	objects.push_back(&killua);
+	headnode = new QT::Quad;
+
+	QT::InitList(headnode);
+
 }
 
 BoogieMan::~BoogieMan()
@@ -143,6 +152,9 @@ BoogieMan::~BoogieMan()
 	UnloadShader(BloomShader);
 	UnloadShader(PixelShader);
 
+	QT::FreeQuads(headnode);
+
+	LOG_TRACEBACK_PRINT_FILE("LogTraceBack.txt");
 	
 	Sky->clear();
 }
@@ -157,13 +169,14 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		break;
 	case INGAME:
 
+
 		BEGIN_INTERNAL_CAMERA(MainCamera);
+
 		ForestMid.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 1.7);
 		END_INTERNAL_CAMERA;
 
 
 		BEGIN_INTERNAL_CAMERA(MainCamera);
-
 		dt = GetFrameTime();
 
 		
@@ -208,6 +221,9 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 2.6);
 		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 2.8);
 
+		BEGIN_INTERNAL_CAMERA(MainCamera);
+		QT::ContructQuads(headnode, objects, { 200,200 }, MainCamera);
+		END_INTERNAL_CAMERA;
 
 		for (int i = 0; i < sizeofnebula; i++)
 		{
@@ -218,7 +234,6 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 			}
 		}
 
-		
 
 
 		break;
@@ -290,9 +305,9 @@ void BoogieMan::drawOffFBO(Camera2D& MainCamera)
 	
 	//Vec2<float> mousePos({ GetMouseX()/getWsize().x , GetMouseY() / getWsize().y});
 	//mousePos(mousePos * 2.0f - 1.0f);
-	//glm::vec3 LightPosition(0.0f, 0.0f, 0.1f);
+	glm::vec3 LightPosition(0.4f, 0.1f, 5.0f);
 	//glm::vec3 LightPosition(mousePos.x , mousePos.y, 0.1f);
-    glm::vec3 LightPosition(camera3d.target.x , camera3d.target.y, camera3d.target.z);
+    //glm::vec3 LightPosition(camera3d.target.x , camera3d.target.y, camera3d.target.z);
 	std::cout << "LIGHT POSITION: " << LightPosition.x << " " << LightPosition.y << " " << LightPosition.z << std::endl;
 
 	//glm::vec3 LightPosition(camera3d.target.x, camera3d.target.y, camera3d.target.z);

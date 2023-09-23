@@ -24,14 +24,15 @@ namespace QT
 	private:
 	};
 
-	void ContructQuads(Quad* HeadQuad,std::vector<GameObject*>& Objects, Vec2<float> DesiredQuadSize);
+	void ContructQuads(Quad* HeadQuad,std::vector<GameObject*>& Objects, Vec2<float> DesiredQuadSize, Camera2D& camera);
 	bool CheckCollision(GameObject& obj1, GameObject& obj2);
-	std::vector<GameObject*> FetchOnScreen(std::vector<GameObject*>& Objects);
+	std::vector<GameObject*> FetchOnScreen(std::vector<GameObject*>& Objects, Camera2D& camera);
 	void SortObjectsPosition(std::vector<GameObject*>& Objects);
 
 	void FreeQuads(Quad* HeadQuad);
 	void InsertNode(Quad* HeadQuad);
 	void DeleteLastNode(Quad* HeadQuad);
 	void InitList(Quad* HeadQuad);
+	Quad* GetNodeWithIndex(Quad* headnode, int index);
 }
 

@@ -6,6 +6,7 @@
 #include <memory>
 #include <string>
 #include "GameObject.h"
+#include "../QuadTreeCollision.h"
 #define REAL  0
 #define DUPLICATE  1
 
@@ -89,6 +90,10 @@ public:
 	GameObject WoodenLogWithRoots;
 
 	ObjectData woodcol;
+
+	std::vector<GameObject*> objects;
+
+	QT::Quad* headnode;
 
 	Character killua;
 

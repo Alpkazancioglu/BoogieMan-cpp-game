@@ -1,32 +1,65 @@
 #include "QuadTreeCollision.h"
+#include "util/Log.h"
+#include <string>
 
 static unsigned int NodeCount = 0;
 static QT::Quad* LastNode = nullptr;
 static Vec2<float> PrevDesiredQuadSize;
 
-void QT::ContructQuads(Quad* HeadQuad, std::vector<GameObject*>& Objects,Vec2<float> DesiredQuadSize)
+void QT::ContructQuads(Quad* HeadQuad, std::vector<GameObject*>& Objects,Vec2<float> DesiredQuadSize , Camera2D &camera)
 {
+	//HeadQuad = new Quad;
+	//FreeQuads(HeadQuad);
+	//InitList(HeadQuad);
+
 	Vec2<unsigned int> GridCount = (getWsize() / DesiredQuadSize).Cast<unsigned int>();
 
-	Quad* temp = HeadQuad;
-	std::vector<GameObject*> ObjectsOnScreen = FetchOnScreen(Objects);
+	std::vector<GameObject*> ObjectsOnScreen = FetchOnScreen(Objects,camera);
 
 	SortObjectsPosition(ObjectsOnScreen);
 
-	for (auto* object : Objects)
+	std::vector<Vec2<int>> ObjectIndexes;
+
+	for (auto* object : ObjectsOnScreen)
 	{
-		if (object->Data.pos < getWsize() && object->Data.pos > 0)
-		{
-			object->Data.pos / getWsize()
-		}
+		Vec2<int> QuadIndex = (object->Data.pos / DesiredQuadSize).Cast<int>();
+		LOG("OBJECT LOCATION: " << object->Data.pos);
+		ObjectIndexes.push_back(QuadIndex);
 	}
+
+	std::sort(ObjectIndexes.begin(), ObjectIndexes.end());
+
+	for (size_t i = 0; i < ObjectIndexes.size(); i++)
+	{
+		LOG("Object " << i << " " << ObjectIndexes.at(i));
+		DrawRectangleLines(ObjectIndexes.at(i).x * DesiredQuadSize.x, ObjectIndexes.at(i).y * DesiredQuadSize.y, DesiredQuadSize.x, DesiredQuadSize.y , RED);
+	}
+
+	/*for (size_t y = 0; y < ObjectIndexes.size(); y++)
+	{
+		for (size_t i = y; i < ObjectIndexes.size() - y; i++)
+		{
+			if (ObjectIndexes.at(y) == ObjectIndexes.at(i))
+			{
+				InsertNode(HeadQuad);
+				LastNode->objects.push_back(ObjectsOnScreen.at(y));
+				LastNode->objects.push_back(ObjectsOnScreen.at(i));
+			}
+		}
+	}*/
+
+	/*LOG("NODE COUNT: " << NodeCount);
+	Quad* temp = HeadQuad->next;
 
 	while (temp != nullptr)
 	{
-	    
-
+		for (auto* object : temp->objects)
+		{
+			LOG("Object: " << object->Data.pos);
+		}
 		temp = temp->next;
-	}
+	}*/
+
 }
 
 bool QT::CheckCollision(GameObject& obj1, GameObject& obj2)
@@ -34,26 +67,31 @@ bool QT::CheckCollision(GameObject& obj1, GameObject& obj2)
 	return false;
 }
 
-std::vector<GameObject*> QT::FetchOnScreen(std::vector<GameObject*>& Objects)
+std::vector<GameObject*> QT::FetchOnScreen(std::vector<GameObject*>& Objects, Camera2D& camera)
 {
 	std::vector<GameObject*> OnScreen;
+	Vec4<float> ScreenRect(camera.target.x - camera.offset.x , camera.target.y - camera.offset.y, getWsize().x, getWsize().y);
+	//ScreenRect.zw(ScreenRect.zw() * camera.zoom);
+	//ScreenRect.xy(ScreenRect.xy() / camera.zoom);
+
 	for (auto* object : Objects)
 	{
-		if (object->Data.pos < getWsize() && object->Data.pos > 0)
+		if (object->Data.pos < (ScreenRect.xy() + ScreenRect.zw()) && object->Data.pos >= ScreenRect.xy())
 		{
 			OnScreen.push_back(object);
 		}
 	}
+	//+ ((getWsize().x / 2) - camera.target.x)
+	LOG("ScreenRect: " << ScreenRect);
+	//DrawRectangle(ScreenRect.x, ScreenRect.y, ScreenRect.z, ScreenRect.w, RED);
+	//DrawRectangleLines(ScreenRect.x, ScreenRect.y, ScreenRect.z, ScreenRect.w, RED);
 	return OnScreen;
 }
 
-// the interval from [s to m] and [m+1 to e] in v are sorted
-// the function will merge both of these intervals
-// such the interval from [s to e] in v becomes sorted
+
 void MergeSortedIntervals(std::vector<GameObject*>& v, int s, int m, int e) 
 {
-	// temp is used to temporary store the vector obtained by merging
-	// elements from [s to m] and [m+1 to e] in v
+	
 	std::vector<GameObject*> temp;
 
 	int i, j;
@@ -119,8 +157,10 @@ void QT::FreeQuads(Quad* HeadQuad)
 	}
 	else
 	{
+		HeadQuad = nullptr;
 		LastNode = nullptr;
 		NodeCount = 0;
+		LOG_INF("Quads are deallocated!");
 	}
 }
 
@@ -152,5 +192,23 @@ void QT::InitList(Quad* HeadQuad)
 {
 	LastNode = HeadQuad;
 	NodeCount++;
+	LOG_INF("Quad list has been initialized!");
+}
+
+QT::Quad* QT::GetNodeWithIndex(Quad* headnode,int index)
+{
+	if (index == 0)
+	{
+		return headnode;
+	}
+
+	int IndexInterval = 0;
+	QT::Quad* temp = headnode;
+	while (IndexInterval < index)
+	{
+		temp = temp->next;
+		IndexInterval++;
+	}
+	return temp;
 }
 
