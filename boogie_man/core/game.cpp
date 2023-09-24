@@ -133,6 +133,8 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 
 	QT::InitList(headnode);
 
+	Threadpool = std::make_unique<ThreadPool>(4);
+
 }
 
 BoogieMan::~BoogieMan()
@@ -210,7 +212,8 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		BEGIN_INTERNAL_CAMERA(MainCamera);
 
 		//CharacterMovement();	
-		DrawRectangleRec(woodcol.rec, RED);
+		Threadpool->enqueue([&]() {DrawRectangleRec(woodcol.rec, RED); });
+		
 
 		killua.CharacterMove(dt, woodcol);
 
