@@ -347,14 +347,14 @@ bgGL::InstancedTexture2D::InstancedTexture2D(int instanceCount , Texture2D &text
         offsets[i] = { 0,0 , 0 };
     }
 
-    std::cout << "Offsets :";
+   /* std::cout << "Offsets :";
 
     for (size_t i = 0; i < offsets.size(); i++)
     {
         std::cout << "(" << offsets[i].x << " , " << offsets[i].y << " , " << offsets[i].z<< ")";
     }
 
-    std::cout << "\n";
+    std::cout << "\n";*/
 
     instanceAmount = instanceCount;
 

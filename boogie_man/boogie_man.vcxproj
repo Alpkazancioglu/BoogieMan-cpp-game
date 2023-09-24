@@ -150,8 +150,10 @@
     <ClCompile Include="core\Maincpp.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="GameEntity.cpp" />
+    <ClCompile Include="QuadTreeCollision.cpp" />
     <ClCompile Include="util\FileHandler.cpp" />
     <ClCompile Include="util\InputHandler.cpp" />
+    <ClCompile Include="util\Log.cpp" />
     <ClCompile Include="util\Shader.cpp" />
     <ClCompile Include="util\StopWatch.cpp" />
     <ClCompile Include="util\VectorMath.cpp" />
@@ -174,6 +176,7 @@
     <ClInclude Include="rcamera.h" />
     <ClInclude Include="util\FileHandler.h" />
     <ClInclude Include="util\InputHandler.h" />
+    <ClInclude Include="util\Log.h" />
     <ClInclude Include="util\Shader.h" />
     <ClInclude Include="util\StopWatch.h" />
     <ClInclude Include="util\VectorMath.h" />
