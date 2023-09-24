@@ -131,6 +131,9 @@
     <ClInclude Include="util\Log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="util\Thread.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="level.json">

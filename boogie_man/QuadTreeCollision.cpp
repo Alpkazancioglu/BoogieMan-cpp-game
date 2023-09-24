@@ -11,7 +11,7 @@ void QT::ContructQuads(Quad* HeadQuad, std::vector<GameObject*>& Objects,Vec2<fl
 	//HeadQuad = new Quad;
 	//FreeQuads(HeadQuad);
 	//InitList(HeadQuad);
-
+	
 	Vec2<unsigned int> GridCount = (getWsize() / DesiredQuadSize).Cast<unsigned int>();
 
 	std::vector<GameObject*> ObjectsOnScreen = FetchOnScreen(Objects,camera);

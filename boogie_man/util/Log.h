@@ -50,7 +50,6 @@ extern std::vector<std::string> logTraceBack;
 #define LOG_TRACEBACK_PRINT_FILE(filename) \
     { \
        std::ofstream logFile(filename, std::ios::app); \
-       std::cout<<"COUNT: " << logTraceBack.size() << std::endl; \
        for (auto &log : logTraceBack) \
        { \
            logFile << log;  \

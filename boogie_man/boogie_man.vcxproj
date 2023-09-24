@@ -179,6 +179,7 @@
     <ClInclude Include="util\Log.h" />
     <ClInclude Include="util\Shader.h" />
     <ClInclude Include="util\StopWatch.h" />
+    <ClInclude Include="util\Thread.h" />
     <ClInclude Include="util\VectorMath.h" />
     <ClInclude Include="util\WindowUtil.h" />
   </ItemGroup>
