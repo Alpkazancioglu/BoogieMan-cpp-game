@@ -1,8 +1,5 @@
 #include "MainCharacter.h"
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
 GameObject object;
 
 
@@ -45,18 +42,9 @@ void BgCharacter::MainCharacter::DisableAbility(CHARACTER_ABILITY_FLAG Flag)
 		this->abilities.DoubleJump = false;
 	}
 }
-=======
->>>>>>> Stashed changes
-
 
 
 GameObject object;
-
-
-<<<<<<< Updated upstream
-=======
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
->>>>>>> Stashed changes
 
 void BgCharacter::MainCharacter::Move()
 {
@@ -65,18 +53,6 @@ void BgCharacter::MainCharacter::Move()
 	static int TempMaxSpeed = this->Data.MaxSpeed;
 	this->acceleration = 16.0f;
 	
-<<<<<<< Updated upstream
-	
-
-
-=======
-<<<<<<< HEAD
-=======
-	
-
-
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
->>>>>>> Stashed changes
 	if (this->abilities.move)
 	{
 		if (IsKeyDown(KEY_LEFT_SHIFT) && this->abilities.sprint)

@@ -107,24 +107,20 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 
 	WoodenLogWithRoots.SetBaseAttributes(WoodFront_t, 2.0f, { {},{500,900},0,0,0,0 }, 0.0f);
 
-<<<<<<< Updated upstream
+
 	WoodenLogWithRoots.SetBaseAttributes(WoodFront_t, 2.0f, { {},{-700,900},0,0,0,0 }, 0.0f);
 
 	woodcol.Data(WoodenLogWithRoots.Data);
 	woodcol.Data.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
 	woodcol.Data.pos({ woodcol.Data.rec.x, woodcol.Data.rec.y });
-=======
-<<<<<<< HEAD
+
 	woodcol(WoodenLogWithRoots.Data);
 	woodcol.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
 	woodcol.pos({ woodcol.rec.x, woodcol.rec.y });
 	WoodenLogWithRoots.Data.rec = woodcol.rec;
-=======
 	woodcol.Data(WoodenLogWithRoots.Data);
 	woodcol.Data.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
 	woodcol.Data.pos({ woodcol.Data.rec.x, woodcol.Data.rec.y });
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
->>>>>>> Stashed changes
 
 	BloomShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/bloom.fs").c_str(), 330));
 	PixelShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/pixelizer.fs").c_str(), 330));
@@ -230,40 +226,31 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		BEGIN_INTERNAL_CAMERA(MainCamera);
 
 		//CharacterMovement();	
-<<<<<<< Updated upstream
 		Threadpool->enqueue([&]() {DrawRectangleRec(woodcol.Data.rec, RED); });
-=======
-<<<<<<< HEAD
-=======
+
 		Threadpool->enqueue([&]() {DrawRectangleRec(woodcol.Data.rec, RED); });
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
->>>>>>> Stashed changes
+
 		
 		killua.Move();
 		killua.Jump();
 
-<<<<<<< Updated upstream
 		//killua.CharacterMove(dt, woodcol,killua);
 		killua.abilities.move = true;
 		killua.abilities.jump = true;
 		killua.abilities.sprint = true;
 		killua.abilities.DoubleJump = true;
 
-=======
-<<<<<<< HEAD
+
 		DrawRectangleRec(woodcol.rec, RED);
 
 
 		//killua.CharacterMove(dt, WoodenLogWithRoots, killua);
-=======
 		//killua.CharacterMove(dt, woodcol,killua);
 		killua.abilities.move = true;
 		killua.abilities.jump = true;
 		killua.abilities.sprint = true;
 		killua.abilities.DoubleJump = true;
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
 
->>>>>>> Stashed changes
 		killua.Move();
 		killua.Jump();
 		

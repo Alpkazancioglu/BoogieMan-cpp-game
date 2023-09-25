@@ -1,9 +1,6 @@
 #pragma once
 #include "GameObject.h"
-<<<<<<< Updated upstream
 
-=======
-<<<<<<< HEAD
 #define ABILITIES
 
 #ifdef ABILITIES
@@ -16,23 +13,12 @@
 #endif
 
 typedef long int CHARACTER_ABILITY_FLAG;
-=======
 
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
->>>>>>> Stashed changes
 
 namespace BgCharacter
 {
 	const float gravity = 1000.0f;
 
-<<<<<<< Updated upstream
-
-=======
-<<<<<<< HEAD
-=======
-
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
->>>>>>> Stashed changes
 	struct Abilities
 	{
 		bool move;
@@ -48,21 +34,11 @@ namespace BgCharacter
 
 		Abilities abilities;
 
-<<<<<<< Updated upstream
 
-=======
-<<<<<<< HEAD
 		void EnableAbility(CHARACTER_ABILITY_FLAG Flag);
 		void DisableAbility(CHARACTER_ABILITY_FLAG Flag);
-=======
-
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
->>>>>>> Stashed changes
 		void Move();
 		void Jump();
-
-
-
 
 	};
 }

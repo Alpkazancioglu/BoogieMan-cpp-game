@@ -90,7 +90,7 @@ public:
 	GameObject castle;
 	GameObject WoodenLogWithRoots;
 
-	GameObject woodcol;
+	ObjectData woodcol;
 
 	std::vector<GameObject*> objects;
 
