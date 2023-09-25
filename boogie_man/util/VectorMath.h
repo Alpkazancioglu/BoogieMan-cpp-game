@@ -94,6 +94,11 @@ struct Vec2
 		return this->x == other.x && this->y == other.y;
 	}
 
+	bool operator!=(const Vec2& other) const
+	{
+		return this->x != other.x && this->y != other.y;
+	}
+
 	bool operator>(const Vec2& other) const
 	{
 		return this->x > other.x && this->y > other.y;

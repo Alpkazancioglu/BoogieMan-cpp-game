@@ -5,7 +5,7 @@
 #include "../util/WindowUtil.h"
 #include <memory>
 #include <string>
-#include "GameObject.h"
+#include "MainCharacter.h"
 #include "../QuadTreeCollision.h"
 #include "../util/Thread.h"
 #define REAL  0
@@ -96,7 +96,7 @@ public:
 
 	QT::Quad* headnode;
 
-	Character killua;
+	BgCharacter::MainCharacter killua;
 
 	std::unique_ptr<bgGL::cubemap> Sky;
 

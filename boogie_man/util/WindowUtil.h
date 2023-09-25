@@ -41,6 +41,7 @@ namespace bgGL
     void ClearColorBufferBit(Color color);
     RenderTexture2D GetCurrentFBO();
     void SetCurrentFBOtracker(RenderTexture2D FBO);
+    void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
     void BindDefaultFBO();
 
 
@@ -90,7 +91,6 @@ namespace bgGL
                 TextFormat(GetRelativeTexturePath("skybox.fs").c_str(), GLSL_VERSION));
 
             int UseHDRuniform = useHDR ? 1 : 0;
-
 
             MaterialMapIndex cubeMapIndex = MATERIAL_MAP_CUBEMAP;
 
