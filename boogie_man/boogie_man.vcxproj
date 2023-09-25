@@ -147,6 +147,7 @@
     <ClCompile Include="core\GameHandler.cpp" />
     <ClCompile Include="core\GameObject.cpp" />
     <ClCompile Include="core\LevelHandler.cpp" />
+    <ClCompile Include="core\MainCharacter.cpp" />
     <ClCompile Include="core\Maincpp.cpp" />
     <ClCompile Include="ECS.cpp" />
     <ClCompile Include="GameEntity.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="core\GameObject.h" />
     <ClInclude Include="core\killua.h" />
     <ClInclude Include="core\LevelHandler.h" />
+    <ClInclude Include="core\MainCharacter.h" />
     <ClInclude Include="core\middle_Background.h" />
     <ClInclude Include="core\nebula.h" />
     <ClInclude Include="ECS.h" />

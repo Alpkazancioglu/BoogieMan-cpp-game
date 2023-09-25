@@ -25,6 +25,9 @@
 Vec2<float> getWsize();
 std::string GetRelativeTexturePath(std::string textureName);
 
+void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
+
+
 namespace bgGL
 {
     

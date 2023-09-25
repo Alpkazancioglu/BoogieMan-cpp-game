@@ -108,9 +108,9 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 
 	WoodenLogWithRoots.SetBaseAttributes(WoodFront_t, 2.0f, { {},{-700,900},0,0,0,0 }, 0.0f);
 
-	woodcol(WoodenLogWithRoots.Data);
-	woodcol.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
-	woodcol.pos({ woodcol.rec.x, woodcol.rec.y });
+	woodcol.Data(WoodenLogWithRoots.Data);
+	woodcol.Data.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
+	woodcol.Data.pos({ woodcol.Data.rec.x, woodcol.Data.rec.y });
 
 	BloomShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/bloom.fs").c_str(), 330));
 	PixelShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/pixelizer.fs").c_str(), 330));
@@ -188,7 +188,7 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		////animation update for textures
 		{
 		   //fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
-		   killua.updateCharacterTexture(dt, 5, woodcol);
+		   killua.updateCharacterTexture(dt, 5, woodcol.Data);
 		}
 		
 
@@ -212,11 +212,19 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		BEGIN_INTERNAL_CAMERA(MainCamera);
 
 		//CharacterMovement();	
-		Threadpool->enqueue([&]() {DrawRectangleRec(woodcol.rec, RED); });
+		Threadpool->enqueue([&]() {DrawRectangleRec(woodcol.Data.rec, RED); });
 		
 
-		killua.CharacterMove(dt, woodcol);
+		//killua.CharacterMove(dt, woodcol,killua);
+		killua.abilities.move = true;
+		killua.abilities.jump = true;
+		killua.abilities.sprint = true;
+		killua.abilities.DoubleJump = true;
 
+		killua.Move();
+		killua.Jump();
+		
+		
 		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos.toVector2(), WHITE);
 
 		END_INTERNAL_CAMERA;

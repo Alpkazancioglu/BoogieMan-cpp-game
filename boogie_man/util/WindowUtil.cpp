@@ -24,6 +24,17 @@ std::string GetRelativeTexturePath(std::string textureName)
 	return (WorkingDir + "/textures/" + textureName);
 }
 
+void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
+{
+    Image image = { 0 };
+    image.format = format;
+    image.height = height;
+    image.width = width;
+    image.data = data;
+    image.mipmaps = mipmaps;
+    *texture = LoadTextureFromImage(image);
+}
+
 float bgGL::Pixel2Percent(int Pixel)
 {
     return (getWsize().y * Pixel) / 1080;

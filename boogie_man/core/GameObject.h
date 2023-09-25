@@ -13,17 +13,27 @@
 class BoogieMan;
 
 
-void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
+
+struct Collision
+{
+	int direction;
+	bool IsOnTop;
+	bool IsColliding;
+};
 
 class ObjectData
 {
 public:
+	
 	Rectangle rec;
+	Collision collision;
 	Vec2<float> pos;
+	Vec2<float> CurrentSpeed;
+	int MovingStatus;
 	int frame;
 	float runningtime;
 	float updatetime;
-	int speed;
+	int MaxSpeed;
 	
 	ObjectData()
 	{
@@ -37,7 +47,7 @@ public:
 		frame = frame_i;
 		runningtime = runningtime_i;
 		updatetime = updatetime_i;
-		speed = speed_i;
+		MaxSpeed = speed_i;
 	}
 
 	void Set(Rectangle rec_i, Vec2<float> pos_i, int frame_i, float runningtime_i, float updatetime_i, int speed_i) {
@@ -46,13 +56,16 @@ public:
 		frame = frame_i;
 		runningtime = runningtime_i;
 		updatetime = updatetime_i;
-		speed = speed_i;
+		MaxSpeed = speed_i;
 	};
+	
+	
+	
 	
 	bool operator ==(ObjectData& other)
 	{
 		bool result = rec.x == other.rec.x && rec.y == other.rec.y && rec.width == other.rec.width && rec.height == other.rec.height && pos.x == other.pos.x &&
-			pos.y == other.pos.y && frame == other.frame && runningtime == other.runningtime && updatetime == other.updatetime && speed == other.speed;
+			pos.y == other.pos.y && frame == other.frame && runningtime == other.runningtime && updatetime == other.updatetime && MaxSpeed == other.MaxSpeed;
 		return result;
 	}
 
@@ -63,7 +76,7 @@ public:
 		frame = other.frame;
 		runningtime = other.runningtime;
 		updatetime = other.updatetime;
-		speed = other.speed;
+		MaxSpeed = other.MaxSpeed;
 	}
 
 	
@@ -103,6 +116,8 @@ enum Direction {
 	LEFT
 };
 
+
+
 class GameObject
 {
 public:
@@ -127,8 +142,11 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
+	void SetCollisionInfo(GameObject object);
 	static Direction VectorDirection(glm::vec2 target, float HeightCoeff);
-	
+	bool alpCheckCollision(ObjectData obstacle);
+	bool isOnGround(ObjectData object);
+	Direction DirectionRelativeToObject(ObjectData obstacle);
 
 	inline bool operator< (GameObject& other)
 	{
@@ -138,6 +156,8 @@ public:
 	Texture2D *Texture = nullptr;
 	ObjectData Data;
 	CollisionBox Hitbox;
+	
+	
 	float scale;
 	float rotation;
 	Color tint;
@@ -147,8 +167,13 @@ public:
 	float duplicateDistance;
 	Vector2 atlasCut;
 	bool reverseSpeed;
-	
 	std::vector<int> RandomDistances;
+
+
+
+
+
+
 };
 
 class InstancedGameObject : public GameObject
@@ -169,27 +194,25 @@ class Item
 
 };
 
+
+
+
 class Character : public GameObject
 {
 public:
 	
-	int direction;
+	
 	int MovingStatus;
-	Vec2<float> CurrentSpeed;
-	
-	bool alpCheckCollision(ObjectData obstacle);
+	float acceleration;
+	float MaxJumpHigh;
+	float CurrentHigh;
 	void updateCharacterTexture(float dt, int maxframe,ObjectData obstacle);
-	void updateMovingState(int& MoveEverything, float dt, ObjectData obstacle);
-	void CharacterMove(float dt,ObjectData obstacle);
-	bool isOnGround(ObjectData object);
-	Direction DirectionRelativeToObject(ObjectData obstacle);
 	
-	Direction CheckDirection(ObjectData object);
-
-
-private:
-
-	std::vector<Item> ItemStorage;
+	void CharacterMove(float dt,GameObject obstacle,GameObject object);
+	
 	
 };
+
+
+
 

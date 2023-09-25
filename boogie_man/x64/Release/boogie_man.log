@@ -1,0 +1,124 @@
+﻿  QuadTreeCollision.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.h(95,64): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\QuadTreeCollision.cpp(35,142): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\QuadTreeCollision.cpp(35,123): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\QuadTreeCollision.cpp(35,87): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\QuadTreeCollision.cpp(35,44): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\QuadTreeCollision.cpp(147,42): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  GameHandler.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.h(95,64): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(31,1): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(53,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(54,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameHandler.cpp(19,22): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameHandler.cpp(20,23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameHandler.cpp(47,43): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameHandler.cpp(47,29): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameHandler.cpp(218,20): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameHandler.cpp(219,21): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameHandler.cpp(223,36): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameHandler.cpp(224,38): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  GameObject.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.h(95,64): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.cpp(155,27): warning C4244: 'initializing': conversion from '_Ty' to 'float', possible loss of data
+          with
+          [
+              _Ty=int
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.cpp(452,24): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.cpp(495,34): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.cpp(503,24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  LevelHandler.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.h(95,64): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  MainCharacter.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.h(95,64): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\MainCharacter.cpp(46,48): warning C4244: 'argument': conversion from 'int' to 'const T', possible loss of data
+          with
+          [
+              T=float
+          ]
+  Maincpp.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.h(95,64): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(31,1): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(53,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(54,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+  game.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\GameObject.h(95,64): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(31,1): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(53,28): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.h(54,27): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(93,3): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(100,136): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(103,111): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(106,109): warning C4244: 'return': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(177,125): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(205,119): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(232,108): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(233,106): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(325,73): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(326,68): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(327,76): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(328,74): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(331,43): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\core\game.cpp(331,29): warning C4244: 'argument': conversion from 'T' to 'GLsizei', possible loss of data
+          with
+          [
+              T=float
+          ]
+  WindowUtil.cpp
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\util\WindowUtil.cpp(8,78): warning C4244: 'argument': conversion from 'int' to 'const T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\util\WindowUtil.cpp(8,39): warning C4244: 'argument': conversion from 'int' to 'const T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\util\WindowUtil.cpp(133,45): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\util\WindowUtil.cpp(133,33): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\util\WindowUtil.cpp(168,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\util\WindowUtil.cpp(202,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+C:\Users\alppk\Desktop\Alp_Game\boogie_man\util\Shader.cpp(25): warning C4715: 'Util::ReadTextFile': not all control paths return a value
+  All 2601 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  boogie_man.vcxproj -> C:\Users\alppk\Desktop\Alp_Game\x64\Release\boogie_man.exe

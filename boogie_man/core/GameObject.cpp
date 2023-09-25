@@ -61,7 +61,7 @@ void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Col
 		{
 			this->Move(StartDes);
 		}
-		this->IncrementPosition({ (float)this->Data.speed * dt , 0 });
+		this->IncrementPosition({ (float)this->Data.MaxSpeed * dt , 0 });
 	}
 	else
 	{
@@ -69,7 +69,7 @@ void GameObject::RenderDuplicateExLoop(int16 duplicateCount, float distance, Col
 		{
 			this->Move(StartDes);
 		}
-		this->IncrementPosition({ -(float)this->Data.speed * dt , 0 });
+		this->IncrementPosition({ -(float)this->Data.MaxSpeed * dt , 0 });
 	}
 
 	if (this->Texture != nullptr)
@@ -101,7 +101,7 @@ void GameObject::RenderDuplicateRecLoop(int16 duplicateCount, float distance, Co
 		{
 			this->Move(StartDes);
 		}
-		this->IncrementPosition({ (float)this->Data.speed * dt , 0 });
+		this->IncrementPosition({ (float)this->Data.MaxSpeed * dt , 0 });
 	}
 	else
 	{
@@ -109,7 +109,7 @@ void GameObject::RenderDuplicateRecLoop(int16 duplicateCount, float distance, Co
 		{
 			this->Move(StartDes);
 		}
-		this->IncrementPosition({ -(float)this->Data.speed * dt , 0 });
+		this->IncrementPosition({ -(float)this->Data.MaxSpeed * dt , 0 });
 	}
 
 	if (this->Texture != nullptr)
@@ -258,6 +258,17 @@ void GameObject::SetTexture(Texture2D &texture)
 	this->Texture = &texture;
 }
 
+void GameObject::SetCollisionInfo(GameObject object)
+{
+	
+	this->Data.collision.direction = object.DirectionRelativeToObject(this->Data);
+	this->Data.collision.IsOnTop = object.isOnGround(this->Data);
+	this->Data.collision.IsColliding = object.alpCheckCollision(this->Data);
+
+
+
+}
+
 
 
 void InstancedGameObject::SetInstancing(int instanceCount, std::vector<glm::vec3> positionoffsets, Util::Shader& instanceShader)
@@ -280,12 +291,12 @@ InstancedGameObject::~InstancedGameObject()
 
 
 
-bool Character::alpCheckCollision(ObjectData obstacle)
+bool GameObject::alpCheckCollision(ObjectData obstacle)
 {
-	return CheckCollisionRecs({ this->Data.pos.x + this->CurrentSpeed.x,this->Data.pos.y+this->CurrentSpeed.y,this->Data.rec.width,this->Data.rec.height }, { obstacle.rec });
+	return CheckCollisionRecs({ this->Data.pos.x + this->Data.CurrentSpeed.x,this->Data.pos.y+this->Data.CurrentSpeed.y,this->Data.rec.width,this->Data.rec.height }, { obstacle.rec });
 }
 
-void Character::updateCharacterTexture(float dt, int maxframe,ObjectData obstacle)
+void Character::updateCharacterTexture(float dt, int maxframe, ObjectData obstacle)
 {
 	
 		
@@ -346,28 +357,18 @@ void Character::updateCharacterTexture(float dt, int maxframe,ObjectData obstacl
 		}
 
 }
-bool Character::isOnGround(ObjectData object)
-{
-	/*Vec2<float> CharacterCenter(bgGL::FindCenterAABB({killua.Data.pos.x, killua.Data.pos.y, killua.Data.rec.width, killua.Data.rec.height}));
-	Vec2<float> ObstacleCenter(bgGL::FindCenterAABB({ woodcol.pos.x, woodcol.pos.y, woodcol.rec.width, woodcol.rec.height }));
-	Vec2<float> target(CharacterCenter - ObstacleCenter);
-	*/
-	
-	//std::cout << "direction : " << direction << std::endl;
-	if (this->alpCheckCollision(object) && this->direction == UP) return true;
 
+
+bool GameObject::isOnGround(ObjectData object)
+{
+	
+	if (this->alpCheckCollision(object) && this->Data.collision.direction == UP) return true;
 	
 	return this->Data.pos.y + this->Data.rec.height >= GROUND;
 }
 
-/*Direction Character::CheckDirection(ObjectData object)
-{
-	int direction = GameObject::DirectionRelativeToObject(this->Data, object);
-	return (Direction)direction;
-}
-*/
 
-Direction Character::DirectionRelativeToObject (ObjectData obstacle)
+Direction GameObject::DirectionRelativeToObject (ObjectData obstacle)
 {
 	static int fix = 0;
 	static bool allow = false;
@@ -427,14 +428,16 @@ Direction Character::DirectionRelativeToObject (ObjectData obstacle)
 
 
 
-void Character::CharacterMove(float dt,ObjectData obstacle)
+void Character::CharacterMove(float dt, GameObject obstacle, GameObject object)
 {
 	
-	this->direction = this->DirectionRelativeToObject(obstacle);
-	std::cout << "DIRECTION = " << this->direction << std::endl;
-	bool IsOnGround = this->isOnGround(obstacle);
-	bool IsColliding = this->alpCheckCollision(obstacle);
+	//this->direction = this->DirectionRelativeToObject(obstacle);
+	//std::cout << "DIRECTION = " << this->direction << std::endl;
+	//bool IsOnGround = this->isOnGround(obstacle);
+	//bool IsColliding = this->alpCheckCollision(obstacle);
+	obstacle.SetCollisionInfo(object);
 	
+
 	static bool isMaxHeightReached = false;
 	static bool isPlayerJumped = false;
 	static bool Slowing = false;
@@ -443,26 +446,26 @@ void Character::CharacterMove(float dt,ObjectData obstacle)
 	static Vec2<float> LocalSpeed = {};
 	static float max_high = this->Data.pos.y - 100;
 	
-	std::cout << "SPEED" << this->CurrentSpeed << std::endl;
-	std::cout << "isonground " << IsOnGround << std::endl;
-	std::cout <<"iscolliding" << IsColliding << std::endl;
-	static float maxSpeed = this->Data.speed;
+	std::cout << "SPEED" << this->Data.CurrentSpeed << std::endl;
+	std::cout << "isonground " << Data.collision.IsOnTop << std::endl;
+	std::cout <<"iscolliding" << Data.collision.IsColliding << std::endl;
+	static float maxSpeed = this->Data.MaxSpeed;
 	const float gravity = 1000;
 	const float acceleration = 16.0f;
-	this->CurrentSpeed = LocalSpeed*dt;
+	this->Data.CurrentSpeed = LocalSpeed*dt;
 	this->Data.pos.y += LocalSpeed.y * dt;
 	
 	//Y axis Movement
 	
-	if (IsOnGround && IsKeyDown(KEY_SPACE))
+	if (obstacle.Data.collision.IsOnTop && IsKeyDown(KEY_SPACE))
 	{
-		if (!IsOnGround)
+		if (!obstacle.Data.collision.IsOnTop)
 			isPlayerJumped = true;
 		
 		
 		LocalSpeed.y = 0;
 	}
-	else if (IsOnGround)
+	else if (obstacle.Data.collision.IsOnTop)
 	{
 		max_high = this->Data.pos.y - 100;
 		isMaxHeightReached = false;
@@ -489,7 +492,7 @@ void Character::CharacterMove(float dt,ObjectData obstacle)
 	
 	if (IsKeyDown(KEY_LEFT_SHIFT))
 	{
-		maxSpeed = this->Data.speed * 2;
+		maxSpeed = this->Data.MaxSpeed * 2;
 	}
 
 	
@@ -497,21 +500,21 @@ void Character::CharacterMove(float dt,ObjectData obstacle)
 	{
 
 		Slowing = true;
-		maxSpeed = this->Data.speed;
+		maxSpeed = this->Data.MaxSpeed;
 	}
 
 	if (IsKeyDown(KEY_D))
 	{
-		if (( IsColliding && this->direction == LEFT))
+		if (( obstacle.Data.collision.IsColliding && obstacle.Data.collision.direction == LEFT))
 		{
-			this->Data.pos.x = obstacle.pos.x - this->Data.rec.width;
+			this->Data.pos.x = obstacle.Data.pos.x - this->Data.rec.width;
 			LocalSpeed.x = 0;
 			this->MovingStatus = IDLE;
 		}
 		
 		else
 		{
-			if (LocalSpeed.x <= this->Data.speed)
+			if (LocalSpeed.x <= this->Data.MaxSpeed)
 				Slowing = false;
 			
 			if (!Slowing)
@@ -530,9 +533,9 @@ void Character::CharacterMove(float dt,ObjectData obstacle)
 	}
 	else if (IsKeyDown(KEY_A))
 	{
-		if ((IsColliding && this->direction == RIGHT))
+		if ((obstacle.Data.collision.IsColliding && obstacle.Data.collision.direction == RIGHT))
 		{
-			this->Data.pos.x = obstacle.pos.x + obstacle.rec.width;
+			this->Data.pos.x = obstacle.Data.pos.x + obstacle.Data.rec.width;
 			LocalSpeed.x = 0;
 			this->MovingStatus = IDLE;
 		}
@@ -540,7 +543,7 @@ void Character::CharacterMove(float dt,ObjectData obstacle)
 		else
 		{
 
-			if (LocalSpeed.x >= -this->Data.speed)
+			if (LocalSpeed.x >= -this->Data.MaxSpeed)
 				Slowing = false;
 			if (!Slowing)
 			{
@@ -562,7 +565,7 @@ void Character::CharacterMove(float dt,ObjectData obstacle)
 		if (LocalSpeed.x > 0)
 		{
 
-			if (LocalSpeed.x >= this->Data.speed)
+			if (LocalSpeed.x >= this->Data.MaxSpeed)
 				LocalSpeed.x -= acceleration * 2;
 
 			else
@@ -580,7 +583,7 @@ void Character::CharacterMove(float dt,ObjectData obstacle)
 
 		else if (LocalSpeed.x < 0)
 		{
-			if (LocalSpeed.x <= -this->Data.speed)
+			if (LocalSpeed.x <= -this->Data.MaxSpeed)
 				LocalSpeed.x += acceleration * 2;
 
 			else
@@ -631,18 +634,4 @@ Direction GameObject::VectorDirection(glm::vec2 target , float HeightCoeff)
 }
 
 
-
-
-
-//Load a texture from a header file consists of an image byte array
-void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
-{
-	Image image = { 0 };
-	image.format = format;
-	image.height = height;
-	image.width = width;
-	image.data = data;
-	image.mipmaps = mipmaps;
-	*texture = LoadTextureFromImage(image);
-}
 
