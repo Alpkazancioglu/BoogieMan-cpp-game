@@ -113,15 +113,8 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	woodcol.Data(WoodenLogWithRoots.Data);
 	woodcol.Data.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
 	woodcol.Data.pos({ woodcol.Data.rec.x, woodcol.Data.rec.y });
-
-	woodcol(WoodenLogWithRoots.Data);
-	woodcol.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
-	woodcol.pos({ woodcol.rec.x, woodcol.rec.y });
-	WoodenLogWithRoots.Data.rec = woodcol.rec;
-	woodcol.Data(WoodenLogWithRoots.Data);
-	woodcol.Data.rec = { WoodenLogWithRoots.Data.pos.x + 18,WoodenLogWithRoots.Data.pos.y + 40,63 * WoodenLogWithRoots.scale,40 * WoodenLogWithRoots.scale };
-	woodcol.Data.pos({ woodcol.Data.rec.x, woodcol.Data.rec.y });
-
+	WoodenLogWithRoots.Data.rec = woodcol.Data.rec;
+	
 	BloomShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/bloom.fs").c_str(), 330));
 	PixelShader = LoadShader(0, TextFormat(GetRelativeTexturePath("shaders/pixelizer.fs").c_str(), 330));
 
@@ -144,11 +137,11 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 
 	QT::InitList(headnode);
 
-	Threadpool = std::make_unique<ThreadPool>(4);
 
 	killua.EnableAbility(ABILITY_FLAG_JUMP);
 	killua.EnableAbility(ABILITY_FLAG_MOVE);
-
+	killua.EnableAbility(ABILITY_FLAG_SPRINT);
+	killua.EnableAbility(ABILITY_FLAG_DOUBLE_JUMP);
 }
 
 BoogieMan::~BoogieMan()
@@ -185,98 +178,27 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		break;
 	case INGAME:
 
-
-		BEGIN_INTERNAL_CAMERA(MainCamera);
-
-		ForestMid.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 1.7);
-		END_INTERNAL_CAMERA;
-
-
-		BEGIN_INTERNAL_CAMERA(MainCamera);
-		dt = GetFrameTime();
-
-		
-		//DrawRectangleGradientV(0,0,getWsize().x ,getWsize().y, { 43, 82, 122 , 255 } , {179 , 181 , 199 , 255});
-		//Sky->Draw();
-
 		////animation update for textures
-		{
-		   //fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
-		   killua.updateCharacterTexture(dt, 5, woodcol.Data);
-		}
+	    {
+		//fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
+		killua.updateCharacterTexture(dt, 5, woodcol.Data);
+	    }
 		
-
-		//castle.RenderDuplicateEx(1, 0, { 200,200,200,210 });
-		//farbackground_o.RenderDuplicateEx(3, 0, WHITE);
-		//middlebackground_o.RenderDuplicateEx(3, 0, WHITE);
-		//foreground_o.RenderDuplicateEx(3, 0, WHITE);
-		//Road.RenderDuplicateEx(3, 0, { 231, 255, 207 , 255 });
-		FrontVegetation.RenderDuplicateEx(5, 0, WHITE);
-		fog_cloud.RenderDuplicateRec(3, 0, { 255,255,255,220 }, 4, 1);
-
-		END_INTERNAL_CAMERA;
-
-		Road.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 },*Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 1.8);
-
-
+		killua.Move();
+		killua.Jump();
 
 		std::cout << "KILLUA POS: " << killua.Data.pos << std::endl;
 
-		
-		BEGIN_INTERNAL_CAMERA(MainCamera);
-
-		//CharacterMovement();	
-		Threadpool->enqueue([&]() {DrawRectangleRec(woodcol.Data.rec, RED); });
-
-		Threadpool->enqueue([&]() {DrawRectangleRec(woodcol.Data.rec, RED); });
-
-		
-		killua.Move();
-		killua.Jump();
-
-		//killua.CharacterMove(dt, woodcol,killua);
-		killua.abilities.move = true;
-		killua.abilities.jump = true;
-		killua.abilities.sprint = true;
-		killua.abilities.DoubleJump = true;
-
-
-		DrawRectangleRec(woodcol.rec, RED);
-
-
-		//killua.CharacterMove(dt, WoodenLogWithRoots, killua);
-		//killua.CharacterMove(dt, woodcol,killua);
-		killua.abilities.move = true;
-		killua.abilities.jump = true;
-		killua.abilities.sprint = true;
-		killua.abilities.DoubleJump = true;
-
-		killua.Move();
-		killua.Jump();
-		
-		
-		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos.toVector2(), WHITE);
-
-		END_INTERNAL_CAMERA;
-
-		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 2.6);
-		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 2.8);
-
-
-		BEGIN_INTERNAL_CAMERA(MainCamera);
 		QT::ContructQuads(headnode, objects, { 300,300 }, MainCamera);
-		END_INTERNAL_CAMERA;
 
 		for (int i = 0; i < sizeofnebula; i++)
 		{
-			if (CheckCollisionCircleRec(nebulas[i]->Hitbox.Data.pos.toVector2(), nebulas[i]->Hitbox.radius, Rectangle{killua.Data.pos.x + 38,killua.Data.pos.y,(float)(killua_t.width / 6) - 38,(float)killua_t.height - 20}))
+			if (CheckCollisionCircleRec(nebulas[i]->Hitbox.Data.pos.toVector2(), nebulas[i]->Hitbox.radius, Rectangle{ killua.Data.pos.x + 38,killua.Data.pos.y,(float)(killua_t.width / 6) - 38,(float)killua_t.height - 20 }))
 			{
 				//std::cout << "game is over" << std::endl;
 				//GAMESTAGE = ENDPAGE;
 			}
 		}
-
-
 
 		break;
 
@@ -301,7 +223,6 @@ void BoogieMan::drawOffCamera()
 	case INGAME:
 
 		Sky->drawFBO();
-		
 		
 		Clouds.RenderDuplicateEx(1, 0, { 200,200,200,220 });
 
@@ -365,7 +286,7 @@ void BoogieMan::drawOffFBO(Camera2D& MainCamera)
 	EndTextureMode();
 }
 
-void BoogieMan::draw(RenderTexture2D* fbo)
+void BoogieMan::draw(RenderTexture2D* fbo, Camera2D& MainCamera)
 {
 	switch (this->GAMESTAGE)
 	{
@@ -373,13 +294,46 @@ void BoogieMan::draw(RenderTexture2D* fbo)
 
 		break;
 	case INGAME:
-	    Sky->Draw();
+	{
+		dt = GetFrameTime();
 
+		BEGIN_INTERNAL_CAMERA(MainCamera);
+		ForestMid.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 1.7);
+		END_INTERNAL_CAMERA;
+
+
+		BEGIN_INTERNAL_CAMERA(MainCamera);
+
+		FrontVegetation.RenderDuplicateEx(5, 0, WHITE);
+		fog_cloud.RenderDuplicateRec(3, 0, { 255,255,255,220 }, 4, 1);
+
+		END_INTERNAL_CAMERA;
+
+		Road.InstancedTexture->draw(MainCamera, { 231, 255, 207 , 255 }, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 1.8);
+
+		BEGIN_INTERNAL_CAMERA(MainCamera);
+		DrawRectangleRec(woodcol.Data.rec, RED);
+		DrawTextureRec(killua_t, killua.Data.rec, killua.Data.pos.toVector2(), WHITE);
+		END_INTERNAL_CAMERA;
+
+		WoodFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 2.6);
+		ForestFront.InstancedTexture->draw(MainCamera, GRAY, *Sky->GetFBOtexture(), ShadowMapFBO->texture.id, 2.8);
+
+		BEGIN_INTERNAL_CAMERA(MainCamera);
+		QT::Quad* CurrentQuad = headnode;
+		while (CurrentQuad != nullptr)
+		{
+			DrawRectangleLines(CurrentQuad->Attrib.x * CurrentQuad->Attrib.z, CurrentQuad->Attrib.y * CurrentQuad->Attrib.w, CurrentQuad->Attrib.z, CurrentQuad->Attrib.w, RED);
+			CurrentQuad = CurrentQuad->next;
+		}
+		END_INTERNAL_CAMERA;
+	}
 		break;
 	case ENDPAGE:
 
 		break;
 	default:
+
 		break;
 	}
 }

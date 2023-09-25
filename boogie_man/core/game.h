@@ -90,7 +90,7 @@ public:
 	GameObject castle;
 	GameObject WoodenLogWithRoots;
 
-	ObjectData woodcol;
+	GameObject woodcol;
 
 	std::vector<GameObject*> objects;
 
@@ -106,14 +106,12 @@ public:
 	std::unique_ptr<RenderTexture2D> ShadowMapFBO;
 	Camera camera3d;
 
-	std::unique_ptr<ThreadPool> Threadpool;
-
 	BoogieMan(Vec2<int> WindowSize);
 	~BoogieMan();
 	
 
 	void update(RenderTexture2D* fbo , Camera2D &MainCamera);
-	void draw(RenderTexture2D* fbo);
+	void draw(RenderTexture2D* fbo, Camera2D& MainCamera);
 	void drawOffCamera();
 	void drawOffFBO(Camera2D &MainCamera);
 	

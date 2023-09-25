@@ -258,32 +258,13 @@ void GameObject::SetTexture(Texture2D &texture)
 	this->Texture = &texture;
 }
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-void GameObject::SetCollisionInfo(GameObject &object)
+
+void GameObject::SetCollisionInfo(GameObject& object)
 {
 	this->Data.collision.direction = object.DirectionRelativeToObject(this->Data);
 	this->Data.collision.IsOnTop = object.isOnGround(this->Data);
 	this->Data.collision.IsColliding = object.alpCheckCollision(this->Data);
-=======
->>>>>>> Stashed changes
-void GameObject::SetCollisionInfo(GameObject object)
-{
-	
-	this->Data.collision.direction = object.DirectionRelativeToObject(this->Data);
-	this->Data.collision.IsOnTop = object.isOnGround(this->Data);
-	this->Data.collision.IsColliding = object.alpCheckCollision(this->Data);
-
-
-
-<<<<<<< Updated upstream
-=======
->>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
->>>>>>> Stashed changes
 }
-
-
 
 void InstancedGameObject::SetInstancing(int instanceCount, std::vector<glm::vec3> positionoffsets, Util::Shader& instanceShader)
 {

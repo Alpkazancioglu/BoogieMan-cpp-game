@@ -9,7 +9,6 @@
 #include <glew.h>
 
 
-
 game::game(int screenw_a, int screenh_a)
 {
 	 screenw = screenw_a;
@@ -68,6 +67,9 @@ void game::initialize(const char* windowname , int fps)
 	MainCamera->zoom = 1.0f;
 
 	newwatch.stopwatch();
+
+	Threadpool = std::make_unique<ThreadPool>(4);
+
 }
 
 
@@ -80,18 +82,14 @@ void game::update()
 	updatescreenrec();
 
 	////          GAME_UPDATE             /////
-
+	Threadpool->enqueue([&]() { BoogieManGame->update(target.get(), *MainCamera); });
 	/////            ////                /////
 	
-	//Update_Camera({ BoogieManGame->killua.Data.pos.x ,getWsize().y/2 - (MainCamera->zoom * 60.0f) },
-		         // { (float)getWsize().x / 2 - (BoogieManGame->killua.Data.rec.width * BoogieManGame->killua.scale / 2) , (getWsize().y / 2) - (MainCamera->zoom * 60.0f) } , {1.0f,-10.0f});
-	//std::cout << "IMAGE WIDTH: " << (BoogieManGame->killua.Data.rec.width * BoogieManGame->killua.scale / 2) << std::endl;
-	
+		
 	Update_Camera({ BoogieManGame->killua.Data.pos.x + (BoogieManGame->killua.Data.rec.width * BoogieManGame->killua.scale / 2),getWsize().y / 2 },
 		{ (float)getWsize().x / 2  , (getWsize().y / 2) }, { 1.0f,-10.0f });
 
-
-	game::fullscreen_g(900, 700);
+	game::fullscreen_g(GetScreenWidth(), GetScreenHeight());
 
 	if (IsWindowMaximized())
 	{
@@ -134,7 +132,7 @@ void game::draw()
 
 
 	////          GAME_DRAW_CAMERA             /////
-	BoogieManGame->update(target.get() , *MainCamera);
+	BoogieManGame->draw(target.get() , *MainCamera);
 	
 	if (IsKeyPressed(KEY_M))
 	{

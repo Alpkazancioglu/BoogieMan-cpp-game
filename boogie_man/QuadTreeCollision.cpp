@@ -57,7 +57,7 @@ void QT::ContructQuads(Quad*& HeadQuad, std::vector<GameObject*>& Objects,Vec2<f
 	{
 		//LOG("QUAD " << CurrentQuad->Index << ": " << CurrentQuad->Attrib);
 
-		DrawRectangleLines(CurrentQuad->Attrib.x * CurrentQuad->Attrib.z, CurrentQuad->Attrib.y * CurrentQuad->Attrib.w, CurrentQuad->Attrib.z, CurrentQuad->Attrib.w, RED);
+		//DrawRectangleLines(CurrentQuad->Attrib.x * CurrentQuad->Attrib.z, CurrentQuad->Attrib.y * CurrentQuad->Attrib.w, CurrentQuad->Attrib.z, CurrentQuad->Attrib.w, RED);
 		CurrentQuad = CurrentQuad->next;
 	}
 

@@ -44,8 +44,6 @@ void BgCharacter::MainCharacter::DisableAbility(CHARACTER_ABILITY_FLAG Flag)
 }
 
 
-GameObject object;
-
 void BgCharacter::MainCharacter::Move()
 {
 	float dt = GetFrameTime();

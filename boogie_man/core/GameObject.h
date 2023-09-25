@@ -142,9 +142,7 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
-	void SetCollisionInfo(GameObject object);
 	void SetCollisionInfo(GameObject &object);
-	void SetCollisionInfo(GameObject object);
 	static Direction VectorDirection(glm::vec2 target, float HeightCoeff);
 	bool alpCheckCollision(ObjectData obstacle);
 	bool isOnGround(ObjectData object);
