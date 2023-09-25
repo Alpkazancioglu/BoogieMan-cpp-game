@@ -1,11 +1,62 @@
 #include "MainCharacter.h"
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+GameObject object;
+
+
+void BgCharacter::MainCharacter::EnableAbility(CHARACTER_ABILITY_FLAG Flag)
+{
+	if (Flag == ABILITY_FLAG_MOVE)
+	{
+		this->abilities.move = true;
+	}
+	else if(Flag == ABILITY_FLAG_JUMP)
+	{
+		this->abilities.jump = true;
+	}
+	else if (Flag == ABILITY_FLAG_SPRINT)
+	{
+		this->abilities.sprint = true;
+	}
+	else if (Flag == ABILITY_FLAG_DOUBLE_JUMP)
+	{
+		this->abilities.DoubleJump = true;
+	}
+}
+
+void BgCharacter::MainCharacter::DisableAbility(CHARACTER_ABILITY_FLAG Flag)
+{
+	if (Flag == ABILITY_FLAG_MOVE)
+	{
+		this->abilities.move = false;
+	}
+	else if (Flag == ABILITY_FLAG_JUMP)
+	{
+		this->abilities.jump = false;
+	}
+	else if (Flag == ABILITY_FLAG_SPRINT)
+	{
+		this->abilities.sprint = false;
+	}
+	else if (Flag == ABILITY_FLAG_DOUBLE_JUMP)
+	{
+		this->abilities.DoubleJump = false;
+	}
+}
+=======
+>>>>>>> Stashed changes
 
 
 
 GameObject object;
 
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
+>>>>>>> Stashed changes
 
 void BgCharacter::MainCharacter::Move()
 {
@@ -14,9 +65,18 @@ void BgCharacter::MainCharacter::Move()
 	static int TempMaxSpeed = this->Data.MaxSpeed;
 	this->acceleration = 16.0f;
 	
+<<<<<<< Updated upstream
 	
 
 
+=======
+<<<<<<< HEAD
+=======
+	
+
+
+>>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
+>>>>>>> Stashed changes
 	if (this->abilities.move)
 	{
 		if (IsKeyDown(KEY_LEFT_SHIFT) && this->abilities.sprint)

@@ -4,66 +4,93 @@
 
 static unsigned int NodeCount = 0;
 static QT::Quad* LastNode = nullptr;
-static Vec2<float> PrevDesiredQuadSize;
+static int Index = 0;
 
-void QT::ContructQuads(Quad* HeadQuad, std::vector<GameObject*>& Objects,Vec2<float> DesiredQuadSize , Camera2D &camera)
+void QT::ContructQuads(Quad*& HeadQuad, std::vector<GameObject*>& Objects,Vec2<float> DesiredQuadSize , Camera2D &camera)
 {
-	//HeadQuad = new Quad;
-	//FreeQuads(HeadQuad);
-	//InitList(HeadQuad);
+	FreeQuads(HeadQuad);
+	InitList(HeadQuad);
 	
-	Vec2<unsigned int> GridCount = (getWsize() / DesiredQuadSize).Cast<unsigned int>();
-
 	std::vector<GameObject*> ObjectsOnScreen = FetchOnScreen(Objects,camera);
 
 	SortObjectsPosition(ObjectsOnScreen);
 
-	std::vector<Vec2<int>> ObjectIndexes;
-
-	for (auto* object : ObjectsOnScreen)
+	for (size_t i = 0; i < ObjectsOnScreen.size(); i++)
 	{
-		Vec2<int> QuadIndex = (object->Data.pos / DesiredQuadSize).Cast<int>();
-		LOG("OBJECT LOCATION: " << object->Data.pos);
-		ObjectIndexes.push_back(QuadIndex);
-	}
+		std::vector<GameObject*> InSameQuad;
+		Vec4<float> ObjectRec({ ObjectsOnScreen.at(i)->Data.pos.x , ObjectsOnScreen.at(i)->Data.pos.y ,
+							 ObjectsOnScreen.at(i)->Data.rec.width , ObjectsOnScreen.at(i)->Data.rec.height });
+		Vec2<float> objectRecCenter(bgGL::FindCenterAABB(ObjectRec));
 
-	std::sort(ObjectIndexes.begin(), ObjectIndexes.end());
-
-	for (size_t i = 0; i < ObjectIndexes.size(); i++)
-	{
-		LOG("Object " << i << " " << ObjectIndexes.at(i));
-		DrawRectangleLines(ObjectIndexes.at(i).x * DesiredQuadSize.x, ObjectIndexes.at(i).y * DesiredQuadSize.y, DesiredQuadSize.x, DesiredQuadSize.y , RED);
-	}
-
-	/*for (size_t y = 0; y < ObjectIndexes.size(); y++)
-	{
-		for (size_t i = y; i < ObjectIndexes.size() - y; i++)
+		Vec2<int> QuadIndex = (objectRecCenter / DesiredQuadSize).Cast<int>();
+ 		for (size_t t = i ; t < ObjectsOnScreen.size() - i - 1 ; t++)
 		{
-			if (ObjectIndexes.at(y) == ObjectIndexes.at(i))
+			Vec2<int> QuadIndexNext = (objectRecCenter / DesiredQuadSize).Cast<int>();
+
+			if (QuadIndexNext == QuadIndex)
 			{
-				InsertNode(HeadQuad);
-				LastNode->objects.push_back(ObjectsOnScreen.at(y));
-				LastNode->objects.push_back(ObjectsOnScreen.at(i));
+				InSameQuad.push_back(ObjectsOnScreen.at(t));
 			}
 		}
-	}*/
 
-	/*LOG("NODE COUNT: " << NodeCount);
-	Quad* temp = HeadQuad->next;
+		InSameQuad.push_back(ObjectsOnScreen.at(i));
 
-	while (temp != nullptr)
-	{
-		for (auto* object : temp->objects)
+		if (i != 0 && InSameQuad.size() == 1)
 		{
-			LOG("Object: " << object->Data.pos);
+			InsertNode(HeadQuad);
 		}
-		temp = temp->next;
-	}*/
+
+		LastNode->Attrib.xy(QuadIndex.Cast<float>());
+		LastNode->Attrib.zw(DesiredQuadSize);
+		LastNode->objects.assign(InSameQuad.begin(), InSameQuad.end());
+
+		if (InSameQuad.size() > 2)
+		{
+			SubdivideQuad(LastNode , InSameQuad);
+		}
+
+		LOG("Object " << i << " " << QuadIndex);
+	}
+
+	Quad* CurrentQuad = HeadQuad;
+	while (CurrentQuad != nullptr)
+	{
+		//LOG("QUAD " << CurrentQuad->Index << ": " << CurrentQuad->Attrib);
+
+		DrawRectangleLines(CurrentQuad->Attrib.x * CurrentQuad->Attrib.z, CurrentQuad->Attrib.y * CurrentQuad->Attrib.w, CurrentQuad->Attrib.z, CurrentQuad->Attrib.w, RED);
+		CurrentQuad = CurrentQuad->next;
+	}
+
+	LOG("QUAD COUNT: " << NodeCount);
+}
+
+void QT::SubdivideQuad(Quad*& QuadToSubdivide , std::vector<GameObject*> &InSameQuad)
+{
+	Vec2<float> SubdividedQuadSize(QuadToSubdivide->Attrib.zw() / 2);
+
+	for (size_t y = 0; y < 2; y++)
+	{
+		for (size_t x = 0; x < 2; x++)
+		{
+			InsertNode(QuadToSubdivide);
+			Vec2<int> SubdividedPosition( (QuadToSubdivide->Attrib.x + (x * SubdividedQuadSize.x)) / SubdividedQuadSize.x,(QuadToSubdivide->Attrib.y + (y * SubdividedQuadSize.y)) / SubdividedQuadSize.y );
+			LastNode->Attrib.xy(SubdividedPosition.Cast<float>());
+			LastNode->Attrib.zw(SubdividedQuadSize);
+			//LastNode->objects.push_back(InSameQuad.at(y * 2 + x));
+		}
+	}
+	/*QuadToSubdivide->Attrib.SetValues( QuadToSubdivide->Attrib.x + (2 * SubdividedQuadSize.x),
+									   QuadToSubdivide->Attrib.y + (2 * SubdividedQuadSize.y),
+									   SubdividedQuadSize.x , SubdividedQuadSize.y );*/
 
 }
 
 bool QT::CheckCollision(GameObject& obj1, GameObject& obj2)
 {
+
+
+
+
 	return false;
 }
 
@@ -71,27 +98,22 @@ std::vector<GameObject*> QT::FetchOnScreen(std::vector<GameObject*>& Objects, Ca
 {
 	std::vector<GameObject*> OnScreen;
 	Vec4<float> ScreenRect(camera.target.x - camera.offset.x , camera.target.y - camera.offset.y, getWsize().x, getWsize().y);
-	//ScreenRect.zw(ScreenRect.zw() * camera.zoom);
-	//ScreenRect.xy(ScreenRect.xy() / camera.zoom);
-
+	
 	for (auto* object : Objects)
 	{
-		if (object->Data.pos < (ScreenRect.xy() + ScreenRect.zw()) && object->Data.pos >= ScreenRect.xy())
+		Vec2<float> objectRecCenter(bgGL::FindCenterAABB({ object->Data.pos.x , object->Data.pos.y , object->Data.rec.width , object->Data.rec.height }));
+		if (objectRecCenter < (ScreenRect.xy() + ScreenRect.zw()) && objectRecCenter >= ScreenRect.xy())
 		{
 			OnScreen.push_back(object);
 		}
 	}
-	//+ ((getWsize().x / 2) - camera.target.x)
 	LOG("ScreenRect: " << ScreenRect);
-	//DrawRectangle(ScreenRect.x, ScreenRect.y, ScreenRect.z, ScreenRect.w, RED);
-	//DrawRectangleLines(ScreenRect.x, ScreenRect.y, ScreenRect.z, ScreenRect.w, RED);
 	return OnScreen;
 }
 
 
 void MergeSortedIntervals(std::vector<GameObject*>& v, int s, int m, int e) 
 {
-	
 	std::vector<GameObject*> temp;
 
 	int i, j;
@@ -147,32 +169,36 @@ void QT::SortObjectsPosition(std::vector<GameObject*>& Objects)
 	MergeSort(Objects, 0, Objects.size() - 1);
 }
 
-void QT::FreeQuads(Quad* HeadQuad)
+void QT::FreeQuads(QT::Quad*& HeadQuad)
 {
 	if (HeadQuad != nullptr)
 	{
-		Quad* temp = HeadQuad->next;
+		QT::Quad* temp = HeadQuad->next;
 		delete HeadQuad;
+		HeadQuad = nullptr;
 		FreeQuads(temp);
 	}
 	else
 	{
-		HeadQuad = nullptr;
 		LastNode = nullptr;
 		NodeCount = 0;
+		Index = 0;
 		LOG_INF("Quads are deallocated!");
 	}
 }
 
-void QT::InsertNode(Quad* HeadQuad)
+void QT::InsertNode(Quad*& HeadQuad)
 {
-	LastNode->next = new Quad;
-	LastNode->next->prev = LastNode;
-	LastNode = LastNode->next;
+	Quad* newQuad = new Quad;
+	newQuad->Index = Index;
+	LastNode->next = newQuad;
+	newQuad->prev = LastNode;
+	LastNode = newQuad;
 	NodeCount++;
+	Index++;
 }
 
-void QT::DeleteLastNode(Quad* HeadQuad)
+void QT::DeleteLastNode(Quad*& HeadQuad)
 {
 	if (LastNode->prev != nullptr)
 	{
@@ -186,16 +212,39 @@ void QT::DeleteLastNode(Quad* HeadQuad)
 	}
 
 	NodeCount--;
+	Index--;
 }
 
-void QT::InitList(Quad* HeadQuad)
+void QT::InitList(QT::Quad*& HeadQuad)
 {
+	HeadQuad = new QT::Quad;
+	HeadQuad->Index = Index;
 	LastNode = HeadQuad;
 	NodeCount++;
+	Index++;
 	LOG_INF("Quad list has been initialized!");
 }
 
-QT::Quad* QT::GetNodeWithIndex(Quad* headnode,int index)
+void QT::DeleteNode(Quad*& nodeToDelete)
+{
+	if (nodeToDelete != nullptr)
+	{
+		Quad* next = nodeToDelete->next;
+		Quad* prev = nodeToDelete->prev;
+
+		if (next != nullptr)
+		{
+			next->prev = prev;
+		}
+		if (prev != nullptr)
+		{
+			prev->next = next;
+		}
+		delete nodeToDelete;
+	}
+}
+
+QT::Quad* QT::GetNodeWithIndex(Quad*& headnode,int index)
 {
 	if (index == 0)
 	{

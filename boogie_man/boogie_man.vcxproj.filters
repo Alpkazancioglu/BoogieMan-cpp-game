@@ -63,9 +63,18 @@
     <ClCompile Include="util\Log.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< Updated upstream
     <ClCompile Include="core\GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+=======
+<<<<<<< HEAD
+=======
+    <ClCompile Include="core\GameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+>>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
+>>>>>>> Stashed changes
     <ClCompile Include="core\MainCharacter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -134,9 +143,18 @@
     <ClInclude Include="util\Thread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
     <ClInclude Include="core\GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+=======
+<<<<<<< HEAD
+=======
+    <ClInclude Include="core\GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+>>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
+>>>>>>> Stashed changes
     <ClInclude Include="core\MainCharacter.h">
       <Filter>Header Files</Filter>
     </ClInclude>

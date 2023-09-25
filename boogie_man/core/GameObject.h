@@ -13,7 +13,15 @@
 class BoogieMan;
 
 
+<<<<<<< Updated upstream
 
+=======
+<<<<<<< HEAD
+void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
+=======
+
+>>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
+>>>>>>> Stashed changes
 struct Collision
 {
 	int direction;
@@ -142,7 +150,15 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
+<<<<<<< Updated upstream
 	void SetCollisionInfo(GameObject object);
+=======
+<<<<<<< HEAD
+	void SetCollisionInfo(GameObject &object);
+=======
+	void SetCollisionInfo(GameObject object);
+>>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
+>>>>>>> Stashed changes
 	static Direction VectorDirection(glm::vec2 target, float HeightCoeff);
 	bool alpCheckCollision(ObjectData obstacle);
 	bool isOnGround(ObjectData object);
@@ -169,11 +185,21 @@ public:
 	bool reverseSpeed;
 	std::vector<int> RandomDistances;
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> Stashed changes
 
 
 
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> a7c628740530180ca947fab099e99eb8d2f16131
+>>>>>>> Stashed changes
 };
 
 class InstancedGameObject : public GameObject

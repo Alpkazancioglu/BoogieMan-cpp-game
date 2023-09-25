@@ -7,32 +7,33 @@
 
 namespace QT
 {
-
 	class Quad
 	{
 	public:
 
-		Quad():next(nullptr),prev(nullptr)
+		Quad():next(nullptr),prev(nullptr),Index(-1)
 		{};
 
 		std::vector<GameObject*> objects;
 		Vec4<float> Attrib;
-		unsigned int Index;
+		int Index;
 		Quad* next;
 		Quad* prev;
 
 	private:
 	};
 
-	void ContructQuads(Quad* HeadQuad,std::vector<GameObject*>& Objects, Vec2<float> DesiredQuadSize, Camera2D& camera);
+	void ContructQuads(Quad*& HeadQuad,std::vector<GameObject*>& Objects, Vec2<float> DesiredQuadSize, Camera2D& camera);
+	void SubdivideQuad(Quad*& QuadToSubdivide, std::vector<GameObject*>& InSameQuad);
 	bool CheckCollision(GameObject& obj1, GameObject& obj2);
 	std::vector<GameObject*> FetchOnScreen(std::vector<GameObject*>& Objects, Camera2D& camera);
 	void SortObjectsPosition(std::vector<GameObject*>& Objects);
 
-	void FreeQuads(Quad* HeadQuad);
-	void InsertNode(Quad* HeadQuad);
-	void DeleteLastNode(Quad* HeadQuad);
-	void InitList(Quad* HeadQuad);
-	Quad* GetNodeWithIndex(Quad* headnode, int index);
+	void FreeQuads(QT::Quad*& HeadQuad);
+	void InsertNode(Quad*& HeadQuad);
+	void DeleteLastNode(Quad*& HeadQuad);
+	void InitList(QT::Quad*& HeadQuad);
+	void DeleteNode(Quad*& nodeToDelete);
+	Quad* GetNodeWithIndex(Quad*& headnode, int index);
 }
 
