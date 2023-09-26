@@ -155,6 +155,9 @@
     <None Include="level.json">
       <Filter>Header files</Filter>
     </None>
+    <None Include="textures\shaders\TextureRec.fs">
+      <Filter>Resource files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source files">

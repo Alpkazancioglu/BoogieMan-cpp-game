@@ -5,41 +5,43 @@ GameObject object;
 
 void BgCharacter::MainCharacter::EnableAbility(CHARACTER_ABILITY_FLAG Flag)
 {
-	if (Flag == ABILITY_FLAG_MOVE)
+	switch (Flag)
 	{
+	case ABILITY_FLAG_MOVE:
 		this->abilities.move = true;
-	}
-	else if(Flag == ABILITY_FLAG_JUMP)
-	{
+		break;
+	case ABILITY_FLAG_JUMP:
 		this->abilities.jump = true;
-	}
-	else if (Flag == ABILITY_FLAG_SPRINT)
-	{
+		break;
+	case ABILITY_FLAG_SPRINT:
 		this->abilities.sprint = true;
-	}
-	else if (Flag == ABILITY_FLAG_DOUBLE_JUMP)
-	{
+		break;
+	case ABILITY_FLAG_DOUBLE_JUMP:
 		this->abilities.DoubleJump = true;
+		break;
+	default:
+		break;
 	}
 }
 
 void BgCharacter::MainCharacter::DisableAbility(CHARACTER_ABILITY_FLAG Flag)
 {
-	if (Flag == ABILITY_FLAG_MOVE)
+	switch (Flag)
 	{
+	case ABILITY_FLAG_MOVE:
 		this->abilities.move = false;
-	}
-	else if (Flag == ABILITY_FLAG_JUMP)
-	{
+		break;
+	case ABILITY_FLAG_JUMP:
 		this->abilities.jump = false;
-	}
-	else if (Flag == ABILITY_FLAG_SPRINT)
-	{
+		break;
+	case ABILITY_FLAG_SPRINT:
 		this->abilities.sprint = false;
-	}
-	else if (Flag == ABILITY_FLAG_DOUBLE_JUMP)
-	{
+		break;
+	case ABILITY_FLAG_DOUBLE_JUMP:
 		this->abilities.DoubleJump = false;
+		break;
+	default:
+		break;
 	}
 }
 

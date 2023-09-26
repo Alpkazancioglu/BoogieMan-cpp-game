@@ -195,6 +195,7 @@
     <None Include="textures\shaders\pixelizer.fs" />
     <None Include="textures\shaders\ShadowMap.fs" />
     <None Include="textures\shaders\ShadowMap.vs" />
+    <None Include="textures\shaders\TextureRec.fs" />
     <None Include="textures\skybox.fs" />
     <None Include="textures\skybox.vs" />
   </ItemGroup>

@@ -70,7 +70,7 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	//farbackground_o.SetBaseAttributes(far_background, ForestScale, { {}, { 0, FORESTPOSY }, 0, 0, 0, 80 }, 0.0f);
 
 	Road.SetBaseAttributes(t_foreground, 0.8f, { {0.0f,getWsize().y - 120.0f , (float)t_foreground.width , (float)t_foreground.height}, { 0,getWsize().y - 120}, 0, 0, 0, 180 * MoveEverything }, 0.0f);
-	Road.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, 2.6f, 0.5f));
+	Road.SetInstancing(40, bgGL::MakeInstanceOffsetArray(40, { 0,0 }, 5.6f, 0.5f));
 
 
 	std::cout<< "size" << getWsize().x / 2 << std::endl;
@@ -134,14 +134,15 @@ BoogieMan::BoogieMan(Vec2<int> WindowSize)
 	objects.push_back(&killua);
 	objects.push_back(&WoodenLogWithRoots);
 
-
 	QT::InitList(headnode);
-
 
 	killua.EnableAbility(ABILITY_FLAG_JUMP);
 	killua.EnableAbility(ABILITY_FLAG_MOVE);
 	killua.EnableAbility(ABILITY_FLAG_SPRINT);
 	killua.EnableAbility(ABILITY_FLAG_DOUBLE_JUMP);
+
+	Threadpool = std::make_unique<ThreadPool>(4, 10);
+
 }
 
 BoogieMan::~BoogieMan()
@@ -177,17 +178,17 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 
 		break;
 	case INGAME:
-
+	{
 		////animation update for textures
-	    {
-		//fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
-		killua.updateCharacterTexture(dt, 5, woodcol.Data);
-	    }
-		
+		{
+			//fog_cloud.Data = updateAnimdata(fog_cloud.Data, dt, 3);
+			killua.updateCharacterTexture(dt, 5, woodcol.Data);
+		}
+
 		killua.Move();
 		killua.Jump();
 
-		std::cout << "KILLUA POS: " << killua.Data.pos << std::endl;
+		LOG("KILLUA POS: " << killua.Data.pos);
 
 		QT::ContructQuads(headnode, objects, { 300,300 }, MainCamera);
 
@@ -201,7 +202,7 @@ void BoogieMan::update(RenderTexture2D *fbo , Camera2D &MainCamera)
 		}
 
 		break;
-
+	}
 	case ENDPAGE:
 		
 
@@ -253,7 +254,6 @@ void BoogieMan::drawOffFBO(Camera2D& MainCamera)
 {
 	Sky->Draw();
 
-	//glBindFramebuffer(GL_FRAMEBUFFER, ShadowMap->GetShadowMapFBO());
 	BeginTextureMode(*ShadowMapFBO);
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
@@ -263,7 +263,6 @@ void BoogieMan::drawOffFBO(Camera2D& MainCamera)
 	glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glViewport(0, 0, ShadowMapFBO->texture.width, ShadowMapFBO->texture.height);
 
-	//glBindTexture(GL_TEXTURE_2D, ShadowMap->GetShadowMapImage());
     //UpdateCamera(&camera3d, CAMERA_FIRST_PERSON);
 	
 	//Vec2<float> mousePos({ GetMouseX()/getWsize().x , GetMouseY() / getWsize().y});
@@ -282,7 +281,6 @@ void BoogieMan::drawOffFBO(Camera2D& MainCamera)
 	glCullFace(GL_BACK);
 	glDepthFunc(GL_LESS);
 	glDisable(GL_DEPTH_TEST);
-	//glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	EndTextureMode();
 }
 

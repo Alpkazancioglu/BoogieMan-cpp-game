@@ -13,13 +13,12 @@
 #include <string>
 #include <functional>
 
-
 #define PLATFORM_DESKTOP
 
 #if defined(PLATFORM_DESKTOP)
-
   #define GLSL_VERSION  330
-
+#elif defined(PLATFORM_MOBILE)
+  #define GLSL_VERSION  100
 #endif
 
 Vec2<float> getWsize();
@@ -47,7 +46,6 @@ namespace bgGL
     void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
     void BindDefaultFBO();
 
-
     void BindFBO(RenderTexture2D &fbo);
 
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> position, Vec2<float> offsetBetween, float scale);
@@ -56,7 +54,6 @@ namespace bgGL
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, std::function<float()> scale, float position_y, float* position_x = nullptr);
     std::vector<glm::vec3> MakeInstanceOffsetArray(int InstanceCount, Vec2<float> offsetBetween, std::function<float()> scale, float position_y, std::function<float()> position_x);
     
-
     class cubemap
     {
     public:
@@ -162,7 +159,6 @@ namespace bgGL
             rlEnableDepthMask();
             EndMode3D();
 
-            //EndTextureMode();
             bgGL::BindDefaultFBO();
 
             glDepthFunc(GL_LESS);
@@ -255,8 +251,6 @@ namespace bgGL
         uint shadowMapHeight;
 
     };
-
-
 
 
     class InstancedTexture2D

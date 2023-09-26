@@ -40,7 +40,6 @@ private:
 	float scale;
 	stopwatch_t newwatch;
 
-	std::unique_ptr<ThreadPool> Threadpool;
 
 	bool DrawShadowMapFBO = true;
 };

@@ -106,6 +106,8 @@ public:
 	std::unique_ptr<RenderTexture2D> ShadowMapFBO;
 	Camera camera3d;
 
+	std::unique_ptr<ThreadPool> Threadpool;
+
 	BoogieMan(Vec2<int> WindowSize);
 	~BoogieMan();
 	

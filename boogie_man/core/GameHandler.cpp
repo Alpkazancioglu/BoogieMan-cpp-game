@@ -68,7 +68,6 @@ void game::initialize(const char* windowname , int fps)
 
 	newwatch.stopwatch();
 
-	Threadpool = std::make_unique<ThreadPool>(4);
 
 }
 
@@ -82,7 +81,7 @@ void game::update()
 	updatescreenrec();
 
 	////          GAME_UPDATE             /////
-	Threadpool->enqueue([&]() { BoogieManGame->update(target.get(), *MainCamera); });
+	BoogieManGame->update(target.get(), *MainCamera);
 	/////            ////                /////
 	
 		
@@ -115,7 +114,10 @@ void game::draw()
 {
 	glClear(GL_DEPTH_BUFFER_BIT);
 
+	/////      GAME_DRAW_OUT_OF_MAIN_FBO     /////
 	BoogieManGame->drawOffFBO(*this->MainCamera);
+	/////               ////                /////
+
 
 	//Loading all the render info onto backbuffer 
 	//BeginTextureMode(*target);
