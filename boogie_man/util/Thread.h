@@ -9,8 +9,10 @@ class ThreadPool
 {
 public:
 
-	ThreadPool(size_t numberOfThreads)
+	ThreadPool(size_t numberOfThreads , size_t maxTaskCount)
 	{
+		this->maxTaskCount = maxTaskCount;
+
 		for (size_t i = 0; i < numberOfThreads; i++)
 		{
 			threads.emplace_back([this] {
@@ -28,7 +30,15 @@ public:
 						task = std::move(tasks.front());
 						tasks.pop();
 					}
-					task();
+					try
+					{
+						task();
+					}
+					catch (const std::exception& ex)
+					{
+						LOG_ERR("Task ended with an exception: :: "<< ex.what() << typeid(task).name());
+					}
+
 					LOG_INF("Thread executed the task!");
 				}
 			});
@@ -40,11 +50,18 @@ public:
 	template<class F>
 	void enqueue(F&& task)
 	{
+		if (tasks.size() <= maxTaskCount)
 		{
-			std::unique_lock<std::mutex> lock(mutex);
-			tasks.emplace(std::forward<F>(task));
+			{
+				std::unique_lock<std::mutex> lock(mutex);
+				tasks.emplace(std::forward<F>(task));
+			}
+			condition.notify_one();
 		}
-		condition.notify_one();
+		else
+		{
+			LOG_WARN("Reached the maximum count of tasks in queue!");
+		}
 	}
 
 	~ThreadPool()
@@ -55,10 +72,13 @@ public:
 		}
 
 		condition.notify_all();
+
+		int Index = 0;
 		for (auto &thread : threads)
 		{
 			thread.join();
-			LOG_INF("Thread is distrupted!");
+			LOG_INF("Thread "<< Index <<" is distrupted!");
+			Index++;
 		}
 	}
 
@@ -70,4 +90,5 @@ private:
 	std::mutex mutex;
 	std::condition_variable condition;
 	bool stop = false;
+	size_t maxTaskCount;
 };

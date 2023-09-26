@@ -12,7 +12,7 @@
 
 class BoogieMan;
 
-
+void LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps);
 
 struct Collision
 {
@@ -142,7 +142,7 @@ public:
 	void ReferenceCopyTexture(GameObject& Object2CopyTo);
 	void ReferenceCopyArrayTexture(std::vector<GameObject> &Object2CopyTo);
 	void SetTexture(Texture2D &texture);
-	void SetCollisionInfo(GameObject object);
+	void SetCollisionInfo(GameObject &object);
 	static Direction VectorDirection(glm::vec2 target, float HeightCoeff);
 	bool alpCheckCollision(ObjectData obstacle);
 	bool isOnGround(ObjectData object);
@@ -168,11 +168,6 @@ public:
 	Vector2 atlasCut;
 	bool reverseSpeed;
 	std::vector<int> RandomDistances;
-
-
-
-
-
 
 };
 

@@ -1,10 +1,49 @@
 #include "MainCharacter.h"
 
-
-
-
 GameObject object;
 
+
+void BgCharacter::MainCharacter::EnableAbility(CHARACTER_ABILITY_FLAG Flag)
+{
+	switch (Flag)
+	{
+	case ABILITY_FLAG_MOVE:
+		this->abilities.move = true;
+		break;
+	case ABILITY_FLAG_JUMP:
+		this->abilities.jump = true;
+		break;
+	case ABILITY_FLAG_SPRINT:
+		this->abilities.sprint = true;
+		break;
+	case ABILITY_FLAG_DOUBLE_JUMP:
+		this->abilities.DoubleJump = true;
+		break;
+	default:
+		break;
+	}
+}
+
+void BgCharacter::MainCharacter::DisableAbility(CHARACTER_ABILITY_FLAG Flag)
+{
+	switch (Flag)
+	{
+	case ABILITY_FLAG_MOVE:
+		this->abilities.move = false;
+		break;
+	case ABILITY_FLAG_JUMP:
+		this->abilities.jump = false;
+		break;
+	case ABILITY_FLAG_SPRINT:
+		this->abilities.sprint = false;
+		break;
+	case ABILITY_FLAG_DOUBLE_JUMP:
+		this->abilities.DoubleJump = false;
+		break;
+	default:
+		break;
+	}
+}
 
 
 void BgCharacter::MainCharacter::Move()
@@ -14,9 +53,6 @@ void BgCharacter::MainCharacter::Move()
 	static int TempMaxSpeed = this->Data.MaxSpeed;
 	this->acceleration = 16.0f;
 	
-	
-
-
 	if (this->abilities.move)
 	{
 		if (IsKeyDown(KEY_LEFT_SHIFT) && this->abilities.sprint)

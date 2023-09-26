@@ -678,6 +678,18 @@ void bgGL::SetCurrentFBOtracker(RenderTexture2D FBO)
     CurrentBindFBO = FBO;
 }
 
+//Load a texture from a header file consists of an image byte array
+void bgGL::LoadTexture2DfromHeader(Texture2D* texture, unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
+{
+    Image image = { 0 };
+    image.format = format;
+    image.height = height;
+    image.width = width;
+    image.data = data;
+    image.mipmaps = mipmaps;
+    *texture = LoadTextureFromImage(image);
+}
+
 void bgGL::BindFBO(RenderTexture2D &fbo)
 {
     BeginTextureMode(fbo);

@@ -1,179 +1,173 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Resource Files\Shaders">
-      <UniqueIdentifier>{345895de-3dda-4959-a0d6-4ea7e7f26181}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\levels">
-      <UniqueIdentifier>{0ba7ca17-e066-431c-a256-9eead42bf60f}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="GameEntity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ECS.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="core\game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util\VectorMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util\WindowUtil.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="util\FileHandler.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="util\StopWatch.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="core\game.cpp">
+      <Filter>Source files</Filter>
     </ClCompile>
-    <ClCompile Include="core\Maincpp.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="GameEntity.cpp">
+      <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="core\GameHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="core\LevelHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util\InputHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util\Shader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QuadTreeCollision.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util\Log.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="core\GameObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="util\InputHandler.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\LevelHandler.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="util\Log.cpp">
+      <Filter>Source files</Filter>
     </ClCompile>
     <ClCompile Include="core\MainCharacter.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="core\Maincpp.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadTreeCollision.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="util\Shader.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="util\StopWatch.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="util\VectorMath.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="util\WindowUtil.cpp">
+      <Filter>Source files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ECS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core\game.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="core\far_background.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core\foreground.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core\killua.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core\middle_Background.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core\nebula.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\WindowUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\VectorMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rcamera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\nlohmann\json.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="util\FileHandler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header files</Filter>
     </ClInclude>
-    <ClInclude Include="util\StopWatch.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="core\foreground.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\game.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEntity.h">
+      <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="core\GameHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="core\LevelHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\InputHandler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="QuadTreeCollision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\Log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util\Thread.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="core\GameObject.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\InputHandler.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\nlohmann\json.hpp">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\killua.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\LevelHandler.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\Log.h">
+      <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="core\MainCharacter.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\middle_Background.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="core\nebula.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadTreeCollision.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="rcamera.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\Shader.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\StopWatch.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\Thread.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\VectorMath.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="util\WindowUtil.h">
+      <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="level.json">
-      <Filter>Resource Files\levels</Filter>
-    </None>
     <None Include="textures\shaders\Basic.fs">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource files</Filter>
     </None>
     <None Include="textures\shaders\Basic.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="textures\skybox.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="textures\skybox.vs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="textures\cubemap.fs">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="textures\cubemap.vs">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource files</Filter>
     </None>
     <None Include="textures\shaders\bloom.fs">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource files</Filter>
+    </None>
+    <None Include="textures\cubemap.fs">
+      <Filter>Resource files</Filter>
+    </None>
+    <None Include="textures\cubemap.vs">
+      <Filter>Resource files</Filter>
     </None>
     <None Include="textures\shaders\pixelizer.fs">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource files</Filter>
     </None>
     <None Include="textures\shaders\ShadowMap.fs">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource files</Filter>
     </None>
     <None Include="textures\shaders\ShadowMap.vs">
-      <Filter>Resource Files\Shaders</Filter>
+      <Filter>Resource files</Filter>
     </None>
+    <None Include="textures\skybox.vs">
+      <Filter>Resource files</Filter>
+    </None>
+    <None Include="textures\skybox.fs">
+      <Filter>Resource files</Filter>
+    </None>
+    <None Include="level.json">
+      <Filter>Header files</Filter>
+    </None>
+    <None Include="textures\shaders\TextureRec.fs">
+      <Filter>Resource files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source files">
+      <UniqueIdentifier>{c200b9ac-6b50-4864-ade2-111789e959cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header files">
+      <UniqueIdentifier>{a00d8feb-813c-46b9-9b60-2c66eb5c690e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource files">
+      <UniqueIdentifier>{229acd9b-5b8f-4751-b5e2-4648f6e72970}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

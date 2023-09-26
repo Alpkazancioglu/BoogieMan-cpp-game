@@ -19,7 +19,7 @@ GameObject::~GameObject()
 //Initialize the texture from a header file consists of a byte array
 void GameObject::InitializeTextureFromHeader(unsigned int format, unsigned int height, unsigned int width, unsigned char* data, int mipmaps)
 {
-	LoadTexture2DfromHeader(this->Texture, format, height, width, data, mipmaps);
+	bgGL::LoadTexture2DfromHeader(this->Texture, format, height, width, data, mipmaps);
 }
 
 //Initialize the texture from an external file
@@ -258,18 +258,13 @@ void GameObject::SetTexture(Texture2D &texture)
 	this->Texture = &texture;
 }
 
-void GameObject::SetCollisionInfo(GameObject object)
+
+void GameObject::SetCollisionInfo(GameObject& object)
 {
-	
 	this->Data.collision.direction = object.DirectionRelativeToObject(this->Data);
 	this->Data.collision.IsOnTop = object.isOnGround(this->Data);
 	this->Data.collision.IsColliding = object.alpCheckCollision(this->Data);
-
-
-
 }
-
-
 
 void InstancedGameObject::SetInstancing(int instanceCount, std::vector<glm::vec3> positionoffsets, Util::Shader& instanceShader)
 {

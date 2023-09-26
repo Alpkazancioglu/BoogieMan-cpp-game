@@ -113,7 +113,7 @@ public:
 	
 
 	void update(RenderTexture2D* fbo , Camera2D &MainCamera);
-	void draw(RenderTexture2D* fbo);
+	void draw(RenderTexture2D* fbo, Camera2D& MainCamera);
 	void drawOffCamera();
 	void drawOffFBO(Camera2D &MainCamera);
 	

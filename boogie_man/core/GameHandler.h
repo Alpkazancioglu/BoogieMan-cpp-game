@@ -40,6 +40,7 @@ private:
 	float scale;
 	stopwatch_t newwatch;
 
+
 	bool DrawShadowMapFBO = true;
 };
 
